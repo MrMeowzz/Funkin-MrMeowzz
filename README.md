@@ -1,2 +1,2 @@
 # FNF-MrMeowzz
-Play Customized FNF by Mr Meowzz on the web!
+Play Mr Meowzz's FNF on the web!
