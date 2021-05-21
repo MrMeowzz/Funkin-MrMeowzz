@@ -84,6 +84,9 @@ class GameOverSubstate extends MusicBeatSubstate
 			if (PlayState.isStoryMode)
 				FlxG.switchState(new StoryMenuState());
 			else
+			#if html5
+				FlxG.sound.playMusic(Paths.music('frogMenu'));
+			#end
 				FlxG.switchState(new FreeplayState());
 		}
 
