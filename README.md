@@ -8,4 +8,4 @@ Mr Meowzz's FNF is basically my version of <a href="https://github.com/KadeDev/K
 
 <a href="https://github.com/ninjamuffin99/Funkin">Original by ninjamufin99.</a>
 
-<a href="../../wiki">Wiki</a>
+<a href="https://github.com/MrMeowzz/Funkin-MrMeowzz/wiki">Wiki</a>
