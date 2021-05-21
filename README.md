@@ -8,4 +8,4 @@ Mr Meowzz's FNF is basically my version of kade engine but it has extra songs an
 
 <a href="https://github.com/ninjamuffin99/Funkin">Original by ninjamufin99.</a>
 
-<a href="https://github.com/MrMeowzz/Funkin-MrMeowzz/wiki">Wiki</a>
+<a href="../../wiki">Wiki</a>
