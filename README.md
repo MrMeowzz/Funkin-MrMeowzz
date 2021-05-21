@@ -1,6 +1,6 @@
 # Funkin-MrMeowzz
 
-Mr Meowzz's FNF is basically my version of kade engine but it has extra songs and stuff.
+Mr Meowzz's FNF is basically my version of <a href="https://github.com/KadeDev/Kade-Engine">Kade Engine</a> but it has extra songs and stuff.
 
 ## Links
 
