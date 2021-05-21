@@ -1,6 +1,6 @@
 # Mr Meowzz's FNF
 
-<a href="../..">Mr Meowzz's FNF</a> is basically my version of <a href="https://github.com/KadeDev/Kade-Engine">Kade Engine</a> but it has extra songs and stuff. (KADE ENGINE IS BETTER, THIS IS A MESS)
+Mr Meowzz's FNF is basically my version of <a href="https://github.com/KadeDev/Kade-Engine">Kade Engine</a> but it has extra songs and stuff. (KADE ENGINE IS BETTER, THIS IS A MESS)
 
 ## Links
 
@@ -8,4 +8,4 @@
 
 <a href="https://github.com/ninjamuffin99/Funkin">Original by ninjamufin99.</a>
 
-<a href="../../wiki">Wiki</a>
+<a href="https://github.com/MrMeowzz/Funkin-MrMeowzz/wiki">Wiki</a>
