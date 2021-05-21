@@ -1678,7 +1678,7 @@ class PlayState extends MusicBeatState
 			ratingTxt.text = "(FC)";
 			ratingTxt.visible = true;
 		}
-		else if (misses <= 10)
+		else if (misses < 10)
 		{
 			if (accuracy > 0)
 				accuracyTxt.text = "Accuracy:" + accuracy + "%";
