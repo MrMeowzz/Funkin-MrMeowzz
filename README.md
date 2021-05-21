@@ -4,7 +4,7 @@ Mr Meowzz's FNF is basically my version of <a href="https://github.com/KadeDev/K
 
 ## Links
 
-<a href="https://mrmeowzz.github.io/Funkin-MrMeowzz/web" target="_blank">Play Mr Meowzz's FNF in your browser!</a>
+<a href="https://mrmeowzz.github.io/Funkin-MrMeowzz/web">Play Mr Meowzz's FNF in your browser!</a>
 
 <a href="https://github.com/ninjamuffin99/Funkin">Original by ninjamufin99.</a>
 
