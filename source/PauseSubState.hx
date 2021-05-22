@@ -263,6 +263,8 @@ class PauseSubState extends MusicBeatSubstate
 						menuItems.remove(PlayState.SONG.player1);
 					if (PlayState.SONG.player1 == 'bf-amogus' || PlayState.curStage.startsWith('school'))
 						menuItems.remove('amog us');
+					if (PlayState.SONG.player1 == gfVersion)
+						menuItems.remove('gf');
 					regenMenu();
 					curSelected = 0;
 				case "EASY" | "NORMAL" | "HARD" | "HARD PLUS":

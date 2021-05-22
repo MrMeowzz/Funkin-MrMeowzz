@@ -158,11 +158,47 @@ class PlayState extends MusicBeatState
 	var detailsPausedText:String = "";
 	#end
 
+	public var timer:FlxTimer;
+
+
+	function sustain2(strum:Int, spr:FlxSprite, note:Note):Void
+	{
+		var length:Float = note.sustainLength;
+
+		if (length > 0)
+		{
+			strumming2[strum] = true;
+		}
+
+		var bps:Float = Conductor.bpm / 60;
+		var spb:Float = 1 / bps;
+
+		if (!note.isSustainNote)
+		{
+			timer = new FlxTimer();
+			timer.start(length == 0 ? 0.2 : (length / Conductor.crochet * spb) + 0.1, function(tmr:FlxTimer)
+			{
+				if (!strumming2[strum])
+				{
+					spr.animation.play("static", true);
+					spr.centerOffsets();
+				}
+				else
+				{
+					strumming2[strum] = false;
+					spr.animation.play("static", true);
+					spr.centerOffsets();
+				}
+			});
+		}
+	}
+
 	override public function create()
 	{
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
+		timer = new FlxTimer();
 		misses = 0;
 		goodnotes = 0;
 		songScore = 0;
@@ -1576,6 +1612,8 @@ class PlayState extends MusicBeatState
 				startTimer.active = true;
 			paused = false;
 
+			timer.active = true;
+
 			#if desktop
 			if (startTimer.finished)
 			{
@@ -1671,6 +1709,8 @@ class PlayState extends MusicBeatState
 		var sec = Math.floor(((FlxG.sound.music.length - Conductor.songPosition) % 60000) / 1000);
 		var finalmin = '$min'.lpad("0", 2);
 		var finalsec = '$sec'.lpad("0", 2);
+		if (Std.parseFloat(finalsec) < 0)
+			lengthTxt.visible = false;
 		lengthTxt.text = Std.string(finalmin + ":" + finalsec);
 		lengthTxt.size = 40;
 
@@ -1712,6 +1752,8 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			persistentDraw = true;
 			paused = true;
+
+			timer.active = false;
 
 			// 1 / 1000 chance for Gitaroo Man easter egg
 			if (FlxG.random.bool(0.1))
@@ -2167,9 +2209,8 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
-	}
 
-	function sustain2(strum:Int, spr:FlxSprite, note:Note):Void
+		function sustain2(strum:Int, spr:FlxSprite, note:Note):Void
 		{
 			var length:Float = note.sustainLength;
 
@@ -2183,20 +2224,24 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
-				new FlxTimer().start(length == 0 ? 0.2 : (length / Conductor.crochet * spb) + 0.1, function(tmr:FlxTimer)
+				timer = new FlxTimer();
+				timer.start(length == 0 ? 0.2 : (length / Conductor.crochet * spb) + 0.1, function(tmr:FlxTimer)
 				{
 					if (!strumming2[strum])
 					{
 						spr.animation.play("static", true);
+						spr.centerOffsets();
 					}
-					else if (length > 0)
+					else
 					{
 						strumming2[strum] = false;
 						spr.animation.play("static", true);
+						spr.centerOffsets();
 					}
 				});
 			}
 		}
+	}
 
 	function endSong():Void
 	{
@@ -2344,8 +2389,9 @@ class PlayState extends MusicBeatState
 				daRating = 'bad';
 		 */
 
-		var pixelShitPart1:String = "";
+		var pixelShitPart1:String = '';
 		var pixelShitPart2:String = '';
+		var sussy:String = '';
 
 		if (curStage.startsWith('school'))
 		{
@@ -2356,10 +2402,10 @@ class PlayState extends MusicBeatState
 		if (curStage.startsWith('amogus'))
 		{
 			if (daRating == 'bad' || daRating == 'shit')
-				pixelShitPart1 = 'sus';
+				sussy = 'sus';
 		}
 
-		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
+		rating.loadGraphic(Paths.image(pixelShitPart1 + sussy + daRating + pixelShitPart2));
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
 		rating.y -= 60;

@@ -25,7 +25,7 @@ class LoadingState extends MusicBeatState
 	
 	var logo:FlxSprite;
 	var gfDance:FlxSprite;
-	var danceLeft = false;
+	var danceLeft:Bool = false;
 	
 	function new(target:FlxState, stopMusic:Bool)
 	{
@@ -36,6 +36,7 @@ class LoadingState extends MusicBeatState
 	
 	override function create()
 	{
+
 		logo = new FlxSprite(-150, -100);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 		logo.antialiasing = true;
@@ -50,6 +51,7 @@ class LoadingState extends MusicBeatState
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gfDance.antialiasing = true;
+		gfDance.animation.play('danceLeft');
 		add(gfDance);
 		add(logo);
 		
@@ -107,15 +109,11 @@ class LoadingState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-		
+
 		logo.animation.play('bump');
-		danceLeft = !danceLeft;
-		
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
 	}
+
+	var timerstarted = false;
 	
 	override function update(elapsed:Float)
 	{
@@ -124,6 +122,21 @@ class LoadingState extends MusicBeatState
 		if (FlxG.keys.justPressed.SPACE)
 			trace('fired: ' + callbacks.getFired() + " unfired:" + callbacks.getUnfired());
 		#end
+
+		if (!timerstarted)
+		{
+		timerstarted = true;
+			new FlxTimer().start(0.3, function(tmr:FlxTimer)
+			{
+				danceLeft = !danceLeft;
+
+				if (danceLeft)
+					gfDance.animation.play('danceRight');
+				else
+					gfDance.animation.play('danceLeft');
+				timerstarted = false;
+			});
+		}
 	}
 	
 	function onLoad()
