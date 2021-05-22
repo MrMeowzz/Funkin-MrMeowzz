@@ -1,0 +1,4 @@
+:dad:Who are you?
+:bf:Tankman.
+:dad:Ok... Tankman, Use the arrow keys to keep up with me singing.
+:bf:But I already know how to sing!
