@@ -71,6 +71,8 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		super.update(elapsed);
 
+		FlxG.updateFramerate = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
+
 		if (controls.ACCEPT)
 		{
 			endBullshit();
@@ -84,15 +86,13 @@ class GameOverSubstate extends MusicBeatSubstate
 			if (PlayState.isStoryMode)
 				FlxG.switchState(new StoryMenuState());
 			else
-			#if html5
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
-			#end
 				FlxG.switchState(new FreeplayState());
 		}
 
+		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
 		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.01 * (60 / (cast (Lib.current.getChildAt(0), Main).currentframerate())));
+			FlxG.camera.follow(camFollow, LOCKON, 0.01 * (120 / (fps / 60)) / fps);
 		}
 
 		if (PlayState.storyWeek == 7 && bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)

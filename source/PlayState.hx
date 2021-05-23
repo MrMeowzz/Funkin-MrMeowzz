@@ -992,8 +992,8 @@ class PlayState extends MusicBeatState
 		}
 
 		add(camFollow);
-
-		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (15 / (cast (Lib.current.getChildAt(0), Main)).currentframerate()));
+		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * ((30 / (fps / 60)) / fps));
 		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
@@ -1676,9 +1676,13 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		FlxG.updateFramerate = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 		#if !debug
 		perfectMode = false;
 		#end
+
+		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * ((30 / (fps / 60)) / fps));
 
 		if (FlxG.keys.justPressed.NINE)
 		{

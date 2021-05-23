@@ -15,6 +15,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
+import openfl.Lib;
 
 using StringTools;
 
@@ -33,7 +34,7 @@ class StoryMenuState extends MusicBeatState
 		['Ugh', 'Guns', 'Stress'],
 		['iPhone', 'No Among Us', 'Among Us Drip']
 	];
-	var curDifficulty:Int = 1;
+	var curDifficulty:Int = OG.DifficultyStoryMode;
 
 	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true, true];
 
@@ -225,6 +226,8 @@ class StoryMenuState extends MusicBeatState
 		// add(rankText);
 		add(scoreText);
 		add(txtWeekTitle);
+		curWeek = OG.SelectedStoryMode;
+		changeWeek();
 
 		updateText();
 
@@ -235,6 +238,7 @@ class StoryMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		FlxG.updateFramerate = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 		// scoreText.setFormat('VCR OSD Mono', 32);
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.5));
 
@@ -292,6 +296,8 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
+			OG.SelectedStoryMode = curWeek;
+			OG.DifficultyStoryMode = curDifficulty;
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -338,6 +344,8 @@ class StoryMenuState extends MusicBeatState
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
+				OG.SelectedStoryMode = curWeek;
+				OG.DifficultyStoryMode = curDifficulty;
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			});
 		}
@@ -422,6 +430,7 @@ class StoryMenuState extends MusicBeatState
 		grpWeekCharacters.members[1].animation.play(weekCharacters[curWeek][1]);
 		grpWeekCharacters.members[2].animation.play(weekCharacters[curWeek][2]);
 		txtTracklist.text = "Tracks\n\n";
+		grpWeekCharacters.members[0].flipX = false;
 
 		switch (grpWeekCharacters.members[0].animation.curAnim.name)
 		{
@@ -444,6 +453,11 @@ class StoryMenuState extends MusicBeatState
 			case 'tankman':
 				grpWeekCharacters.members[0].offset.set(60, -20);
 				grpWeekCharacters.members[0].setGraphicSize(Std.int(grpWeekCharacters.members[0].width * 1));
+			
+			case 'pico':
+				grpWeekCharacters.members[0].offset.set(100, 100);
+				grpWeekCharacters.members[0].setGraphicSize(Std.int(grpWeekCharacters.members[0].width * 1));
+				grpWeekCharacters.members[0].flipX = true;
 
 			default:
 				grpWeekCharacters.members[0].offset.set(100, 100);

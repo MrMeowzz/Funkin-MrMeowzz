@@ -13,6 +13,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 import flixel.util.FlxTimer;
+import openfl.Lib;
 
 using StringTools;
 
@@ -21,8 +22,8 @@ class FreeplayState extends MusicBeatState
 	var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
-	var curSelected:Int = 0;
-	var curDifficulty:Int = 1;
+	var curSelected:Int = OG.SelectedFreeplay;
+	var curDifficulty:Int = OG.DifficultyFreeplay;
 
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -36,6 +37,11 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
+		#if html5
+			if (!FlxG.sound.music.playing)
+				FlxG.sound.playMusic(Paths.music('frogMenu'));
+		#end
+
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
 		for (i in 0...initSonglist.length)
@@ -192,6 +198,8 @@ class FreeplayState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		
+		FlxG.updateFramerate = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 
 		if (FlxG.sound.music.volume < 0.7)
 		{
@@ -225,6 +233,8 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
+			OG.SelectedFreeplay = curSelected;
+			OG.DifficultyFreeplay = curDifficulty;
 			FlxG.switchState(new MainMenuState());
 			#if desktop
 			FlxG.sound.playMusic(Paths.music('frogMenu'));
@@ -243,6 +253,8 @@ class FreeplayState extends MusicBeatState
 
 			PlayState.storyWeek = songs[curSelected].week;
 			trace('CUR WEEK' + PlayState.storyWeek);
+			OG.SelectedFreeplay = curSelected;
+			OG.DifficultyFreeplay = curDifficulty;
 			LoadingState.loadAndSwitchState(new PlayState());
 		}
 	}

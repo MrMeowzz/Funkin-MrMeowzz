@@ -197,6 +197,7 @@ class PauseSubState extends MusicBeatSubstate
 					menuItems = originalmenuItems;
 					regenMenu();
 					curSelected = 0;
+					changeSelection();	
 				case "Skip Song":
 					var difficulty = "";
 					PlayState.deathCounter = 0;
@@ -253,6 +254,7 @@ class PauseSubState extends MusicBeatSubstate
 						menuItems.push("BACK");
 					regenMenu();
 					curSelected = 0;
+					changeSelection();
 				case "Change Character":
 					menuItems = ['bf', 'amog us', 'tankman', 'pico', 'gf', 'BACK'];
 					if (gfVersion != "gf-christmas" && gfVersion != "gf" && PlayState.SONG.player2 != "gf")
@@ -267,6 +269,7 @@ class PauseSubState extends MusicBeatSubstate
 						menuItems.remove('gf');
 					regenMenu();
 					curSelected = 0;
+					changeSelection();
 				case "EASY" | "NORMAL" | "HARD" | "HARD PLUS":
 					switch (daSelected)
 					{
