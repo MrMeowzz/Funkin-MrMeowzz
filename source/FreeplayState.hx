@@ -59,7 +59,7 @@ class FreeplayState extends MusicBeatState
 
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("In the Menus - Freeplay", null);
 		#end
 
 		var isDebug:Bool = false;
@@ -195,6 +195,10 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 
+	var uptimer = new FlxTimer();
+	var downtimer = new FlxTimer();
+	var randomtimer = new FlxTimer();
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -215,15 +219,47 @@ class FreeplayState extends MusicBeatState
 
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
+		var up = controls.UP;
+		var down = controls.DOWN;
+		var upR = controls.UP_R;
+		var downR = controls.DOWN_R;
 		var accepted = controls.ACCEPT;
+
 
 		if (upP)
 		{
 			changeSelection(-1);
+
+			uptimer.start(0.3, function(tmr:FlxTimer)
+			{
+				uptimer.start(0.1, function(tmr:FlxTimer)
+				{
+						changeSelection(-1);
+				}, 0);
+			});
 		}
+
 		if (downP)
 		{
 			changeSelection(1);
+
+			downtimer.start(0.3, function(tmr:FlxTimer)
+			{
+				downtimer.start(0.1, function(tmr:FlxTimer)
+				{
+						changeSelection(1);
+				}, 0);
+			});
+		}
+
+		if (upR)
+		{
+			uptimer.cancel();
+		}
+
+		if (downR)
+		{
+			downtimer.cancel();
 		}
 
 		if (controls.LEFT_P)
@@ -235,6 +271,10 @@ class FreeplayState extends MusicBeatState
 		{
 			OG.SelectedFreeplay = curSelected;
 			OG.DifficultyFreeplay = curDifficulty;
+			OG.gunsCutsceneEnded = false;
+			OG.ughCutsceneEnded = false;
+			OG.stressCutsceneEnded = false;
+			OG.horrorlandCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
 			#if desktop
 			FlxG.sound.playMusic(Paths.music('frogMenu'));
@@ -257,6 +297,33 @@ class FreeplayState extends MusicBeatState
 			OG.DifficultyFreeplay = curDifficulty;
 			LoadingState.loadAndSwitchState(new PlayState());
 		}
+
+		if (FlxG.keys.justPressed.R)
+		{
+			var totalsongs:Int = 0;
+
+			for (i in grpSongs.members)
+			{
+				totalsongs++;
+			}
+
+			curSelected = FlxG.random.int(0, totalsongs);
+			changeSelection();
+
+			randomtimer.start(0.3, function(tmr:FlxTimer)
+			{
+				randomtimer.start(0.08, function(tmr:FlxTimer)
+				{
+						curSelected = FlxG.random.int(0, totalsongs);
+						changeSelection();
+				}, 0);
+			});
+		}
+
+		if (FlxG.keys.justReleased.R)
+		{
+			randomtimer.cancel();
+		}
 	}
 
 	function changeDiff(change:Int = 0)
@@ -275,13 +342,13 @@ class FreeplayState extends MusicBeatState
 		switch (curDifficulty)
 		{
 			case 0:
-				diffText.text = "EASY";
+				diffText.text = "< EASY >";
 			case 1:
-				diffText.text = 'NORMAL';
+				diffText.text = '< NORMAL >';
 			case 2:
-				diffText.text = "HARD";
+				diffText.text = "< HARD >";
 			case 3:
-				diffText.text = "HARD PLUS";
+				diffText.text = "< HARD PLUS >";
 		}
 	}
 

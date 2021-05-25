@@ -16,11 +16,12 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var stageSuffix:String = "";
 	var playingDeathSound:Bool = false;
+	public static var daBf:String = '';
 
 	public function new(x:Float, y:Float)
 	{
 		var daStage = PlayState.curStage;
-		var daBf:String = '';
+		
 		switch (daStage)
 		{
 			case 'school':
@@ -84,9 +85,17 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.deathCounter = 0;
 
 			if (PlayState.isStoryMode)
+			{
+				OG.gunsCutsceneEnded = false;
+				OG.ughCutsceneEnded = false;
+				OG.stressCutsceneEnded = false;
+				OG.horrorlandCutsceneEnded = false;
 				FlxG.switchState(new StoryMenuState());
+			}
 			else
+			{
 				FlxG.switchState(new FreeplayState());
+			}
 		}
 
 		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());

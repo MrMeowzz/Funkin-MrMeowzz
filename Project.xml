@@ -8,7 +8,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Mr Meowzz's Friday Night Funkin'" file="MrMeowzzFunkin" packageName="com.MrMeowzz.funkin" package="com.MrMeowzz.funkin" main="Main" version="1.1.9-PRE-3" company="Mr Meowzz" />
+	<app title="Mr Meowzz's Friday Night Funkin'" file="MrMeowzzFunkin" packageName="com.MrMeowzz.funkin" package="com.MrMeowzz.funkin" main="Main" version="1.2.2" company="Mr Meowzz" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -104,9 +104,13 @@
 	<assets path="assets/week7"    library="week7"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/week8"    library="week8"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week8"    library="week8"    exclude="*.mp3" unless="web"/>
+	<assets path="assets/week7/videos" include="*.mp3" if="web"/>
+	<assets path="assets/week7/videos" include="*.ogg" unless="web"/>
+	<assets path="assets/week7/videos" include="*.txt" unless="web"/>
 	
 	<assets path='example_mods' rename='mods' embed='false'/>
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
+
+	<assets path='LICENSE' rename='LICENSE.txt' embed='false'/>
 	<!-- <template path='mods' /> -->
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
@@ -137,6 +141,9 @@
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
+
+	<haxelib name="actuate" />
+	<haxelib name="extension-webm" if="desktop" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

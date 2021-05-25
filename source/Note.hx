@@ -20,6 +20,7 @@ class Note extends FlxSprite
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var altNote:Bool = false;
+	public var willMiss:Bool = false;
 	public var prevNote:Note;
 
 	public var sustainLength:Float = 0;
@@ -174,8 +175,14 @@ class Note extends FlxSprite
 
 		if (mustPress)
 		{
+			if (willMiss && !wasGoodHit)
+			{
+				tooLate = true;
+				canBeHit = false;
+			
+			}
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
-			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
+			else if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
 				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
 				canBeHit = true;
 			else

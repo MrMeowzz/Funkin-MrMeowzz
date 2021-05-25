@@ -122,7 +122,7 @@ class StoryMenuState extends MusicBeatState
 		
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("In the Menus - Story Mode", null);
 		#end
 
 		for (i in 0...weekData.length)
@@ -236,6 +236,10 @@ class StoryMenuState extends MusicBeatState
 		super.create();
 	}
 
+	var uptimer = new FlxTimer();
+	var downtimer = new FlxTimer();
+	var randomtimer = new FlxTimer();
+
 	override function update(elapsed:Float)
 	{
 		FlxG.updateFramerate = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
@@ -263,11 +267,37 @@ class StoryMenuState extends MusicBeatState
 				if (controls.UP_P)
 				{
 					changeWeek(-1);
+
+					uptimer.start(0.3, function(tmr:FlxTimer)
+					{
+						uptimer.start(0.15, function(tmr:FlxTimer)
+						{
+							changeWeek(-1);
+						}, 0);
+					});
 				}
 
 				if (controls.DOWN_P)
 				{
 					changeWeek(1);
+
+					downtimer.start(0.3, function(tmr:FlxTimer)
+					{
+						downtimer.start(0.15, function(tmr:FlxTimer)
+						{
+							changeWeek(1);
+						}, 0);
+					});
+				}
+
+				if (controls.UP_R)
+				{
+					uptimer.cancel();
+				}
+
+				if (controls.DOWN_R)
+				{
+					downtimer.cancel();
 				}
 
 				if (controls.RIGHT)
@@ -299,6 +329,33 @@ class StoryMenuState extends MusicBeatState
 			OG.SelectedStoryMode = curWeek;
 			OG.DifficultyStoryMode = curDifficulty;
 			FlxG.switchState(new MainMenuState());
+		}
+
+		if (FlxG.keys.justPressed.R)
+		{
+			var totalweeks:Int = 0;
+
+			for (item in grpWeekText.members)
+			{
+				totalweeks++;
+			}
+
+			curWeek = FlxG.random.int(0, totalweeks);
+			changeWeek();
+
+			randomtimer.start(0.3, function(tmr:FlxTimer)
+			{
+				randomtimer.start(0.08, function(tmr:FlxTimer)
+				{
+						curWeek = FlxG.random.int(0, totalweeks);
+						changeWeek();
+				}, 0);
+			});
+		}
+
+		if (FlxG.keys.justReleased.R)
+		{
+			randomtimer.cancel();
 		}
 
 		super.update(elapsed);

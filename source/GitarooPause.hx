@@ -64,7 +64,10 @@ class GitarooPause extends MusicBeatState
 			else
 			{
 				PlayState.deathCounter = 0;
-				PlayState.songScore = 0;
+				OG.gunsCutsceneEnded = false;
+				OG.ughCutsceneEnded = false;
+				OG.stressCutsceneEnded = false;
+				OG.horrorlandCutsceneEnded = false;
 				FlxG.switchState(new MainMenuState());
 			}
 		}

@@ -62,9 +62,10 @@ class DiscordClient
 		trace("Discord Client initialized");
 	}
 
-	public static function changePresence(details:String, state:Null<String>, ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
+	public static function changePresence(details:String, state:Null<String>, ?largeImageKey : String = 'icon', ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
 	{
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
+		var largeImageText:String = if(largeImageKey == 'icon') "Mr Meowzz's Friday Night Funkin'" else largeImageKey;
 
 		if (endTimestamp > 0)
 		{
@@ -74,9 +75,10 @@ class DiscordClient
 		DiscordRpc.presence({
 			details: details,
 			state: state,
-			largeImageKey: 'icon',
-			largeImageText: "Mr Meowzz's Friday Night Funkin'",
-			smallImageKey : smallImageKey,
+			largeImageKey: largeImageKey,
+			largeImageText: largeImageText,
+			smallImageKey: smallImageKey,
+			smallImageText: smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
 			startTimestamp : Std.int(startTimestamp / 1000),
             endTimestamp : Std.int(endTimestamp / 1000)
