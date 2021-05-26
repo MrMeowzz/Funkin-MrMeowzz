@@ -65,7 +65,8 @@ class DiscordClient
 	public static function changePresence(details:String, state:Null<String>, ?largeImageKey : String = 'icon', ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
 	{
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
-		var largeImageText:String = if(largeImageKey == 'icon') "Mr Meowzz's Friday Night Funkin'" else largeImageKey;
+		var largeImageText:String = if(largeImageKey == 'icon') "Mr Meowzz's Friday Night Funkin'" else if(largeImageKey.contains('dead')) "Died playing as " + PlayState.SONG.player1 else "Against " + largeImageKey;
+		var smallImageText:String = if(largeImageKey.contains('dead')) "Against " + smallImageKey else "Playing as " + smallImageKey;
 
 		if (endTimestamp > 0)
 		{
@@ -78,7 +79,7 @@ class DiscordClient
 			largeImageKey: largeImageKey,
 			largeImageText: largeImageText,
 			smallImageKey: smallImageKey,
-			smallImageText: smallImageKey,
+			smallImageText: smallImageText,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
 			startTimestamp : Std.int(startTimestamp / 1000),
             endTimestamp : Std.int(endTimestamp / 1000)

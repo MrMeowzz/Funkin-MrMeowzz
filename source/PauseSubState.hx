@@ -162,7 +162,7 @@ class PauseSubState extends MusicBeatSubstate
 				PlayState.modeText = " - One Shot Mode";
 			else
 				PlayState.modeText = '';
-			DiscordClient.changePresence(PlayState.detailsPausedText, PlayState.SONG.song + " (" + PlayState.storyDifficultyText + PlayState.modeText + ") - Against " + PlayState.SONG.player2, PlayState.player2RPC, PlayState.player1RPC);
+			DiscordClient.changePresence(PlayState.detailsPausedText, PlayState.SONG.song + " (" + PlayState.storyDifficultyText + PlayState.modeText + ")", PlayState.player2RPC, PlayState.player1RPC);
 		#end
 
 		var upP = controls.UP_P;

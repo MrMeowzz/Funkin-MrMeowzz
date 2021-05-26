@@ -288,18 +288,18 @@ class PlayState extends MusicBeatState
 				weektxt = 'tutorial';
 			if (storyWeek == 8)
 				weektxt = 'meme';
-			detailsText = "in Story Mode: Week " + weektxt + " - Playing as " + SONG.player1;
+			detailsText = "in Story Mode: Week " + weektxt;
 		}
 		else
 		{
-			detailsText = "in Freeplay - " + "Playing as " + SONG.player1;
+			detailsText = "in Freeplay";
 		}
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
 		
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC);
+		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 		#end
 
 		switch (SONG.song.toLowerCase())
@@ -1435,7 +1435,7 @@ class PlayState extends MusicBeatState
 		songLength = FlxG.sound.music.length;
 
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC, true, songLength);
+		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC, true, songLength);
 		#end
 	}
 
@@ -1690,11 +1690,11 @@ class PlayState extends MusicBeatState
 			#if desktop
 			if (startTimer.finished)
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC, true, songLength - Conductor.songPosition);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC, true, songLength - Conductor.songPosition);
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 			}
 			#end
 		}
@@ -1709,11 +1709,11 @@ class PlayState extends MusicBeatState
 		{
 			if (Conductor.songPosition > 0.0)
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC, true, songLength - Conductor.songPosition);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC, true, songLength - Conductor.songPosition);
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 			}
 		}
 		#end
@@ -1726,7 +1726,7 @@ class PlayState extends MusicBeatState
 		#if desktop
 		if (health > 0 && !paused)
 		{
-			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC);
+			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 		}
 		#end
 
@@ -1858,7 +1858,7 @@ class PlayState extends MusicBeatState
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		
 			#if desktop
-			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, player2RPC, player1RPC);
+			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 			#end
 		}
 
@@ -2184,7 +2184,7 @@ class PlayState extends MusicBeatState
 			
 			#if desktop
 			// Game Over doesn't get his own variable because it's only used here
-			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + modeText + ") - Against " + SONG.player2, deadRPC, player2RPC);
+			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", deadRPC, player2RPC);
 			#end
 		}
 
