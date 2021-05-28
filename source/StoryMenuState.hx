@@ -58,7 +58,7 @@ class StoryMenuState extends MusicBeatState
 		"MOMMY MUST MURDER",
 		"RED SNOW",
 		"hating simulator ft. moawling",
-		"TANKMAN PORT (WIP)",
+		"TANKMAN",
 		""
 	];
 

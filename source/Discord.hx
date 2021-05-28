@@ -2,6 +2,7 @@ package;
 
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
+import lime.app.Application;
 
 using StringTools;
 
@@ -39,7 +40,7 @@ class DiscordClient
 			details: "In the Menus",
 			state: null,
 			largeImageKey: 'icon',
-			largeImageText: "Mr Meowzz's Friday Night Funkin'"
+			largeImageText: "v" + Application.current.meta.get('version')
 		});
 	}
 
@@ -65,7 +66,7 @@ class DiscordClient
 	public static function changePresence(details:String, state:Null<String>, ?largeImageKey : String = 'icon', ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
 	{
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
-		var largeImageText:String = if(largeImageKey == 'icon') "Mr Meowzz's Friday Night Funkin'" else if(largeImageKey.contains('dead')) "Died playing as " + PlayState.SONG.player1 else "Against " + largeImageKey;
+		var largeImageText:String = if(largeImageKey == 'icon') "v" + Application.current.meta.get('version') else if(largeImageKey.contains('dead')) "Died playing as " + PlayState.SONG.player1 else "Against " + largeImageKey;
 		var smallImageText:String = if(largeImageKey.contains('dead')) "Against " + smallImageKey else "Playing as " + smallImageKey;
 
 		if (endTimestamp > 0)

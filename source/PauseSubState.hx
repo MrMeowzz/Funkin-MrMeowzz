@@ -200,6 +200,8 @@ class PauseSubState extends MusicBeatSubstate
 					gfVersion = 'gf-pixel';
 				case 'tank':
 					gfVersion = 'gf-tankmen';
+					if (PlayState.SONG.song.toLowerCase() == 'stress')
+						gfVersion = 'pico-speaker';
 				case 'amogus':
 					gfVersion = 'gf-amogus';
 			}

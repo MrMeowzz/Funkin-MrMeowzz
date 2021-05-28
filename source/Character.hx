@@ -17,6 +17,8 @@ class Character extends FlxSprite
 
 	public var holdTimer:Float = 0;
 
+	public static var animationNotes:Array<Dynamic> = [];
+
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);
@@ -682,9 +684,12 @@ class Character extends FlxSprite
 				addOffset('shoot1');
 				addOffset("shoot2", -1, -128);
 				addOffset("shoot3", 412, -64);
+
+
 				addOffset("shoot4", 439, -19);
 
-				playAnim('idle');
+				playAnim('shoot1');
+				loadMappedAnims();
 
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('characters/bfChristmas');
@@ -1037,6 +1042,27 @@ class Character extends FlxSprite
 		}
 	}
 
+	function loadMappedAnims()
+	{
+		animationNotes = [];
+		for (anim in Song.loadFromJson('picospeaker', 'stress').notes) 
+    	{
+			for (note in anim.sectionNotes) 
+        	{
+				animationNotes.push(note);
+	   		}
+	    	animationNotes.sort(sortAnims);
+		}
+	}
+
+	function sortAnims(a, b) 
+    {
+		var aThing = a[0];
+		var bThing = b[0];
+		return aThing < bThing ? -1 : 1;
+	}
+	
+
 	override function update(elapsed:Float)
 	{
 		if (!isPlayer)
@@ -1062,6 +1088,22 @@ class Character extends FlxSprite
 			case 'gf':
 				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
 					playAnim('danceRight');
+			case 'pico-speaker':
+				if (0 < animationNotes.length && Conductor.songPosition > animationNotes[0][0]) 
+				{
+					var shootnum = 1;
+					if (2 <= animationNotes[0][1]) {
+						shootnum = 3;				
+					}
+
+					shootnum += FlxG.random.int(0, 1);
+					playAnim("shoot" + shootnum, true);
+					animationNotes.shift();
+				}
+				if (animation.curAnim != null && animation.curAnim.finished)
+				{
+					playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
+				}
 		}
 
 		super.update(elapsed);
@@ -1078,7 +1120,7 @@ class Character extends FlxSprite
 		{
 			switch (curCharacter)
 			{
-				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen' | 'speakers' | 'gf-amogus':
+				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen' | 'gf-amogus':
 					if (!animation.curAnim.name.startsWith('hair'))
 					{
 						danced = !danced;
@@ -1088,7 +1130,8 @@ class Character extends FlxSprite
 						else
 							playAnim('danceLeft');
 					}
-
+				case 'pico-speaker':
+					// do nothing, only here so it doesn't play idle animation
 				case 'spooky':
 					danced = !danced;
 
