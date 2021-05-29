@@ -630,7 +630,7 @@ class PlayState extends MusicBeatState
 		                    */
 		          }
 
-				  case 'ugh' | 'guns' | 'stress' | 'no among us':
+				  case 'ugh' | 'guns' | 'stress' | 'no among us' | 'picospeaker':
 				  {
 					  defaultCamZoom = 0.9;
 					  curStage = 'tank';

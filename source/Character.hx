@@ -472,7 +472,11 @@ class Character extends FlxSprite
 					addOffset("singDOWN", 98, -90);
 					addOffset("singUP-alt", -11, -11);
 					addOffset("hey", -11, -11);
-					addOffset("singDOWN-alt");
+					addOffset("singDOWN-alt", 100, 15);
+					addOffset("singUPmiss", 24, 56);
+					addOffset("singLEFTmiss", 100, -14);
+					addOffset("singRIGHTmiss", -1, -7);
+					addOffset("singDOWNmiss", 98, -90);
 				}
 				else
 				{
@@ -487,10 +491,6 @@ class Character extends FlxSprite
 
 
 				addOffset('idle');
-				addOffset("singUPmiss", 24, 56);
-				addOffset("singLEFTmiss", 100, -14);
-				addOffset("singRIGHTmiss", -1, -7);
-				addOffset("singDOWNmiss", 98, -90);
 
 				
 				
