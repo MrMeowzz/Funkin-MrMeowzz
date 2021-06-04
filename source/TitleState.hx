@@ -84,6 +84,9 @@ class TitleState extends MusicBeatState
 				StoryMenuState.weekUnlocked[0] = true;
 		}
 
+		if (FlxG.save.data.fullscreen != null)
+			FlxG.fullscreen = FlxG.save.data.fullscreen;
+
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
 		#elseif CHARTING
@@ -241,8 +244,10 @@ class TitleState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 
-		if (FlxG.keys.justPressed.F)
+		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
 		{
+			FlxG.save.data.fullscreen = !FlxG.fullscreen;
+			FlxG.save.flush();
 			FlxG.fullscreen = !FlxG.fullscreen;
 		}
 

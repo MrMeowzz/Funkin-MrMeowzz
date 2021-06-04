@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -26,9 +27,17 @@ class Boyfriend extends Character
 			}
 			else
 				holdTimer = 0;
-
+			
 			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
 			{
+				playAnim('idle', true, false, 10);
+				if (PlayState.SONG.player1.startsWith('gf'))
+					PlayState.boyfriend.dance();
+			}
+
+			if (PlayState.boyfriend.color != FlxColor.WHITE && animation.curAnim.finished && !debugMode)
+			{
+				PlayState.boyfriend.color = FlxColor.WHITE;
 				playAnim('idle', true, false, 10);
 				if (PlayState.SONG.player1.startsWith('gf'))
 					PlayState.boyfriend.dance();

@@ -6,6 +6,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import openfl.Lib;
 
 class MenuItem extends FlxSpriteGroup
 {
@@ -36,7 +37,8 @@ class MenuItem extends FlxSpriteGroup
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		y = FlxMath.lerp(y, (targetY * 120) + 480, 0.17);
+		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
+		y = FlxMath.lerp(y, (targetY * 120) + 480, 0.17 * (60 / fps));
 
 		if (isFlashing)
 			flashingInt += 1;

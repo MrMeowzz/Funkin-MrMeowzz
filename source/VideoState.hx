@@ -171,5 +171,12 @@ class VideoState extends MusicBeatState
 		GlobalVideo.get().played = false;
 		GlobalVideo.get().stopped = false;
 		GlobalVideo.get().ended = false;
+
+		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+        {
+			FlxG.save.data.fullscreen = !FlxG.fullscreen;
+			FlxG.save.flush();
+        	FlxG.fullscreen = !FlxG.fullscreen;
+        }
 	}
 }

@@ -32,6 +32,10 @@ class PauseSubState extends MusicBeatSubstate
 
 	var pauseMusic:FlxSound;
 
+	var lastSelected:Int = 0;
+
+	var SelectionScreen:Bool = false;
+
 	public function new(x:Float, y:Float)
 	{
 		if (!PlayState.isStoryMode)
@@ -68,25 +72,32 @@ class PauseSubState extends MusicBeatSubstate
 		bpmlevelInfo.updateHitbox();
 		add(bpmlevelInfo);
 
-		var levelDifficulty:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
+		var speedlevelInfo:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
+		speedlevelInfo.text += "SPEED:" + PlayState.SONG.speed;
+		speedlevelInfo.scrollFactor.set();
+		speedlevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
+		speedlevelInfo.updateHitbox();
+		add(speedlevelInfo);
+
+		var levelDifficulty:FlxText = new FlxText(20, 15 + 96, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyString();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
-		var deathMenuCounter:FlxText = new FlxText(20, 15 + 96, 0, "", 32);
+		var deathMenuCounter:FlxText = new FlxText(20, 15 + 128, 0, "", 32);
 		deathMenuCounter.text = "Blue balled: " + PlayState.deathCounter;
 		deathMenuCounter.scrollFactor.set();
 		deathMenuCounter.setFormat(Paths.font('vcr.ttf'), 32);
 		deathMenuCounter.updateHitbox();
 		add(deathMenuCounter);
 
-		// I KNOW HOW TO SPELL PRACTICE
-		modeText = new FlxText(20, 15 + 128, 0, "", 32);
+		modeText = new FlxText(20, 15 + 160, 0, "", 32);
 		modeText.scrollFactor.set();
 		modeText.setFormat(Paths.font('vcr.ttf'), 32);
 		modeText.updateHitbox();
+		// I KNOW HOW TO SPELL PRACTICE
 		if (PlayState.praticemode)
 		{
 			modeText.visible = true;
@@ -103,22 +114,66 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		add(modeText);
 
+		var sicks:FlxText = new FlxText(20, 568, 0, "", 32);
+		sicks.text += "SICKS:" + PlayState.sicks;
+		sicks.scrollFactor.set();
+		sicks.setFormat(Paths.font("vcr.ttf"), 32);
+		sicks.updateHitbox();
+		add(sicks);
+
+		var goods:FlxText = new FlxText(20, 568 + 32, 0, "", 32);
+		goods.text += "GOODS:" + PlayState.goods;
+		goods.scrollFactor.set();
+		goods.setFormat(Paths.font("vcr.ttf"), 32);
+		goods.updateHitbox();
+		add(goods);
+
+		var bads:FlxText = new FlxText(20, 568 + 64, 0, "", 32);
+		bads.text += "BADS:" + PlayState.bads;
+		bads.scrollFactor.set();
+		bads.setFormat(Paths.font("vcr.ttf"), 32);
+		bads.updateHitbox();
+		add(bads);
+
+		var shits:FlxText = new FlxText(20, 568 + 96, 0, "", 32);
+		shits.text += "SHITS:" + PlayState.shits;
+		shits.scrollFactor.set();
+		shits.setFormat(Paths.font("vcr.ttf"), 32);
+		shits.updateHitbox();
+		add(shits);
+
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
 		bpmlevelInfo.alpha = 0;
+		speedlevelInfo.alpha = 0;
 		deathMenuCounter.alpha = 0;
+		sicks.alpha = 0;
+		goods.alpha = 0;
+		bads.alpha = 0;
+		shits.alpha = 0;
 
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		bpmlevelInfo.x = FlxG.width - (bpmlevelInfo.width + 20);
+		speedlevelInfo.x = FlxG.width - (speedlevelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 		deathMenuCounter.x = FlxG.width - (deathMenuCounter.width + 20);
 		modeText.x = FlxG.width - (modeText.width + 20);
+		sicks.x = FlxG.width - (sicks.width + 20);
+		goods.x = FlxG.width - (goods.width + 20);
+		bads.x = FlxG.width - (bads.width + 20);
+		shits.x = FlxG.width - (shits.width + 20);
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(bpmlevelInfo, {alpha: 1, y: bpmlevelInfo.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
-		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
-		FlxTween.tween(deathMenuCounter, {alpha: 1, y: deathMenuCounter.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+		FlxTween.tween(speedlevelInfo, {alpha: 1, y: speedlevelInfo.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+		FlxTween.tween(deathMenuCounter, {alpha: 1, y: deathMenuCounter.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.1});
+
+		FlxTween.tween(sicks, {alpha: 1, y: sicks.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
+		FlxTween.tween(goods, {alpha: 1, y: goods.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
+		FlxTween.tween(bads, {alpha: 1, y: bads.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+		FlxTween.tween(shits, {alpha: 1, y: shits.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
@@ -179,7 +234,16 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		if (exit)
 		{
-			close();
+			if (SelectionScreen)
+			{
+				SelectionScreen = false;
+				menuItems = originalmenuItems;
+				regenMenu();
+				curSelected = lastSelected;
+				changeSelection();
+			}
+			else
+				close();
 		}
 
 		if (accepted)
@@ -190,6 +254,7 @@ class PauseSubState extends MusicBeatSubstate
 			var lastStage:String = PlayState.curStage;
 			var difficulty:String = "";
 			var gfVersion:String = "gf";
+			SelectionScreen = false;
 			switch (PlayState.curStage)
 			{
 				case 'limo':
@@ -205,29 +270,27 @@ class PauseSubState extends MusicBeatSubstate
 				case 'amogus':
 					gfVersion = 'gf-amogus';
 			}
+			switch (PlayState.storyDifficulty)
+			{
+				case 0:
+					difficulty = '-easy';						
+				case 2:
+					difficulty = '-hard';
+				case 3:
+					difficulty = '-hardplus';
+			}
 
 			switch (daSelected)
 			{
 				case "BACK":
 					menuItems = originalmenuItems;
 					regenMenu();
-					curSelected = 0;
-					changeSelection();	
+					curSelected = lastSelected;
+					changeSelection();
 				case "Skip Song":
 					var difficulty = "";
 					PlayState.deathCounter = 0;
 					PlayState.storyPlaylist.remove(PlayState.storyPlaylist[0]);
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = "-easy";
-					
-						case 2:
-							difficulty = "-hard";
-						
-						case 3:
-							difficulty = "-hardplus";
-					}
 					if (PlayState.storyPlaylist.length <= 0) 
 					{
 						FlxG.sound.playMusic(Paths.music('frogMenu'));
@@ -275,13 +338,16 @@ class PauseSubState extends MusicBeatSubstate
 					modeText.x = FlxG.width - (modeText.width + 20);
 					PlayState.praticemode = false;
 				case "Change Difficulty":
-					menuItems = CoolUtil.difficultyArray;
-					if (!menuItems.contains("BACK"))
-						menuItems.push("BACK");
+					lastSelected = curSelected;
+					SelectionScreen = true;				
+					menuItems = CoolUtil.difficultyArray.copy();
+					menuItems.push("BACK");
 					regenMenu();
 					curSelected = 0;
 					changeSelection();
 				case "Change Character":
+					lastSelected = curSelected;
+					SelectionScreen = true;
 					menuItems = ['bf', 'amog us', 'monster', 'tankman', 'pico', 'gf', 'BACK'];
 					if (gfVersion != "gf-christmas" && gfVersion != "gf" && PlayState.SONG.player2 != "gf")
 						menuItems.remove('gf');
@@ -297,6 +363,8 @@ class PauseSubState extends MusicBeatSubstate
 						menuItems.remove('gf');
 					if (PlayState.SONG.player1.startsWith('bf') && PlayState.SONG.player1 != 'bf-amogus')
 						menuItems.remove('bf');
+					if (PlayState.higheffort)
+						menuItems.remove('tankman');
 					regenMenu();
 					curSelected = 0;
 					changeSelection();
@@ -310,8 +378,15 @@ class PauseSubState extends MusicBeatSubstate
 						case "HARD PLUS":
 							difficulty = '-hardplus';
 					}
-
-					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+					if (CoolUtil.difficultyString() == daSelected)
+					{
+						close();
+						return;
+					}
+					var folder = PlayState.SONG.song.toLowerCase();
+					if (PlayState.higheffort)
+						folder += "/higheffort";
+					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, folder);
 					if (!lastCharacter.startsWith("bf"))
 						PlayState.SONG.player1 = lastCharacter;
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
@@ -325,15 +400,6 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.storyDifficulty = curSelected;
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "tankman":
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = '-easy';						
-						case 2:
-							difficulty = '-hard';
-						case 3:
-							difficulty = '-hardplus';
-					}
 					if (PlayState.curStage == 'tank')
 						PlayState.SONG = Song.loadFromJson("tank" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
@@ -358,16 +424,6 @@ class PauseSubState extends MusicBeatSubstate
 					}
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "bf":
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = '-easy';						
-						case 2:
-							difficulty = '-hard';
-						case 3:
-							difficulty = '-hardplus';
-					}
-					var CurrentSong:SwagSong = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
 						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.replace("tank","").toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
@@ -376,18 +432,9 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.replace("play","").toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && lastCharacter.startsWith('monster'))
 						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.replace("lemon","").toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
-					PlayState.SONG.player1 = CurrentSong.player1;
+					PlayState.SONG.player1 = PlayState.SONG.player1;
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "pico":
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = '-easy';						
-						case 2:
-							difficulty = '-hard';
-						case 3:
-							difficulty = '-hardplus';
-					}
 					if (PlayState.curStage == 'philly')
 						PlayState.SONG = Song.loadFromJson("play" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
@@ -408,15 +455,6 @@ class PauseSubState extends MusicBeatSubstate
 					}
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "gf":
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = '-easy';						
-						case 2:
-							difficulty = '-hard';
-						case 3:
-							difficulty = '-hardplus';
-					}
 					if (PlayState.SONG.song.toLowerCase() == "tutorial")
 						PlayState.SONG = Song.loadFromJson("gftutorial" + difficulty, "tutorial");
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
@@ -430,15 +468,6 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.SONG.player1 = gfVersion;
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "amog us":
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = '-easy';						
-						case 2:
-							difficulty = '-hard';
-						case 3:
-							difficulty = '-hardplus';
-					}
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
 						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.replace("tank","").toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
@@ -456,15 +485,6 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.SONG.player1 = "bf-amogus";
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "monster":
-					switch (PlayState.storyDifficulty)
-					{
-						case 0:
-							difficulty = '-easy';						
-						case 2:
-							difficulty = '-hard';
-						case 3:
-							difficulty = '-hardplus';
-					}
 					if (PlayState.SONG.player2.startsWith('monster'))
 						PlayState.SONG = Song.loadFromJson("lemon" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					if (lastOpponent.startsWith("bf") && lastStage == "tank")
@@ -480,6 +500,13 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.SONG.player1 += "-christmas";
 					LoadingState.loadAndSwitchState(new PlayState());
 			}
+
+			if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+        	{
+				FlxG.save.data.fullscreen = !FlxG.fullscreen;
+				FlxG.save.flush();
+        		FlxG.fullscreen = !FlxG.fullscreen;
+        	}
 		}
 
 		if (FlxG.keys.justPressed.J)

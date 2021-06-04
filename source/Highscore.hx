@@ -64,11 +64,11 @@ class Highscore
 	{
 		var daSong:String = song;
 
-		if (diff == 0)
+		if (diff == 0 || diff == 4)
 			daSong += '-easy';
-		else if (diff == 2)
+		else if (diff == 2 || diff == 6)
 			daSong += '-hard';
-		else if (diff == 3)
+		else if (diff == 3 || diff == 7)
 			daSong += '-hardplus';
 
 		return daSong;

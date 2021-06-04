@@ -59,7 +59,7 @@ class StoryMenuState extends MusicBeatState
 		"RED SNOW",
 		"hating simulator ft. moawling",
 		"TANKMAN",
-		""
+		"MEME TIME"
 	];
 
 	var txtWeekTitle:FlxText;
@@ -358,6 +358,13 @@ class StoryMenuState extends MusicBeatState
 			randomtimer.cancel();
 		}
 
+		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+        {
+			FlxG.save.data.fullscreen = !FlxG.fullscreen;
+			FlxG.save.flush();
+        	FlxG.fullscreen = !FlxG.fullscreen;
+        }
+
 		super.update(elapsed);
 	}
 
@@ -395,6 +402,8 @@ class StoryMenuState extends MusicBeatState
 			}
 
 			PlayState.storyDifficulty = curDifficulty;
+
+			PlayState.higheffort = false;
 
 			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 			PlayState.storyWeek = curWeek;
@@ -488,6 +497,7 @@ class StoryMenuState extends MusicBeatState
 		grpWeekCharacters.members[2].animation.play(weekCharacters[curWeek][2]);
 		txtTracklist.text = "Tracks\n\n";
 		grpWeekCharacters.members[0].flipX = false;
+		grpWeekCharacters.members[0].visible = true;
 
 		switch (grpWeekCharacters.members[0].animation.curAnim.name)
 		{
@@ -521,6 +531,9 @@ class StoryMenuState extends MusicBeatState
 				grpWeekCharacters.members[0].setGraphicSize(Std.int(grpWeekCharacters.members[0].width * 1));
 				// grpWeekCharacters.members[0].updateHitbox();
 		}
+
+		if (curWeek == 0 || curWeek == 8)
+			grpWeekCharacters.members[0].visible = false;
 
 		var stringThing:Array<String> = weekData[curWeek];
 

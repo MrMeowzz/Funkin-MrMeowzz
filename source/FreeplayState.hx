@@ -287,9 +287,19 @@ class FreeplayState extends MusicBeatState
 
 			trace(poop);
 
-			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+			var folder = songs[curSelected].songName.toLowerCase();
+
+			if (curDifficulty >= 4)
+			{
+				folder += "/higheffort";
+				PlayState.higheffort = true;
+			}
+			else
+				PlayState.higheffort = false;
+
+			PlayState.SONG = Song.loadFromJson(poop, folder);
 			PlayState.isStoryMode = false;
-			PlayState.storyDifficulty = curDifficulty;
+			PlayState.storyDifficulty = if (curDifficulty >= 4) curDifficulty - 4 else curDifficulty;
 
 			PlayState.storyWeek = songs[curSelected].week;
 			trace('CUR WEEK' + PlayState.storyWeek);
@@ -324,15 +334,27 @@ class FreeplayState extends MusicBeatState
 		{
 			randomtimer.cancel();
 		}
+
+		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+        {
+			FlxG.save.data.fullscreen = !FlxG.fullscreen;
+			FlxG.save.flush();
+        	FlxG.fullscreen = !FlxG.fullscreen;
+        }
 	}
 
 	function changeDiff(change:Int = 0)
 	{
 		curDifficulty += change;
 
+		var highestdifficulty = 3;
+
+		if (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'ugh')
+			highestdifficulty = 7;
+
 		if (curDifficulty < 0)
-			curDifficulty = 3;
-		if (curDifficulty > 3)
+			curDifficulty = highestdifficulty;
+		if (curDifficulty > highestdifficulty)
 			curDifficulty = 0;
 
 		#if !switch
@@ -349,6 +371,15 @@ class FreeplayState extends MusicBeatState
 				diffText.text = "< HARD >";
 			case 3:
 				diffText.text = "< HARD PLUS >";
+
+			case 4:
+				diffText.text = "< H.E. EASY >";
+			case 5:
+				diffText.text = "< H.E. NORMAL >";
+			case 6:
+				diffText.text = "< H.E. HARD >";
+			case 7:
+				diffText.text = "< H.E. HARD PLUS >";
 		}
 	}
 
@@ -387,6 +418,15 @@ class FreeplayState extends MusicBeatState
 		}
 
 		iconArray[curSelected].alpha = 1;
+
+		if (curDifficulty >= 4 && songs[curSelected].songName.toLowerCase() != 'no among us' && songs[curSelected].songName.toLowerCase() != 'ugh')
+		{
+			curDifficulty = 3;
+			diffText.text = "< HARD PLUS >";
+			#if !switch
+			intendedScore = Highscore.getScore(songs[curSelected].songName, 3);
+			#end
+		}
 
 		for (item in grpSongs.members)
 		{

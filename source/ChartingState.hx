@@ -31,6 +31,7 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
+import lime.app.Application;
 
 using StringTools;
 
@@ -169,6 +170,9 @@ class ChartingState extends MusicBeatState
 		add(curRenderedNotes);
 		add(curRenderedSustains);
 
+		updateSectionUI();
+		updateHeads();
+
 		super.create();
 	}
 
@@ -210,7 +214,17 @@ class ChartingState extends MusicBeatState
 
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
 		{
-			loadJson(_song.song.toLowerCase());
+			var difficulty:String = '';
+			switch (PlayState.storyDifficulty)
+			{
+				case 0:
+					difficulty = '-easy';
+				case 2:
+					difficulty = '-hard';
+				case 3:
+					difficulty = '-hardplus';
+			}
+			loadJson(_song.song.toLowerCase(), difficulty);
 		});
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'load autosave', loadAutosave);
@@ -238,6 +252,25 @@ class ChartingState extends MusicBeatState
 
 		player2DropDown.selectedLabel = _song.player2;
 
+		var switchingDifficultytxt:String = '';
+
+		var difficultyDropDown = new FlxUIDropDownMenu(270, 100, FlxUIDropDownMenu.makeStrIdLabelArray(CoolUtil.difficultyArray, true), function(difficulty:String)
+		{
+			switch (Std.parseInt(difficulty))
+			{
+				case 0:
+					switchingDifficultytxt = '-easy';
+				case 2:
+					switchingDifficultytxt = '-hard';
+				case 3:
+					switchingDifficultytxt = '-hardplus';
+			}
+
+			PlayState.storyDifficulty = Std.parseInt(difficulty);
+		});
+
+		difficultyDropDown.selectedLabel = CoolUtil.difficultyString();
+
 		var tab_group_song = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
 		tab_group_song.add(UI_songTitle);
@@ -252,6 +285,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
+		tab_group_song.add(difficultyDropDown);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();
@@ -264,6 +298,7 @@ class ChartingState extends MusicBeatState
 	var check_changeBPM:FlxUICheckBox;
 	var stepperSectionBPM:FlxUINumericStepper;
 	var check_altAnim:FlxUICheckBox;
+	var altAnimPlayerDropDown:FlxUIDropDownMenu;
 
 	function addSectionUI():Void
 	{
@@ -309,6 +344,11 @@ class ChartingState extends MusicBeatState
 		check_changeBPM = new FlxUICheckBox(10, 60, null, null, 'Change BPM', 100);
 		check_changeBPM.name = 'check_changeBPM';
 
+		altAnimPlayerDropDown = new FlxUIDropDownMenu(130, 400, FlxUIDropDownMenu.makeStrIdLabelArray(["both", "player1", "player2"], true), function(player:String)
+		{
+			_song.notes[curSection].altAnimPlayer = Std.parseInt(player);
+		});
+
 		tab_group_section.add(stepperLength);
 		tab_group_section.add(stepperSectionBPM);
 		tab_group_section.add(stepperCopy);
@@ -318,11 +358,13 @@ class ChartingState extends MusicBeatState
 		tab_group_section.add(copyButton);
 		tab_group_section.add(clearSectionButton);
 		tab_group_section.add(swapSection);
+		tab_group_section.add(altAnimPlayerDropDown);
 
 		UI_box.addGroup(tab_group_section);
 	}
 
 	var stepperSusLength:FlxUINumericStepper;
+	var check_altnote:FlxUICheckBox;
 
 	function addNoteUI():Void
 	{
@@ -335,8 +377,13 @@ class ChartingState extends MusicBeatState
 
 		var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
 
+		check_altnote = new FlxUICheckBox(10, 30, null, null, "Alt note", 100);
+		check_altnote.name = 'altnote';
+		check_altnote.checked = false;
+
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(applyLength);
+		tab_group_note.add(check_altnote);
 
 		UI_box.addGroup(tab_group_note);
 	}
@@ -405,6 +452,16 @@ class ChartingState extends MusicBeatState
 					FlxG.log.add('changed bpm shit');
 				case "Alt Animation":
 					_song.notes[curSection].altAnim = check.checked;
+					if (_song.notes[curSection].altAnimPlayer == null && check.checked == true)
+					{
+						_song.notes[curSection].altAnimPlayer = Std.parseInt(altAnimPlayerDropDown.selectedId);
+					}
+				
+				case "Alt note":
+					if (curSelectedNote != null)
+						curSelectedNote[3] = check.checked;
+					else
+						check.checked = !check.checked;
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
@@ -665,7 +722,23 @@ class ChartingState extends MusicBeatState
 			+ " / "
 			+ Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))
 			+ "\nSection: "
-			+ curSection;
+			+ curSection
+			+ "\nCurStep: "
+			+ curStep
+			+ "\nCurBeat: "
+			+ curBeat
+			+ "\nDifficulty: "
+			+ CoolUtil.difficultyString()
+			+ "\n\n\nMr Meowzz's FNF\nChart Editor\nv" 
+			+ Application.current.meta.get('version');
+
+		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+        {
+			FlxG.save.data.fullscreen = !FlxG.fullscreen;
+			FlxG.save.flush();
+        	FlxG.fullscreen = !FlxG.fullscreen;
+        }
+
 		super.update(elapsed);
 	}
 
@@ -783,6 +856,7 @@ class ChartingState extends MusicBeatState
 		check_altAnim.checked = sec.altAnim;
 		check_changeBPM.checked = sec.changeBPM;
 		stepperSectionBPM.value = sec.bpm;
+		altAnimPlayerDropDown.selectedId = Std.string(sec.altAnimPlayer);
 
 		updateHeads();
 	}
@@ -805,6 +879,7 @@ class ChartingState extends MusicBeatState
 	{
 		if (curSelectedNote != null)
 			stepperSusLength.value = curSelectedNote[2];
+			check_altnote.checked = curSelectedNote[3];
 	}
 
 	function updateGrid():Void
@@ -855,9 +930,11 @@ class ChartingState extends MusicBeatState
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
 			var daSus = i[2];
+			var daAltnote = i[3];
 
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4);
 			note.sustainLength = daSus;
+			note.altNote = daAltnote;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
 			note.x = Math.floor(daNoteInfo * GRID_SIZE);
@@ -883,7 +960,8 @@ class ChartingState extends MusicBeatState
 			mustHitSection: true,
 			sectionNotes: [],
 			typeOfSection: 0,
-			altAnim: false
+			altAnim: false,
+			altAnimPlayer: 3
 		};
 
 		_song.notes.push(sec);
@@ -1014,9 +1092,12 @@ class ChartingState extends MusicBeatState
 		return noteData;
 	}
 
-	function loadJson(song:String):Void
+	function loadJson(song:String, difficulty:String):Void
 	{
-		PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+		var folder = song.toLowerCase();
+		if (PlayState.higheffort)
+			folder += "/higheffort";
+		PlayState.SONG = Song.loadFromJson(song.toLowerCase() + difficulty, folder);
 		FlxG.resetState();
 	}
 
@@ -1029,6 +1110,7 @@ class ChartingState extends MusicBeatState
 	function autosaveSong():Void
 	{
 		FlxG.save.data.autosave = Json.stringify({
+			"generatedBy": "Mr Meowzz's FNF Chart Editor v" + Application.current.meta.get('version'),
 			"song": _song
 		});
 		FlxG.save.flush();
@@ -1037,10 +1119,23 @@ class ChartingState extends MusicBeatState
 	private function saveLevel()
 	{
 		var json = {
+			"generatedBy": "Mr Meowzz's FNF Chart Editor v" + Application.current.meta.get('version'),
 			"song": _song
 		};
 
 		var data:String = Json.stringify(json);
+
+		var Difficultytxt:String = ''; 
+
+		switch (PlayState.storyDifficulty)
+		{
+			case 0:
+				Difficultytxt = '-easy';
+			case 2:
+				Difficultytxt = '-hard';
+			case 3:
+				Difficultytxt = '-hardplus';
+		}
 
 		if ((data != null) && (data.length > 0))
 		{
@@ -1048,7 +1143,7 @@ class ChartingState extends MusicBeatState
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), _song.song.toLowerCase() + ".json");
+			_file.save(data.trim(), _song.song.toLowerCase() + Difficultytxt + ".json");
 		}
 	}
 

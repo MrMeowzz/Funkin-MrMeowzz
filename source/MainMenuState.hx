@@ -54,8 +54,8 @@ class MainMenuState extends MusicBeatState
 
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.x = 0;
-		bg.scrollFactor.y = 0.18;
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
+		bg.scrollFactor.y = 0.17;
+		bg.setGraphicSize(Std.int(bg.width * 1.2));
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = true;
@@ -66,8 +66,8 @@ class MainMenuState extends MusicBeatState
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 		magenta.scrollFactor.x = 0;
-		magenta.scrollFactor.y = 0.18;
-		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
+		magenta.scrollFactor.y = 0.17;
+		magenta.setGraphicSize(Std.int(bg.width));
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
@@ -114,7 +114,10 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		FlxG.updateFramerate = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
+		var fps = cast (Lib.current.getChildAt(0), Main).currentframerate();
+		FlxG.updateFramerate = Std.int(fps);
+
+		FlxG.camera.followLerp = FlxG.elapsed / .016666666666666666 * (0.06 * (60 / fps));
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
@@ -194,6 +197,18 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
+		}
+
+		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+        {
+			FlxG.save.data.fullscreen = !FlxG.fullscreen;
+			FlxG.save.flush();
+        	FlxG.fullscreen = !FlxG.fullscreen;
+        }
+
+		if (FlxG.keys.justPressed.SEVEN && PlayState.SONG != null)
+		{
+			FlxG.switchState(new ChartingState());
 		}
 
 		super.update(elapsed);
