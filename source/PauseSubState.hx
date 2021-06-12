@@ -265,6 +265,8 @@ class PauseSubState extends MusicBeatSubstate
 					gfVersion = 'gf-pixel';
 				case 'tank':
 					gfVersion = 'gf-tankmen';
+					if (PlayState.SONG.song.toLowerCase() == 'gugh' || PlayState.SONG.song.toLowerCase() == 'gums')
+						gfVersion = 'gf-tankmenvoid';
 					if (PlayState.SONG.song.toLowerCase() == 'stress')
 						gfVersion = 'pico-speaker';
 				case 'amogus':
@@ -293,7 +295,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.storyPlaylist.remove(PlayState.storyPlaylist[0]);
 					if (PlayState.storyPlaylist.length <= 0) 
 					{
-						FlxG.sound.playMusic(Paths.music('frogMenu'));
+						FlxG.sound.playMusic(Paths.music('gumMenu'));
 						OG.gunsCutsceneEnded = false;
 						OG.ughCutsceneEnded = false;
 						OG.stressCutsceneEnded = false;
@@ -414,7 +416,7 @@ class PauseSubState extends MusicBeatSubstate
 					{
 						PlayState.SONG.player1 = "tankman-pixel";
 					}
-					else if (PlayState.SONG.song.toLowerCase() == 'no among us')
+					else if (PlayState.SONG.song.toLowerCase() == 'gugh')
 					{
 						PlayState.SONG.player1 = "tankmannoamongus";
 					}

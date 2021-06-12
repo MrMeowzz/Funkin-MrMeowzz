@@ -113,11 +113,11 @@ class GameOverSubstate extends MusicBeatSubstate
 				FlxG.sound.music.fadeIn(4, 0.2, 1);
 			});
 		}
-		else if (PlayState.SONG.song.toLowerCase() == "no among us" && bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)
+		else if ((PlayState.SONG.song.toLowerCase() == "gugh" || PlayState.SONG.song.toLowerCase() == "gums") && bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)
 		{
 			playingDeathSound = true;
 			coolStartDeath(0.2);
-			FlxG.sound.play(Paths.sound('Gameover-' + FlxG.random.int(1, 6)), 1, false, null, true, function() 
+			FlxG.sound.play(Paths.sound('Gameover-' + FlxG.random.int(1, 4)), 1, false, null, true, function() 
 			{ 
 				FlxG.sound.music.fadeIn(4, 0.2, 1);
 			});

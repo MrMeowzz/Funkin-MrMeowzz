@@ -39,7 +39,7 @@ class FreeplayState extends MusicBeatState
 	{
 		#if html5
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('gumMenu'));
 		#end
 
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
@@ -53,7 +53,7 @@ class FreeplayState extends MusicBeatState
 			if (FlxG.sound.music != null)
 			{
 				if (!FlxG.sound.music.playing)
-					FlxG.sound.playMusic(Paths.music('frogMenu'));
+					FlxG.sound.playMusic(Paths.music('gumMenu'));
 			}
 		 */
 
@@ -91,7 +91,8 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Ugh', 'Guns', 'Stress'], 7, ['tankman']);
 		
 		if (StoryMenuState.weekUnlocked[8] || isDebug)
-			addWeek(['iPhone', 'No Among Us', 'Among Us Drip'], 8, ['monster', 'tankmannoamongus', 'amogusguy']);
+			addWeek(['Gugh', 'Gums'], 8, ['tankmannoamongus', 'tankmannoamongus', 'tankmannoamongus']);
+			
 
 		// LOAD MUSIC
 
@@ -277,7 +278,7 @@ class FreeplayState extends MusicBeatState
 			OG.horrorlandCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
 			#if desktop
-			FlxG.sound.playMusic(Paths.music('frogMenu'));
+			FlxG.sound.playMusic(Paths.music('gumMenu'));
 			#end
 		}
 
@@ -349,7 +350,7 @@ class FreeplayState extends MusicBeatState
 
 		var highestdifficulty = 3;
 
-		if (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'ugh')
+		if (songs[curSelected].songName.toLowerCase() == 'gugh' || songs[curSelected].songName.toLowerCase() == 'ugh')
 			highestdifficulty = 7;
 
 		if (curDifficulty < 0)
@@ -419,7 +420,7 @@ class FreeplayState extends MusicBeatState
 
 		iconArray[curSelected].alpha = 1;
 
-		if (curDifficulty >= 4 && songs[curSelected].songName.toLowerCase() != 'no among us' && songs[curSelected].songName.toLowerCase() != 'ugh')
+		if (curDifficulty >= 4 && songs[curSelected].songName.toLowerCase() != 'gugh' && songs[curSelected].songName.toLowerCase() != 'ugh')
 		{
 			curDifficulty = 3;
 			diffText.text = "< HARD PLUS >";

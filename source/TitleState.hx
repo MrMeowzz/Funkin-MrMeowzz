@@ -133,24 +133,24 @@ class TitleState extends MusicBeatState
 			// https://github.com/HaxeFlixel/flixel-addons/pull/348
 
 			// var music:FlxSound = new FlxSound();
-			// music.loadStream(Paths.music('frogIntro'));
+			// music.loadStream(Paths.music('gumIntro'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-			FlxG.sound.playMusic(Paths.music('frogIntro'), 0);
+			FlxG.sound.playMusic(Paths.music('gumIntro'), 1);
 
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
+			//FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
-		Conductor.changeBPM(102);
+		Conductor.changeBPM(111);
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		// bg.antialiasing = true;
+		var bg:FlxSprite = new FlxSprite(-600, -250).loadGraphic(Paths.image('stageGum'));
+		bg.antialiasing = true;
 		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
+		bg.updateHitbox();
 		add(bg);
 
-		logoBl = new FlxSprite(-150, -100);
+		logoBl = new FlxSprite(-25, 0);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = true;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
@@ -347,8 +347,8 @@ class TitleState extends MusicBeatState
 
 		switch (curBeat)
 		{
-			case 1:
-				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er', 'Mr Meowzz']);
+			case 2:
+				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'yeebashy']);
 			// credTextShit.visible = true;
 			case 3:
 				addMoreText('present');
@@ -359,41 +359,45 @@ class TitleState extends MusicBeatState
 			// credTextShit.visible = false;
 			// credTextShit.text = 'In association \nwith';
 			// credTextShit.screenCenter();
-			case 6:
+			case 5:
 				createCoolText(['In association', 'with']);
-			case 7:
-				addMoreText('newgrounds');
+			case 6:
+				addMoreText('ImaginationStudios8');
 				ngSpr.visible = true;
 			// credTextShit.text += '\nNewgrounds';
-			case 9:
+			case 7:
 				deleteCoolText();
 				ngSpr.visible = false;
 			// credTextShit.visible = false;
 
 			// credTextShit.text = 'Shoutouts Tom Fulp';
 			// credTextShit.screenCenter();
-			case 10:
-				createCoolText([curWacky[0]]);
+			case 8:
+				createCoolText(['Get']);
 			// credTextShit.visible = true;
-			case 12:
-				addMoreText(curWacky[1]);
+			case 9:
+				addMoreText('ready');
+				
+			case 10:
+				addMoreText('for');
 			// credTextShit.text += '\nlmao';
-			case 13:
+			case 11:
 				deleteCoolText();
 			// credTextShit.visible = false;
 			// credTextShit.text = "Friday";
-			// credTextShit.screenCenter();
+			// credTextShit.screenCenter()
+			case 12:
+				createCoolText(['Elmore']);
+			case 13:
+				addMoreText('Night');
 			case 14:
-				addMoreText('Mr Meowzzs Friday');
+				addMoreText('Funkin');
 			// credTextShit.visible = true;
 			case 15:
-				addMoreText('Night');
+				deleteCoolText();
 			// credTextShit.text += '\nNight';
 			case 16:
-				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
-
-			case 17:
-				skipIntro();
+				skipIntro();				
 		}
 	}
 
@@ -407,6 +411,8 @@ class TitleState extends MusicBeatState
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
+			FlxG.sound.music.stop();
+			FlxG.sound.playMusic(Paths.music('gumMenu'), 1);
 			skippedIntro = true;
 		}
 	}
@@ -415,7 +421,7 @@ class TitleState extends MusicBeatState
 	{
 		super.stepHit();
 		// makes gf dance faster
-		if (curStep % 2 == 1 && skippedIntro)
+		if (curStep % 4 == 1 && skippedIntro)
 		{
 			danceLeft = !danceLeft;
 

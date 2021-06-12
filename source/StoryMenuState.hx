@@ -32,7 +32,7 @@ class StoryMenuState extends MusicBeatState
 		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
 		['Senpai', 'Roses', 'Thorns'],
 		['Ugh', 'Guns', 'Stress'],
-		['iPhone', 'No Among Us', 'Among Us Drip']
+		['Gugh', 'Gums']
 	];
 	var curDifficulty:Int = OG.DifficultyStoryMode;
 
@@ -59,7 +59,7 @@ class StoryMenuState extends MusicBeatState
 		"RED SNOW",
 		"hating simulator ft. moawling",
 		"TANKMAN",
-		"MEME TIME"
+		"GUMBALL"
 	];
 
 	var txtWeekTitle:FlxText;
@@ -86,7 +86,7 @@ class StoryMenuState extends MusicBeatState
 		if (FlxG.sound.music != null)
 		{
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('gumMenu'));
 		}
 
 		persistentUpdate = persistentDraw = true;

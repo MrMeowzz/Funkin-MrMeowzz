@@ -640,7 +640,7 @@ class PlayState extends MusicBeatState
 		                    */
 		          }
 
-				  case 'ugh' | 'guns' | 'stress' | 'no among us' | 'picospeaker':
+				  case 'ugh' | 'guns' | 'stress' | 'gugh' | 'gums' | 'picospeaker':
 				  {
 					  defaultCamZoom = 0.9;
 					  curStage = 'tank';
@@ -815,6 +815,8 @@ class PlayState extends MusicBeatState
 					gfVersion = 'gf-pixel';
 				case 'tank':
 					gfVersion = 'gf-tankmen';
+					if (SONG.song.toLowerCase() == 'gugh' || SONG.song.toLowerCase() == 'gums')
+						gfVersion = 'gf-tankmenvoid';
 					if (SONG.song.toLowerCase() == 'stress')
 						gfVersion = 'pico-speaker';
 				case 'amogus':
@@ -873,7 +875,7 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.player2)
 		{
-			case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen' | 'pico-speaker':
+			case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen' | 'gf-tankmenvoid' | 'pico-speaker':
 				dad.setPosition(gf.x, gf.y);
 				gf.visible = false;
 				if (isStoryMode)
@@ -2383,7 +2385,7 @@ class PlayState extends MusicBeatState
 								{
 									case 'ugh':
 										spr.animation.play('ugh');
-									case 'no among us':
+									case 'gugh':
 										spr.animation.play('aaa');
 								}
 							}
@@ -2393,7 +2395,7 @@ class PlayState extends MusicBeatState
 								{
 									case 'ugh':
 										spr.animation.play('ugh');
-									case 'no among us':
+									case 'gugh':
 										spr.animation.play('aaa');
 								}
 							}
@@ -2526,7 +2528,7 @@ class PlayState extends MusicBeatState
 
 			if (storyPlaylist.length <= 0)
 			{
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('gumMenu'));
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
@@ -2597,7 +2599,7 @@ class PlayState extends MusicBeatState
 		{
 			trace('WENT BACK TO FREEPLAY??');
 			#if html5
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('gumMenu'));
 			#end
 			FlxG.switchState(new FreeplayState());
 		}
@@ -3117,7 +3119,7 @@ class PlayState extends MusicBeatState
 						{
 							case 'ugh':
 								spr.animation.play('ugh');
-							case 'no among us':
+							case 'gugh':
 								spr.animation.play('aaa');
 						}
 					}
@@ -3127,7 +3129,7 @@ class PlayState extends MusicBeatState
 						{
 							case 'ugh':
 								spr.animation.play('ugh');
-							case 'no among us':
+							case 'gugh':
 								spr.animation.play('aaa');
 						}
 					}
@@ -3336,6 +3338,12 @@ class PlayState extends MusicBeatState
 			if (SONG.player1.startsWith('gf'))
 				boyfriend.dance();
 		}
+		if (!dad.animation.curAnim.name.startsWith("sing"))
+			{
+				dad.dance();
+				dad.playAnim('idle');
+				dad.playAnim('idle', true);
+			}
 
 		if (curBeat % 8 == 7 && curSong == 'Bopeebo')
 		{

@@ -18,9 +18,11 @@ senpai-angry
 spirit
 tankman
 gf-tankmen
+gf-tankmenvoid
 bf-holding-gf
 tankman-pixel
 pico-pixel
 bf-amogus
 gf-amogus
 amogusguy
+tankmannoamongus

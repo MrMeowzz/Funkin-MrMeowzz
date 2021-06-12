@@ -8,10 +8,10 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Mr Meowzz's Friday Night Funkin'" file="MrMeowzzFunkin" packageName="com.MrMeowzz.funkin" package="com.MrMeowzz.funkin" main="Main" version="1.2.6" company="Mr Meowzz" />
+	<app title="Elmore Night Funkin'" file="ElmoreNightFunkin" packageName="com.Elmore.funkin" package="com.Elmore.funkin" main="Main" version="1.2.6" company="yeebashy, ImaginationStudios8" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
-	<set name="APP_ID" value="0x0100f6c013bbc000" />
+	<set name="APP_ID" value="0x0100f6c013bbc001" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->

@@ -195,7 +195,18 @@ class Character extends FlxSprite
 				addOffset('sad', -2, -21);
 
 				playAnim('danceRight');
+			case 'gf-tankmenvoid':
+				tex = Paths.getSparrowAtlas('characters/gfTankmenVoid');
+				frames = tex;
+				animation.addByIndices('sad', 'GF Crying at Gunpoint', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "", 24, false);
+				animation.addByIndices('danceLeft', 'GF Dancing at Gunpoint', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+				animation.addByIndices('danceRight', 'GF Dancing at Gunpoint', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 
+				addOffset('danceLeft', 0, -9);
+				addOffset('danceRight', 0, -9);
+				addOffset('sad', -2, -21);
+
+				playAnim('danceRight');
 			case 'gf-amogus':
 				tex = Paths.getSparrowAtlas('characters/gfAmogus');
 				frames = tex;
@@ -1056,7 +1067,7 @@ class Character extends FlxSprite
 		{
 			switch (curCharacter)
 			{
-				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen' | 'gf-amogus':
+				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen' | 'gf-tankmenvoid' | 'gf-amogus':
 					if (!animation.curAnim.name.startsWith('hair'))
 					{
 						danced = !danced;
