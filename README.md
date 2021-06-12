@@ -1,6 +1,19 @@
 # Elmore Night Funkin' based on Mr Meowzz's FNF
 
+Sprites: 
+    ImaginationStudios8
+    yeebashy
+Music:
+    PUNYASO 
+       (Gumball REMIX: https://www.youtube.com/watch?v=OlrOT_C3A0M)
+       KAWAI SPRITE for most of the songs
+
+The Amazing World of Gumball belongs to Cartoon Network
+Content is not for commercial use.
+
 Mr Meowzz's FNF is basically my version of [Kade Engine](https://github.com/KadeDev/Kade-Engine) but it has extra songs and stuff. (KADE ENGINE IS BETTER, THIS IS A MESS)
+
+
 
 **IF YOU ARE THE CREATOR OF AN ASSET YOU WOULD LIKE ME TO REMOVE, FEEL FREE TO MAKE AN [ISSUE](https://github.com/yeebash/Funkin-Elmore/issues/new)**
 
