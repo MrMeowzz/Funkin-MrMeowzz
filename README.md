@@ -3,10 +3,13 @@
 Sprites: 
     ImaginationStudios8
     yeebashy
-Music:
+    
+    
+Main Menu Music:
     PUNYASO 
        (Gumball REMIX: https://www.youtube.com/watch?v=OlrOT_C3A0M)
        KAWAI SPRITE for most of the songs
+
 
 The Amazing World of Gumball belongs to Cartoon Network
 
