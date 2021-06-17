@@ -10,7 +10,7 @@ Mr Meowzz's FNF is basically my version of [Kade Engine](https://github.com/Kade
 
 [Play a prerelease version of Mr Meowzz's FNF in your browser when available!](https://mrmeowzz.github.io/Funkin-MrMeowzz/webprerelease)
 
-[Original by ninjamufin99.](https://github.com/ninjamuffin99/Funkin)
+[Original by ninjamuffin99.](https://github.com/ninjamuffin99/Funkin)
 
 [Wiki](https://github.com/MrMeowzz/Funkin-MrMeowzz/wiki)
 
