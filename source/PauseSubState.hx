@@ -500,13 +500,6 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.SONG.player1 += "-christmas";
 					LoadingState.loadAndSwitchState(new PlayState());
 			}
-
-			if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
-        	{
-				FlxG.save.data.fullscreen = !FlxG.fullscreen;
-				FlxG.save.flush();
-        		FlxG.fullscreen = !FlxG.fullscreen;
-        	}
 		}
 
 		if (FlxG.keys.justPressed.J)

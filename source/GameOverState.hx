@@ -79,12 +79,6 @@ class GameOverState extends FlxTransitionableState
 			});
 		}
 
-		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
-        {
-			FlxG.save.data.fullscreen = !FlxG.fullscreen;
-			FlxG.save.flush();
-        	FlxG.fullscreen = !FlxG.fullscreen;
-        }
 		super.update(elapsed);
 	}
 }

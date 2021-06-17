@@ -202,13 +202,14 @@ class AnimationDebug extends FlxState
 			genBoyOffsets(false);
 			char.playAnim(animList[curAnim]);
 		}
-
+		#if desktop
 		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
         {
 			FlxG.save.data.fullscreen = !FlxG.fullscreen;
-			FlxG.save.flush();
+			FlxG.save.flush();	
         	FlxG.fullscreen = !FlxG.fullscreen;
         }
+		#end
 
 		super.update(elapsed);
 	}
