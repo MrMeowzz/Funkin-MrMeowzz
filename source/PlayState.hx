@@ -2280,7 +2280,8 @@ class PlayState extends MusicBeatState
 
 			if (SONG.player1.startsWith('tankman') || SONG.player1 == "pico" || SONG.player1.startsWith('gf') || SONG.player1.startsWith('monster'))
 			{
-				FlxG.switchState(new GitarooPause());
+				FlxG.switchState(new AltGameOverScreen());
+				FlxG.sound.play(Paths.sound('fnf_loss_sfx'));
 			}
 			else
 			{
