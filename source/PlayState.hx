@@ -829,12 +829,14 @@ class PlayState extends MusicBeatState
 
 		if (SONG.song.toLowerCase() == 'stress')
 		{
+			remove(tankground);
+			
 			runningtank = new FlxSprite(FlxG.width + 1000, 500);
        		runningtank.frames = Paths.getSparrowAtlas('tankmanKilled1');
         	runningtank.antialiasing = true;
         	runningtank.animation.addByPrefix("run", "tankman running", 24, true);
         	runningtank.animation.addByPrefix("shot", "John Shot " + FlxG.random.int(1,2), 24, false);
-        	runningtank.setGraphicSize(Std.int(0.8 * runningtank.width));
+        	// runningtank.setGraphicSize(Std.int(0.8 * runningtank.width));
         	runningtank.updateHitbox();
         	runningtank.animation.play("run");
         	runningTankSpeed.push(0.7);
@@ -842,12 +844,11 @@ class PlayState extends MusicBeatState
 
 			tankStrumTime.push(Character.animationNotes[0][0]);
         	endingOffset.push(FlxG.random.float(0.6, 1));
-			resetRunningTank(FlxG.width * 1.5, 600, true, runningtank, 0);
+			resetRunningTank(FlxG.width * 1.5, 200 + FlxG.random.int(50, 100), true, runningtank, 0);
 			runningtanks.add(runningtank);
-			remove(tankground);
 			add(runningtank);
 
-			var tanknum = 0;
+			var tanknum = 1;
 			for (c in 1...Character.animationNotes.length)
 			{
 				if (FlxG.random.float(0, 100) < 16)
@@ -1911,31 +1912,45 @@ class PlayState extends MusicBeatState
 		else
 			healthTxt.text = "Health:" + healthBar.percent + "%";
 		missesTxt.text = "Misses:" + misses;
-		var accuracy:Float = Math.round(((goodnotes - misses) / (goodnotes + misses)) * 100);
-		if (misses == 0 && goodnotes == 0 || accuracy == 100)
-		{
-			accuracyTxt.text = "Accuracy:100%";
-			ratingTxt.text = "(FC)";
-			ratingTxt.visible = true;
-		}
-		else if (misses < 10)
-		{
-			if (accuracy > 0)
-				accuracyTxt.text = "Accuracy:" + accuracy + "%";
-			else
-				accuracyTxt.text = "Accuracy:0%";
-			ratingTxt.text = "(SDCB)";
-			ratingTxt.x = 1215;
-			ratingTxt.visible = true;
-		}
-		else if (accuracy < 0)
+		var accuracy:Float = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses)) * 100, 2);
+		if (accuracy < 0)
 		{
 			accuracyTxt.text = "Accuracy:0%";
-			ratingTxt.visible = false;
+			accuracyTxt.x = FlxG.width - (accuracyTxt.width + 10);
+		}
+		else if (misses == 0 && goodnotes == 0 || accuracy == 100)
+		{
+			accuracyTxt.text = "Accuracy:100%";
+			accuracyTxt.x = FlxG.width - (accuracyTxt.width + 10);
 		}
 		else
 		{
 			accuracyTxt.text = "Accuracy:" + accuracy + "%";
+			accuracyTxt.x = FlxG.width - (accuracyTxt.width + 10);
+		}
+
+		if (misses == 0 && goodnotes == 0 || accuracy == 100)
+		{
+			if (sicks > 0 && goods == 0 && bads == 0 && shits == 0)
+				ratingTxt.text = "(MFC)";
+			else if (goods > 0 && bads == 0 && shits == 0)
+				ratingTxt.text = "(GFC)";
+			else
+			{
+				ratingTxt.text = "(FC)";
+			}
+
+			ratingTxt.x = FlxG.width - (ratingTxt.width + 10);
+			ratingTxt.visible = true;
+		}
+		else if (misses < 10)
+		{
+			ratingTxt.text = "(SDCB)";
+			ratingTxt.x = FlxG.width - (ratingTxt.width + 10);
+			ratingTxt.visible = true;
+		}
+		else
+		{
 			ratingTxt.visible = false;
 		}
 
