@@ -16,7 +16,7 @@ Mr Meowzz's FNF is basically my version of [Kade Engine](https://github.com/Kade
 
 ## Build instructions
 
-**THESE INTRUCTIONS ARE DIFFERENT FROM THE ORIGINAL GAME BECAUSE OF THE WEEK 7 CUTSCENES! PLEASE FOLLOW THESE INSTRUCTIONS INSTEAD! ONLY WORKS FOR WINDOWS CURRENTLY!**
+**THESE INTRUCTIONS ARE A BIT DIFFERENT FROM THE ORIGINAL GAME BECAUSE OF THE WEEK 7 CUTSCENES! ONLY WORKS FOR WINDOWS CURRENTLY!**
 
 THESE INSTRUCTIONS ARE FOR COMPILING THE GAME'S SOURCE CODE!!!
 
@@ -46,7 +46,7 @@ You'll also need to install a couple things that involve Gits. To do this, you n
 2. Follow instructions to install the application properly.
 3. Run `haxelib git polymod https://github.com/larsiusprime/polymod.git` to install Polymod.
 4. Run `haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc` to install Discord RPC.
-5. Run `haxelib git extension-webm https://github.com/MrMeowzz/extension-webm` to install the extension-webm fork.
+5. Run `haxelib git extension-webm https://github.com/MrMeowzz/extension-webm` to install the extension-webm fork (for week 7 cutscenes).
 
 You should have everything ready for compiling the game! Follow the guide below to continue!
 
@@ -55,7 +55,7 @@ At the moment, you can optionally fix the transition bug in songs with zoomed ou
 
 ### Compiling game
 
-Once you have all those installed, it's pretty easy to compile the game. You just need to run 'lime test html5 -debug' in the root of the project to build and run the HTML5 version. (command prompt navigation guide can be found here: [https://ninjamuffin99.newgrounds.com/news/post/1090480](https://ninjamuffin99.newgrounds.com/news/post/1090480))
+Once you have all those installed, it's pretty easy to compile the game. You just need to run the `compile html` bat file in the root of the project to build and run the HTML5 version. The html files will be located under `export\release\html5\bin`
 
 To compile the exe version of the game, you need to install Visual Studio Community 2019. While installing VSC, don't click on any of the options to install workloads. Instead, go to the individual components tab and choose the following:
 * MSVC v142 - VS 2019 C++ x64/x86 build tools
@@ -72,7 +72,7 @@ To compile the exe version of the game, you need to install Visual Studio Commun
 * MSVC v141 - VS 2017 C++ x64/x86 build tools
 * MSVC v140 - VS 2015 C++ build tools (v14.00)
 
-This will install about 22GB of crap, but once that is done you can open up a command line in the project's directory and run `lime test windows -debug`. Once that command finishes (it takes forever even on a higher end PC), you can run FNF from the .exe file under export\release\windows\bin
+This will install about 22GB of crap, but once that is done you can run the `compile exe` bat file in the root of the project. Once that finishes (it takes forever even on a higher end PC), the .exe file will be located under `export\release\windows\bin`
 
 ### Additional guides
 
