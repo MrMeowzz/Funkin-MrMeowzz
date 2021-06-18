@@ -115,7 +115,8 @@ class FreeplayState extends MusicBeatState
 			
 			// prevent freeplay lag when playing songs
 			#if PRELOAD_ALL
-			FlxG.sound.load(Paths.inst(songs[i].songName), 0);
+			if (FlxG.save.data.preloadfreeplaypreviews && FlxG.save.data.freeplaypreviews)
+				FlxG.sound.load(Paths.inst(songs[i].songName), 0);
 			#end
 
 			// using a FlxGroup is too much fuss!
@@ -409,7 +410,8 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		#if PRELOAD_ALL
-		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
+		if (FlxG.save.data.freeplaypreviews)
+			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		#end
 
 		var bullShit:Int = 0;

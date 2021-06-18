@@ -51,6 +51,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (PlayState.SONG.player1 == "bf-amogus")
 			daBf = 'bf-amogus';
 
+		if (daBf == 'bf' && FlxG.save.data.cleanmode)
+			daBf = 'bfclean';
+
 		bf = new Boyfriend(x, y, daBf);
 		add(bf);
 

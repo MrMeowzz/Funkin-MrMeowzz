@@ -87,7 +87,10 @@ class PauseSubState extends MusicBeatSubstate
 		add(levelDifficulty);
 
 		var deathMenuCounter:FlxText = new FlxText(20, 15 + 128, 0, "", 32);
-		deathMenuCounter.text = "Blue balled: " + PlayState.deathCounter;
+		if (FlxG.save.data.cleanmode)
+			deathMenuCounter.text = "Deaths: " + PlayState.deathCounter;
+		else
+			deathMenuCounter.text = "Blue balled: " + PlayState.deathCounter;
 		deathMenuCounter.scrollFactor.set();
 		deathMenuCounter.setFormat(Paths.font('vcr.ttf'), 32);
 		deathMenuCounter.updateHitbox();
@@ -115,28 +118,36 @@ class PauseSubState extends MusicBeatSubstate
 		add(modeText);
 
 		var sicks:FlxText = new FlxText(20, 568, 0, "", 32);
-		sicks.text += "SICKS:" + PlayState.sicks;
+		sicks.text += "SICKS: " + PlayState.sicks;
 		sicks.scrollFactor.set();
 		sicks.setFormat(Paths.font("vcr.ttf"), 32);
 		sicks.updateHitbox();
 		add(sicks);
 
 		var goods:FlxText = new FlxText(20, 568 + 32, 0, "", 32);
-		goods.text += "GOODS:" + PlayState.goods;
+		goods.text += "GOODS: " + PlayState.goods;
 		goods.scrollFactor.set();
 		goods.setFormat(Paths.font("vcr.ttf"), 32);
 		goods.updateHitbox();
 		add(goods);
 
 		var bads:FlxText = new FlxText(20, 568 + 64, 0, "", 32);
-		bads.text += "BADS:" + PlayState.bads;
+		if (PlayState.curStage.startsWith('amogus'))
+			bads.text += "SUS: " + PlayState.bads;
+		else
+			bads.text += "BADS: " + PlayState.bads;
 		bads.scrollFactor.set();
 		bads.setFormat(Paths.font("vcr.ttf"), 32);
 		bads.updateHitbox();
 		add(bads);
 
 		var shits:FlxText = new FlxText(20, 568 + 96, 0, "", 32);
-		shits.text += "SHITS:" + PlayState.shits;
+		if (PlayState.curStage.startsWith('amogus'))
+			shits.text += "SUS!: " + PlayState.shits;
+		else if (FlxG.save.data.cleanmode)
+			shits.text += "BADS+: " + PlayState.shits;
+		else
+			shits.text += "SHITS: " + PlayState.shits;
 		shits.scrollFactor.set();
 		shits.setFormat(Paths.font("vcr.ttf"), 32);
 		shits.updateHitbox();

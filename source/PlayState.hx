@@ -1225,7 +1225,10 @@ class PlayState extends MusicBeatState
 					var black:FlxSprite = new FlxSprite(-200, -200).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 					add(black);
 					black.scrollFactor.set();
-					FlxG.switchState(new VideoState('assets/week7/videos/gunsCutscene.webm', function() {OG.gunsCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+					if (FlxG.save.data.cleanmode)
+						FlxG.switchState(new VideoState('assets/week7/videos/gunsCutsceneCLEAN.webm', function() {OG.gunsCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+					else
+						FlxG.switchState(new VideoState('assets/week7/videos/gunsCutscene.webm', function() {OG.gunsCutsceneEnded = true; FlxG.switchState(new PlayState());}));
 				}
 				else
 				{
@@ -1242,7 +1245,10 @@ class PlayState extends MusicBeatState
 					var black:FlxSprite = new FlxSprite(-200, -200).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 					add(black);
 					black.scrollFactor.set();
-					FlxG.switchState(new VideoState('assets/week7/videos/ughCutscene.webm', function() {OG.ughCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+					if (FlxG.save.data.cleanmode)
+						FlxG.switchState(new VideoState('assets/week7/videos/ughCutsceneCLEAN.webm', function() {OG.ughCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+					else
+						FlxG.switchState(new VideoState('assets/week7/videos/ughCutscene.webm', function() {OG.ughCutsceneEnded = true; FlxG.switchState(new PlayState());}));
 				}
 				else
 				{
@@ -1259,7 +1265,10 @@ class PlayState extends MusicBeatState
 					var black:FlxSprite = new FlxSprite(-200, -200).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 					add(black);
 					black.scrollFactor.set();
-					FlxG.switchState(new VideoState('assets/week7/videos/stressCutscene.webm', function() {OG.stressCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+					if (FlxG.save.data.cleanmode)
+						FlxG.switchState(new VideoState('assets/week7/videos/stressCutsceneCLEAN.webm', function() {OG.stressCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+					else
+						FlxG.switchState(new VideoState('assets/week7/videos/stressCutscene.webm', function() {OG.stressCutsceneEnded = true; FlxG.switchState(new PlayState());}));
 				}
 				else
 				{
@@ -2697,7 +2706,10 @@ class PlayState extends MusicBeatState
 				sussy = 'sus';
 		}
 
-		rating.loadGraphic(Paths.image(pixelShitPart1 + sussy + daRating + pixelShitPart2));
+		if (FlxG.save.data.cleanmode && daRating == 'shit' && sussy != 'sus')
+			rating.loadGraphic(Paths.image(pixelShitPart1 + 'badplus' + pixelShitPart2));
+		else
+			rating.loadGraphic(Paths.image(pixelShitPart1 + sussy + daRating + pixelShitPart2));
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
 		rating.y -= 60;
