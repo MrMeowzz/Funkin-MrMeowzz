@@ -46,9 +46,22 @@ class DialogueBox extends FlxSpriteGroup
 			case 'thorns':
 				FlxG.sound.playMusic(Paths.music('LunchboxScary'), 0);
 				FlxG.sound.music.fadeIn(1, 0, 0.8);
-			case 'tutorial' | 'bopeebo' | 'fresh' | 'dadbattle':
-				FlxG.sound.playMusic(Paths.music('Lunchbox'), 0);
-				FlxG.sound.music.fadeIn(1, 0, 0.8);
+			case 'tutorial':
+				if (PlayState.isStoryMode)
+				{
+					FlxG.sound.playMusic(Paths.music('tutorialbg'), 0);
+					FlxG.sound.music.fadeIn(1, 0, 0.4);
+				}
+				else
+					FlxG.sound.music.stop();
+			case 'bopeebo' | 'fresh' | 'dadbattle':
+				if (PlayState.isStoryMode)
+				{
+					FlxG.sound.playMusic(Paths.music('dadbg'), 0);
+					FlxG.sound.music.fadeIn(1, 0, 0.4);
+				}
+				else
+					FlxG.sound.music.stop();
 		}
 
 		bgFade = new FlxSprite(-200, -200).makeGraphic(Std.int(FlxG.width * 1.3), Std.int(FlxG.height * 1.3), 0xFFB3DFd8);
