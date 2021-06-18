@@ -77,3 +77,4 @@ This will install about 22GB of crap, but once that is done you can run the `com
 ### Additional guides
 
 - [Command line basics](https://ninjamuffin99.newgrounds.com/news/post/1090480)
+- [Debug Mode Info](https://haxeflixel.com/documentation/debugger)
