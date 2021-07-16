@@ -2,8 +2,6 @@
 
 Mr Meowzz's FNF is basically my version of [Kade Engine](https://github.com/KadeDev/Kade-Engine) but it has extra songs and stuff. (KADE ENGINE IS BETTER, THIS CODE IS A MESS)
 
-**WEB VERSION IS CURRENTLY LATEST PRE-RELEASE, ILL FIX AS SOON AS IM ABLE TOO**
-
 ## Links
 
 [Credits](https://github.com/MrMeowzz/Funkin-MrMeowzz/wiki/credits)
