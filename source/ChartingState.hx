@@ -126,7 +126,7 @@ class ChartingState extends MusicBeatState
 		}
 
 		FlxG.mouse.visible = true;
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('funkin', 'Mr Meowzz');
 
 		tempBpm = _song.bpm;
 
@@ -1097,8 +1097,6 @@ class ChartingState extends MusicBeatState
 	function loadJson(song:String, difficulty:String):Void
 	{
 		var folder = song.toLowerCase();
-		if (PlayState.higheffort)
-			folder += "/higheffort";
 		PlayState.SONG = Song.loadFromJson(song.toLowerCase() + difficulty, folder);
 		FlxG.resetState();
 	}

@@ -35,6 +35,8 @@ class Character extends FlxSprite
 			case 'gf':
 				// GIRLFRIEND CODE
 				tex = Paths.getSparrowAtlas('characters/GF_assets');
+				if (PlayState.SONG.song == 'Old Bopeebo')
+					tex = Paths.getSparrowAtlas('characters/OLDGF_assets');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singUP', 'GF Up Note', 24, false);

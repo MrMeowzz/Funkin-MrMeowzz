@@ -66,7 +66,7 @@ class TitleState extends MusicBeatState
 		trace('NEWGROUNDS LOL');
 		#end
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('funkin', 'Mr Meowzz');
 
 		Highscore.load();
 
@@ -86,6 +86,29 @@ class TitleState extends MusicBeatState
 
 		if (FlxG.save.data.fullscreen != null)
 			FlxG.fullscreen = FlxG.save.data.fullscreen;
+		else
+			FlxG.save.data.fullscreen = OptionsState.DefaultValues[4];
+
+		if (FlxG.save.data.cleanmode == null)
+		{
+			FlxG.save.data.cleanmode = OptionsState.DefaultValues[0];
+		}
+		if (FlxG.save.data.preloadfreeplaypreviews == null)
+		{
+			FlxG.save.data.preloadfreeplaypreviews = OptionsState.DefaultValues[1];
+		}
+		if (FlxG.save.data.freeplaypreviews == null)
+		{
+			FlxG.save.data.freeplaypreviews = OptionsState.DefaultValues[2];
+		}
+		if (FlxG.save.data.colorratings == null)
+		{
+			FlxG.save.data.colorratings = OptionsState.DefaultValues[3];
+		}
+		if (FlxG.save.data.downscroll == null)
+		{
+			FlxG.save.data.downscroll = OptionsState.DefaultValues[6];
+		}
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
@@ -95,6 +118,10 @@ class TitleState extends MusicBeatState
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
 			startIntro();
+			if (FlxG.save.data.fpscounter != null)
+				(cast (Lib.current.getChildAt(0), Main)).toggleFPSCounter(FlxG.save.data.fpscounter);
+			else
+				FlxG.save.data.fpscounter = OptionsState.DefaultValues[5];
 		});
 		#end
 

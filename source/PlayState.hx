@@ -103,6 +103,7 @@ class PlayState extends MusicBeatState
 
 	private var generatedMusic:Bool = false;
 	private var startingSong:Bool = false;
+	private var WasHUDVisible:Bool = true;
 
 	private var iconP1:HealthIcon;
 	private var iconP2:HealthIcon;
@@ -176,8 +177,6 @@ class PlayState extends MusicBeatState
 	var tankStrumTime:Array<Dynamic> = [];
 	var endingOffset:Array<Float> = [];
 	var runningtanks:FlxTypedGroup<FlxSprite>;
-
-	public static var higheffort:Bool = false;
 
 	function sustain2(strum:Int, spr:FlxSprite, note:Note):Void
 	{
@@ -640,7 +639,7 @@ class PlayState extends MusicBeatState
 		                    */
 		          }
 
-				  case 'ugh' | 'guns' | 'stress' | 'no among us' | 'picospeaker':
+				  case 'ugh' | 'guns' | 'stress' | 'no among us' | 'h.e. no among us' | 'picospeaker' | 'high effort ugh':
 				  {
 					  defaultCamZoom = 0.9;
 					  curStage = 'tank';
@@ -1771,6 +1770,11 @@ class PlayState extends MusicBeatState
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 			}
 			#end
+
+			if (!WasHUDVisible)
+			{
+				camHUD.visible = false;
+			}
 		}
 
 		super.closeSubState();
@@ -1844,6 +1848,10 @@ class PlayState extends MusicBeatState
 				else
 					iconP2.animation.play('bf-old');
 
+		}
+		if (FlxG.keys.justPressed.EIGHT && !inCutscene)
+		{
+			camHUD.visible = !camHUD.visible;
 		}
 
 		switch (curStage)
@@ -1992,6 +2000,13 @@ class PlayState extends MusicBeatState
 			#if desktop
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC, player1RPC);
 			#end
+			if (!camHUD.visible)
+			{
+				WasHUDVisible = false;
+				camHUD.visible = true;
+			}
+			else
+				WasHUDVisible = true;
 		}
 
 		if (FlxG.keys.justPressed.SEVEN)
@@ -2023,8 +2038,10 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85)));
+		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
+		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.80 + (0.05 * (fps / 60)))));
+		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.80 + (0.05 * (fps / 60)))));
+		//smooth bouncy icons
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -2402,7 +2419,7 @@ class PlayState extends MusicBeatState
 
 						if (daNote.altNote)
 						{
-							if (spr.ID == 2 && !PlayState.higheffort)
+							if (spr.ID == 2)
 							{
 								switch (SONG.song.toLowerCase())
 								{
@@ -2412,13 +2429,13 @@ class PlayState extends MusicBeatState
 										spr.animation.play('aaa');
 								}
 							}
-						 	if (spr.ID == 0 && PlayState.higheffort)
+						 	if (spr.ID == 0)
 							{
 								switch (SONG.song.toLowerCase())
 								{
-									case 'ugh':
+									case 'high effort ugh':
 										spr.animation.play('ugh');
-									case 'no among us':
+									case 'h.e. no among us':
 										spr.animation.play('aaa');
 								}
 							}
@@ -2624,7 +2641,15 @@ class PlayState extends MusicBeatState
 		{
 			trace('WENT BACK TO FREEPLAY??');
 			#if html5
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music('frogMenu'));
+			#end
+			#if desktop
+			if (!FlxG.save.data.freeplaypreviews)
+			{
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music('frogMenu'));
+			}
 			#end
 			FlxG.switchState(new FreeplayState());
 		}
@@ -2693,6 +2718,7 @@ class PlayState extends MusicBeatState
 		var pixelShitPart1:String = '';
 		var pixelShitPart2:String = '';
 		var sussy:String = '';
+		var color:String = '';
 
 		if (curStage.startsWith('school'))
 		{
@@ -2706,10 +2732,15 @@ class PlayState extends MusicBeatState
 				sussy = 'sus';
 		}
 
+		if (FlxG.save.data.colorratings)
+		{
+			color = 'COLOR';
+		}
+
 		if (FlxG.save.data.cleanmode && daRating == 'shit' && sussy != 'sus')
-			rating.loadGraphic(Paths.image(pixelShitPart1 + 'badplus' + pixelShitPart2));
+			rating.loadGraphic(Paths.image(pixelShitPart1 + color + 'terrible' + pixelShitPart2));
 		else
-			rating.loadGraphic(Paths.image(pixelShitPart1 + sussy + daRating + pixelShitPart2));
+			rating.loadGraphic(Paths.image(pixelShitPart1 + color + sussy + daRating + pixelShitPart2));
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
 		rating.y -= 60;
@@ -3141,7 +3172,7 @@ class PlayState extends MusicBeatState
 
 				if (note.altNote)
 				{
-					if (spr.ID == 2 && !PlayState.higheffort)
+					if (spr.ID == 2)
 					{
 						switch (SONG.song.toLowerCase())
 						{
@@ -3151,13 +3182,13 @@ class PlayState extends MusicBeatState
 								spr.animation.play('aaa');
 						}
 					}
-					if (spr.ID == 0 && PlayState.higheffort)
+					if (spr.ID == 0)
 					{
 						switch (SONG.song.toLowerCase())
 						{
-							case 'ugh':
+							case 'high effort ugh':
 								spr.animation.play('ugh');
-							case 'no among us':
+							case 'h.e. no among us':
 								spr.animation.play('aaa');
 						}
 					}
@@ -3367,17 +3398,20 @@ class PlayState extends MusicBeatState
 				boyfriend.dance();
 		}
 
-		if (curBeat % 8 == 7 && curSong == 'Bopeebo')
+		if (curBeat % 8 == 7)
 		{
-			if (boyfriend.animation.getByName('hey') != null)
-				boyfriend.playAnim('hey', true);
+			if (curSong == 'Bopeebo' || curSong == 'Old Bopeebo')
+			{
+				if (boyfriend.animation.getByName('hey') != null)
+					boyfriend.playAnim('hey', true);
 
-			if (boyfriend.curCharacter == "tankman")
-				FlxG.sound.play(Paths.sound('ugh'));
+				if (boyfriend.curCharacter == "tankman")
+					FlxG.sound.play(Paths.sound('ugh'));
 
-			gf.playAnim('cheer', true);
-			if (boyfriend.curCharacter == "gf")
-				boyfriend.playAnim('cheer', true);
+				gf.playAnim('cheer', true);
+				if (boyfriend.curCharacter == "gf")
+					boyfriend.playAnim('cheer', true);
+			}
 		}
 
 		if (curBeat % 16 == 15 && SONG.song == 'Tutorial' && dad.curCharacter == 'gf' && curBeat > 16 && curBeat < 48)

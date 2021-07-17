@@ -103,4 +103,8 @@ class Main extends Sprite
 	{
 		return framerateCounter.currentFPS;
 	}
+	public function toggleFPSCounter(visibility:Bool):Void
+	{
+		framerateCounter.visible = visibility;
+	}
 }

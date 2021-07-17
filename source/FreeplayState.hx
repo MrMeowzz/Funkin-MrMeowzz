@@ -41,6 +41,13 @@ class FreeplayState extends MusicBeatState
 			if (!FlxG.sound.music.playing)
 				FlxG.sound.playMusic(Paths.music('frogMenu'));
 		#end
+		#if desktop
+		if (!FlxG.save.data.freeplaypreviews)
+		{
+			if (!FlxG.sound.music.playing)
+				FlxG.sound.playMusic(Paths.music('frogMenu'));
+		}
+		#end
 
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
@@ -70,7 +77,7 @@ class FreeplayState extends MusicBeatState
 
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
-			addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
+			addWeek(['Bopeebo', 'Old Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
 			addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster']);
@@ -88,10 +95,10 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai-angry', 'spirit']);
 			
 		if (StoryMenuState.weekUnlocked[7] || isDebug)
-			addWeek(['Ugh', 'Guns', 'Stress'], 7, ['tankman']);
+			addWeek(['Ugh', 'High Effort Ugh', 'Guns', 'Stress'], 7, ['tankman']);
 		
 		if (StoryMenuState.weekUnlocked[8] || isDebug)
-			addWeek(['iPhone', 'No Among Us', 'Among Us Drip'], 8, ['monster', 'tankmannoamongus', 'amogusguy']);
+			addWeek(['iPhone', 'No Among Us', 'H.E. No Among Us', 'Among Us Drip'], 8, ['monster', 'tankmannoamongus', 'tankmannoamongus', 'amogusguy']);
 
 		// LOAD MUSIC
 
@@ -278,7 +285,8 @@ class FreeplayState extends MusicBeatState
 			OG.horrorlandCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
 			#if desktop
-			FlxG.sound.playMusic(Paths.music('frogMenu'));
+			if (FlxG.save.data.freeplaypreviews)
+				FlxG.sound.playMusic(Paths.music('frogMenu'));
 			#end
 		}
 
@@ -289,14 +297,6 @@ class FreeplayState extends MusicBeatState
 			trace(poop);
 
 			var folder = songs[curSelected].songName.toLowerCase();
-
-			if (curDifficulty >= 4)
-			{
-				folder += "/higheffort";
-				PlayState.higheffort = true;
-			}
-			else
-				PlayState.higheffort = false;
 
 			PlayState.SONG = Song.loadFromJson(poop, folder);
 			PlayState.isStoryMode = false;
@@ -350,14 +350,9 @@ class FreeplayState extends MusicBeatState
 	{
 		curDifficulty += change;
 
-		var highestdifficulty = 3;
-
-		if (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'ugh')
-			highestdifficulty = 7;
-
 		if (curDifficulty < 0)
-			curDifficulty = highestdifficulty;
-		if (curDifficulty > highestdifficulty)
+			curDifficulty = 3;
+		if (curDifficulty > 3)
 			curDifficulty = 0;
 
 		#if !switch
@@ -374,15 +369,6 @@ class FreeplayState extends MusicBeatState
 				diffText.text = "< HARD >";
 			case 3:
 				diffText.text = "< HARD PLUS >";
-
-			case 4:
-				diffText.text = "< H.E. EASY >";
-			case 5:
-				diffText.text = "< H.E. NORMAL >";
-			case 6:
-				diffText.text = "< H.E. HARD >";
-			case 7:
-				diffText.text = "< H.E. HARD PLUS >";
 		}
 	}
 
@@ -422,15 +408,6 @@ class FreeplayState extends MusicBeatState
 		}
 
 		iconArray[curSelected].alpha = 1;
-
-		if (curDifficulty >= 4 && songs[curSelected].songName.toLowerCase() != 'no among us' && songs[curSelected].songName.toLowerCase() != 'ugh')
-		{
-			curDifficulty = 3;
-			diffText.text = "< HARD PLUS >";
-			#if !switch
-			intendedScore = Highscore.getScore(songs[curSelected].songName, 3);
-			#end
-		}
 
 		for (item in grpSongs.members)
 		{

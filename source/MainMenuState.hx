@@ -114,7 +114,7 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		var fps = cast (Lib.current.getChildAt(0), Main).currentframerate();
+		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 		FlxG.updateFramerate = Std.int(fps);
 
 		FlxG.camera.followLerp = FlxG.elapsed / .016666666666666666 * (0.06 * (60 / fps));

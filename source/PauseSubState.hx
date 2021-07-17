@@ -145,7 +145,7 @@ class PauseSubState extends MusicBeatSubstate
 		if (PlayState.curStage.startsWith('amogus'))
 			shits.text += "SUS!: " + PlayState.shits;
 		else if (FlxG.save.data.cleanmode)
-			shits.text += "BADS+: " + PlayState.shits;
+			shits.text += "TERRIBLES: " + PlayState.shits;
 		else
 			shits.text += "SHITS: " + PlayState.shits;
 		shits.scrollFactor.set();
@@ -254,7 +254,9 @@ class PauseSubState extends MusicBeatSubstate
 				changeSelection();
 			}
 			else
+			{
 				close();
+			}
 		}
 
 		if (accepted)
@@ -374,8 +376,10 @@ class PauseSubState extends MusicBeatSubstate
 						menuItems.remove('gf');
 					if (PlayState.SONG.player1.startsWith('bf') && PlayState.SONG.player1 != 'bf-amogus')
 						menuItems.remove('bf');
-					if (PlayState.higheffort)
+					if (PlayState.SONG.song.toLowerCase() == 'high effort ugh' || PlayState.SONG.song.toLowerCase() == 'h.e. no among us')
 						menuItems.remove('tankman');
+					if (PlayState.SONG.song == 'Old Bopeebo')
+						menuItems.remove('gf');
 					regenMenu();
 					curSelected = 0;
 					changeSelection();
@@ -395,8 +399,6 @@ class PauseSubState extends MusicBeatSubstate
 						return;
 					}
 					var folder = PlayState.SONG.song.toLowerCase();
-					if (PlayState.higheffort)
-						folder += "/higheffort";
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, folder);
 					if (!lastCharacter.startsWith("bf"))
 						PlayState.SONG.player1 = lastCharacter;

@@ -6,14 +6,30 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.util.FlxTimer;
+import openfl.Lib;
 
 using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var textMenuItems:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews'];
+	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll'];
 
-	var descriptionMenuItems:Array<String> = ['Changes some sprites, strings, and sounds to make it more PG.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.'];
+	var descriptions:Array<String> = ['Changes some assets to make it more appropriate. W.I.P.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.'];
+
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,true];
+
+	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll'];
+
+	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll'];
+	
+	#if html5
+	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,true];
+	#else
+	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,true];
+	#end
+
+	var VisibleOptions:Array<String> = [];
 
 	var curSelected:Int = 0;
 
@@ -41,43 +57,17 @@ class OptionsState extends MusicBeatState
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
 		add(grpOptionsTexts);
 
-		// this code is so trash, ill clean up in later update
+		regenVisibleOptions();
 
-		if (FlxG.save.data.cleanmode == null)
-			FlxG.save.data.cleanmode = false;
-		
-		if (FlxG.save.data.preloadfreeplaypreviews == null)
-			FlxG.save.data.preloadfreeplaypreviews = true;
-		
-		if (FlxG.save.data.freeplaypreviews == null)
-			FlxG.save.data.freeplaypreviews = true;
-
-		if (FlxG.save.data.cleanmode)
-			textMenuItems[0] += " ON";
-		else
-			textMenuItems[0] += " OFF";
-		
-		if (FlxG.save.data.preloadfreeplaypreviews)
-			textMenuItems[1] += " ON";
-		else
-			textMenuItems[1] += " OFF";
-
-		if (FlxG.save.data.freeplaypreviews)
-			textMenuItems[2] += " ON";
-		else
-			textMenuItems[2] += " OFF";
-
-		for (i in 0...textMenuItems.length)
+		for (i in 0...VisibleOptions.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, (70 * i) + 30, textMenuItems[i], true, false);
+			var optionText:Alphabet = new Alphabet(0, (70 * i) + 30, VisibleOptions[i], true, false);
 			// optionText.ID = i;
 			optionText.targetY = i;
 			grpOptionsTexts.add(optionText);
 		}
 
 		changeSelection();
-
-		FlxG.save.flush();
 
 		super.create();
 	}
@@ -100,54 +90,96 @@ class OptionsState extends MusicBeatState
 
 		if (controls.ACCEPT)
 		{
-			switch (textMenuItems[curSelected])
+			switch (Options[curSelected])
 			{
-				case "Clean Mode" | "Clean Mode ON" | "Clean Mode OFF":
+				case "Clean Mode":
 					FlxG.save.data.cleanmode = !FlxG.save.data.cleanmode;
 					FlxG.save.flush();
-					for (item in grpOptionsTexts.members)
-					{
-						if (item.text.contains(textMenuItems[curSelected]))
-						{
-							if (FlxG.save.data.cleanmode)
-								textMenuItems[curSelected] = "Clean Mode ON";
-							else
-								textMenuItems[curSelected] = "Clean Mode OFF";
-						}
-					}
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
 					regenOptions();
-				case "Freeplay Previews" | "Freeplay Previews ON" | "Freeplay Previews OFF":
+				case "Freeplay Previews":
 				#if desktop
 					FlxG.save.data.freeplaypreviews = !FlxG.save.data.freeplaypreviews;
 					FlxG.save.flush();
-					for (item in grpOptionsTexts.members)
-					{
-						if (item.text.contains(textMenuItems[curSelected]))
-						{
-							if (FlxG.save.data.freeplaypreviews)
-								textMenuItems[curSelected] = "Freeplay Previews ON";
-							else
-								textMenuItems[curSelected] = "Freeplay Previews OFF";
-						}
-					}
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
 					regenOptions();
+				#else
+					if (descriptiontxt.text == descriptions[curSelected])
+					{
+						FlxG.sound.play(Paths.sound('error'));
+						descriptiontxt.text = "This option is not available on the web version.";
+						new FlxTimer().start(3, function(tmr:FlxTimer)
+						{
+							if (descriptiontxt.text == "This option is not available on the web version.")
+								descriptiontxt.text = descriptions[curSelected];
+						});
+					}
 				#end
-				case "Preload Freeplay Previews" | "Preload Freeplay Previews ON" | "Preload Freeplay Previews OFF":
+				case "Preload Freeplay Previews":
 				#if desktop
 					FlxG.save.data.preloadfreeplaypreviews = !FlxG.save.data.preloadfreeplaypreviews;
 					FlxG.save.flush();
-					for (item in grpOptionsTexts.members)
-					{
-						if (item.text.contains(textMenuItems[curSelected]))
-						{
-							if (FlxG.save.data.preloadfreeplaypreviews)
-								textMenuItems[curSelected] = "Preload Freeplay Previews ON";
-							else
-								textMenuItems[curSelected] = "Preload Freeplay Previews OFF";
-						}
-					}
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
 					regenOptions();
+				#else
+					if (descriptiontxt.text == descriptions[curSelected])
+					{
+						FlxG.sound.play(Paths.sound('error'));
+						descriptiontxt.text = "This option is not available on the web version.";
+						new FlxTimer().start(3, function(tmr:FlxTimer)
+						{
+							if (descriptiontxt.text == "This option is not available on the web version.")
+								descriptiontxt.text = descriptions[curSelected];
+						});
+					}
 				#end
+				case "Color Ratings":
+					FlxG.save.data.colorratings = !FlxG.save.data.colorratings;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
+				case "Fullscreen":
+				#if desktop
+					FlxG.save.data.fullscreen = !FlxG.fullscreen;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+        			FlxG.fullscreen = !FlxG.fullscreen;
+					regenVisibleOptions();
+					regenOptions();
+				#else
+					if (descriptiontxt.text == descriptions[curSelected])
+					{
+						FlxG.sound.play(Paths.sound('error'));
+						descriptiontxt.text = "This option is not available on the web version.";
+						new FlxTimer().start(3, function(tmr:FlxTimer)
+						{
+							if (descriptiontxt.text == "This option is not available on the web version.")
+								descriptiontxt.text = descriptions[curSelected];
+						});
+					}
+				#end
+				case "FPS Counter":
+					FlxG.save.data.fpscounter = !FlxG.save.data.fpscounter;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					(cast (Lib.current.getChildAt(0), Main)).toggleFPSCounter(FlxG.save.data.fpscounter);
+					regenVisibleOptions();
+					regenOptions();
+				case "Downscroll":
+					if (descriptiontxt.text == descriptions[curSelected])
+					{
+						FlxG.sound.play(Paths.sound('error'));
+						descriptiontxt.text = "This option is not available yet.";
+						new FlxTimer().start(3, function(tmr:FlxTimer)
+						{
+							if (descriptiontxt.text == "This option is not available yet.")
+								descriptiontxt.text = descriptions[curSelected];
+						});
+					}
 			}
 		}
 
@@ -157,41 +189,124 @@ class OptionsState extends MusicBeatState
 			FlxG.save.data.fullscreen = !FlxG.fullscreen;
 			FlxG.save.flush();	
         	FlxG.fullscreen = !FlxG.fullscreen;
+			regenVisibleOptions();
+			regenOptions();
         }
 		#end
+	}
+
+	public function regenVisibleOptions()
+	{
+		VisibleOptions = [];
+		var i = 0;
+		if (FlxG.save.data.cleanmode)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.preloadfreeplaypreviews)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.freeplaypreviews)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.colorratings)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.fullscreen)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.fpscounter)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.downscroll)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
 	}
 
 	public function regenOptions()
 	{
 		grpOptionsTexts.clear();
-		for (i in 0...textMenuItems.length)
+		for (i in 0...VisibleOptions.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, (70 * i) + 30, textMenuItems[i], true, false);
+			var optionText:Alphabet = new Alphabet(0, (70 * i) + 30, VisibleOptions[i], true, false);
 			// optionText.ID = i;
 			optionText.targetY = i;
 			grpOptionsTexts.add(optionText);
 		}
+		changeSelection(0, false);
 	}
 
-	function changeSelection(change:Int = 0):Void
+	function changeSelection(change:Int = 0, sound:Bool = true):Void
 	{
 		curSelected += change;
 
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		if (sound)
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		if (curSelected < 0)
-			curSelected = textMenuItems.length - 1;
-		if (curSelected >= textMenuItems.length)
+			curSelected = Options.length - 1;
+		if (curSelected >= Options.length)
 			curSelected = 0;
 
-		descriptiontxt.text = descriptionMenuItems[curSelected];
+		descriptiontxt.text = descriptions[curSelected];
 
 		var bullShit:Int = 0;
 
 		for (item in grpOptionsTexts.members)
 		{
 			item.targetY = bullShit - curSelected;
-			bullShit++;
 
 			item.alpha = 0.6;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
@@ -201,6 +316,11 @@ class OptionsState extends MusicBeatState
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
+			if (DisabledOptions[bullShit] && item.targetY != 0)
+			{
+				item.alpha = 0.4;
+			}
+			bullShit++;
 		}
 	}
 }

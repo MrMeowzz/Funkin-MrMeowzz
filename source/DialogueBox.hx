@@ -337,7 +337,10 @@ class DialogueBox extends FlxSpriteGroup
 		swagDialogue.resetText(dialogueList[0]);
 		swagDialogue.start(0.04, true);
 
-		
+		if (dialogueList[0] == '(ugh)')
+		{
+			FlxG.sound.play(Paths.sound('ugh'));
+		}
 
 		switch (curCharacter)
 		{
