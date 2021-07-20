@@ -69,7 +69,7 @@ class Main extends Sprite
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, 60, framerate, skipSplash, startFullscreen));
 
-		var ourSource:String = "assets/week7/videos/ughCutscene.webm";
+		var ourSource:String = "assets/videos/load.webm";
 		
 		#if web
 		var str1:String = "HTML CRAP";

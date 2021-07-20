@@ -13,20 +13,22 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll'];
+	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed'];
 
-	var descriptions:Array<String> = ['Changes some assets to make it more appropriate. W.I.P.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.'];
+	var descriptions:Array<String> = ['Changes some assets to make it more appropriate. W.I.P.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,true];
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false];
 
-	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll'];
+	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON'];
 
-	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll'];
+	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF'];
+
+	var numberOptions:Array<Bool> = [false,false,false,false,false,false,false,true];
 	
 	#if html5
-	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,true];
+	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,false];
 	#else
-	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,true];
+	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,false];
 	#end
 
 	var VisibleOptions:Array<String> = [];
@@ -36,6 +38,12 @@ class OptionsState extends MusicBeatState
 	var grpOptionsTexts:FlxTypedGroup<Alphabet>;
 
 	var descriptiontxt:FlxText;
+
+	var numtxt:FlxText;
+
+	var timer:FlxTimer = new FlxTimer();
+
+	var songspeed:Float = 0.1;
 
 	override function create()
 	{
@@ -54,6 +62,11 @@ class OptionsState extends MusicBeatState
 		descriptiontxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT);
 		add(descriptiontxt);
 
+		numtxt = new FlxText(1000, 500, 0, "sus", 15);
+		numtxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT);
+		numtxt.visible = false;
+		add(numtxt);
+
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
 		add(grpOptionsTexts);
 
@@ -66,6 +79,9 @@ class OptionsState extends MusicBeatState
 			optionText.targetY = i;
 			grpOptionsTexts.add(optionText);
 		}
+
+		if (FlxG.save.data.scrollspeed != null)
+			songspeed = FlxG.save.data.scrollspeed;
 
 		changeSelection();
 
@@ -82,9 +98,37 @@ class OptionsState extends MusicBeatState
 		if (controls.DOWN_P)
 			changeSelection(1);
 
+		if (controls.LEFT_P)
+			if (FlxG.save.data.overridespeed && Options[curSelected] == "Override Song Scroll Speed" && songspeed > 0.1)
+			{
+				songspeed -= 0.1;
+				if (FlxG.keys.pressed.SHIFT && songspeed - 0.4 > 0.1)
+					songspeed -= 0.4;
+				else if (FlxG.keys.pressed.SHIFT && songspeed - 0.4 < 0.1)
+					songspeed = 0.1;
+			}
+					
+
+		if (controls.RIGHT_P)
+			if (FlxG.save.data.overridespeed && Options[curSelected] == "Override Song Scroll Speed" && songspeed < 10)
+			{
+				songspeed += 0.1;
+				if (FlxG.keys.pressed.SHIFT && songspeed + 0.4 < 10)
+					songspeed += 0.4;
+				else if (FlxG.keys.pressed.SHIFT && songspeed + 0.4 > 10)
+					songspeed = 10;
+			}
+
+		numtxt.text = Std.string(songspeed);
+
 		if (controls.BACK)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+			if (FlxG.save.data.overridespeed)
+			{
+				FlxG.save.data.scrollspeed = songspeed;
+				FlxG.save.flush();
+			}
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -110,7 +154,7 @@ class OptionsState extends MusicBeatState
 					{
 						FlxG.sound.play(Paths.sound('error'));
 						descriptiontxt.text = "This option is not available on the web version.";
-						new FlxTimer().start(3, function(tmr:FlxTimer)
+						timer.start(3, function(tmr:FlxTimer)
 						{
 							if (descriptiontxt.text == "This option is not available on the web version.")
 								descriptiontxt.text = descriptions[curSelected];
@@ -129,7 +173,7 @@ class OptionsState extends MusicBeatState
 					{
 						FlxG.sound.play(Paths.sound('error'));
 						descriptiontxt.text = "This option is not available on the web version.";
-						new FlxTimer().start(3, function(tmr:FlxTimer)
+						timer.start(3, function(tmr:FlxTimer)
 						{
 							if (descriptiontxt.text == "This option is not available on the web version.")
 								descriptiontxt.text = descriptions[curSelected];
@@ -155,7 +199,7 @@ class OptionsState extends MusicBeatState
 					{
 						FlxG.sound.play(Paths.sound('error'));
 						descriptiontxt.text = "This option is not available on the web version.";
-						new FlxTimer().start(3, function(tmr:FlxTimer)
+						timer.start(3, function(tmr:FlxTimer)
 						{
 							if (descriptiontxt.text == "This option is not available on the web version.")
 								descriptiontxt.text = descriptions[curSelected];
@@ -170,16 +214,29 @@ class OptionsState extends MusicBeatState
 					regenVisibleOptions();
 					regenOptions();
 				case "Downscroll":
+					FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
+					/**
 					if (descriptiontxt.text == descriptions[curSelected])
 					{
 						FlxG.sound.play(Paths.sound('error'));
 						descriptiontxt.text = "This option is not available yet.";
-						new FlxTimer().start(3, function(tmr:FlxTimer)
+						timer.start(3, function(tmr:FlxTimer)
 						{
 							if (descriptiontxt.text == "This option is not available yet.")
 								descriptiontxt.text = descriptions[curSelected];
 						});
 					}
+					*/
+				case "Override Song Scroll Speed":
+					FlxG.save.data.overridespeed = !FlxG.save.data.overridespeed;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
 			}
 		}
 
@@ -273,6 +330,17 @@ class OptionsState extends MusicBeatState
 		{
 			VisibleOptions.push(OptionsOFF[i]);
 		}
+
+		i++;
+
+		if (FlxG.save.data.overridespeed)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
 	}
 
 	public function regenOptions()
@@ -300,6 +368,7 @@ class OptionsState extends MusicBeatState
 		if (curSelected >= Options.length)
 			curSelected = 0;
 
+		timer.cancel();
 		descriptiontxt.text = descriptions[curSelected];
 
 		var bullShit:Int = 0;
@@ -315,11 +384,16 @@ class OptionsState extends MusicBeatState
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
+				if (numberOptions[bullShit])
+					numtxt.visible = true;
+				else
+					numtxt.visible = false;
 			}
 			if (DisabledOptions[bullShit] && item.targetY != 0)
 			{
 				item.alpha = 0.4;
 			}
+			
 			bullShit++;
 		}
 	}

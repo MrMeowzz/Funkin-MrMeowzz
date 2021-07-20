@@ -109,6 +109,10 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.downscroll = OptionsState.DefaultValues[6];
 		}
+		if (FlxG.save.data.overridespeed == null)
+		{
+			FlxG.save.data.overridespeed = OptionsState.DefaultValues[7];
+		}
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
@@ -226,7 +230,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('dababy'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
@@ -391,7 +395,7 @@ class TitleState extends MusicBeatState
 			case 6:
 				createCoolText(['In association', 'with']);
 			case 7:
-				addMoreText('newgrounds');
+				addMoreText('dababy');
 				ngSpr.visible = true;
 			// credTextShit.text += '\nNewgrounds';
 			case 9:

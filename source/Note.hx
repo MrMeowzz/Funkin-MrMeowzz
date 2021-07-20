@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import flixel.FlxG;
 #if polymod
 import polymod.format.ParseRules.TargetSignatureElement;
 #end
@@ -122,6 +123,9 @@ class Note extends FlxSprite
 
 		// trace(prevNote);
 
+		if (FlxG.save.data.downscroll && isSustainNote) 
+			flipY = true;
+
 		if (isSustainNote && prevNote != null)
 		{
 			noteScore * 0.2;
@@ -188,7 +192,7 @@ class Note extends FlxSprite
 			else
 				canBeHit = false;
 
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset * Conductor.timeScale && !wasGoodHit)
 				tooLate = true;
 		}
 		else
