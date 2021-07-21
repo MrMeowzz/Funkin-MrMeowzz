@@ -59,12 +59,14 @@ class OptionsState extends MusicBeatState
 		add(menuBG);
 
 		descriptiontxt = new FlxText(100, 0, 0, "", 15);
-		descriptiontxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT);
+		descriptiontxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		add(descriptiontxt);
 
-		numtxt = new FlxText(1000, 500, 0, "sus", 15);
-		numtxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT);
+		numtxt = new FlxText(0, 0, 0, "sus", 30);
+		numtxt.setFormat(Paths.font("vcr.ttf"), 30, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		numtxt.visible = false;
+		numtxt.screenCenter();
+		numtxt.y += 200;
 		add(numtxt);
 
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
@@ -76,6 +78,7 @@ class OptionsState extends MusicBeatState
 		{
 			var optionText:Alphabet = new Alphabet(0, (70 * i) + 30, VisibleOptions[i], true, false);
 			// optionText.ID = i;
+			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			grpOptionsTexts.add(optionText);
 		}
@@ -118,6 +121,11 @@ class OptionsState extends MusicBeatState
 				else if (FlxG.keys.pressed.SHIFT && songspeed + 0.4 > 10)
 					songspeed = 10;
 			}
+
+		if (songspeed < 0.1)
+			songspeed = 0.1;
+		if (songspeed > 10)
+			songspeed = 10;
 
 		numtxt.text = Std.string(songspeed);
 
@@ -219,18 +227,6 @@ class OptionsState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenVisibleOptions();
 					regenOptions();
-					/**
-					if (descriptiontxt.text == descriptions[curSelected])
-					{
-						FlxG.sound.play(Paths.sound('error'));
-						descriptiontxt.text = "This option is not available yet.";
-						timer.start(3, function(tmr:FlxTimer)
-						{
-							if (descriptiontxt.text == "This option is not available yet.")
-								descriptiontxt.text = descriptions[curSelected];
-						});
-					}
-					*/
 				case "Override Song Scroll Speed":
 					FlxG.save.data.overridespeed = !FlxG.save.data.overridespeed;
 					FlxG.save.flush();
@@ -350,6 +346,7 @@ class OptionsState extends MusicBeatState
 		{
 			var optionText:Alphabet = new Alphabet(0, (70 * i) + 30, VisibleOptions[i], true, false);
 			// optionText.ID = i;
+			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			grpOptionsTexts.add(optionText);
 		}

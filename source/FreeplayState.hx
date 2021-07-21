@@ -75,6 +75,8 @@ class FreeplayState extends MusicBeatState
 		isDebug = true;
 		#end
 
+		if (StoryMenuState.weekUnlocked[2] || isDebug)
+			addWeek(['Test'], 1, ['bf-pixel']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
 			addWeek(['Bopeebo', 'Old Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
@@ -86,7 +88,10 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
 
 		if (StoryMenuState.weekUnlocked[4] || isDebug)
-			addWeek(['Satin-Panties', 'High', 'Milf'], 4, ['mom']);
+			if (!FlxG.save.data.cleanmode)
+				addWeek(['Satin-Panties', 'High', 'Milf'], 4, ['mom']);
+			else
+				addWeek(['Satin-Pants', 'High', 'Mom'], 4, ['mom']);
 
 		if (StoryMenuState.weekUnlocked[5] || isDebug)
 			addWeek(['Cocoa', 'Eggnog', 'Winter-Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster-christmas']);
@@ -112,7 +117,11 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
+			var songText:Alphabet;
+			if (songs[i].songName.toLowerCase() == 'h.e. no among us')
+				songText = new Alphabet(0, (70 * i) + 30, 'High Effort No Among Us', true, false);
+			else
+				songText = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -123,7 +132,10 @@ class FreeplayState extends MusicBeatState
 			// prevent freeplay lag when playing songs
 			#if PRELOAD_ALL
 			if (FlxG.save.data.preloadfreeplaypreviews && FlxG.save.data.freeplaypreviews)
-				FlxG.sound.load(Paths.inst(songs[i].songName), 0);
+				if (FlxG.save.data.cleanmode && (songs[i].songName.toLowerCase() == 'no among us' || songs[i].songName.toLowerCase() == 'h.e. no among us'))
+					FlxG.sound.load(Paths.cleaninst(songs[i].songName), 0);
+				else
+					FlxG.sound.load(Paths.inst(songs[i].songName), 0);
 			#end
 
 			// using a FlxGroup is too much fuss!
@@ -397,7 +409,10 @@ class FreeplayState extends MusicBeatState
 
 		#if PRELOAD_ALL
 		if (FlxG.save.data.freeplaypreviews)
-			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
+			if (FlxG.save.data.cleanmode && (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'h.e no among us'))
+				FlxG.sound.playMusic(Paths.cleaninst(songs[curSelected].songName), 0);
+			else
+				FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		#end
 
 		var bullShit:Int = 0;

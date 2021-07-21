@@ -407,6 +407,8 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 10:
 				createCoolText([curWacky[0]]);
+				if (curWacky[0] == 'pico said dababy')
+					FlxG.sound.play(Paths.sound('dababypico'));
 			// credTextShit.visible = true;
 			case 12:
 				addMoreText(curWacky[1]);

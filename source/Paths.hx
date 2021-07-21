@@ -95,6 +95,11 @@ class Paths
 		return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
 	}
 
+	inline static public function cleaninst(song:String)
+	{
+		return 'songs:assets/songs/${song.toLowerCase()}/InstCLEAN.$SOUND_EXT';
+	}
+
 	inline static public function image(key:String, ?library:String)
 	{
 		return getPath('images/$key.png', IMAGE, library);

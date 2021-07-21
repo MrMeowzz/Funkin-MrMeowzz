@@ -896,6 +896,8 @@ class Character extends FlxSprite
 
 			case 'pico-pixel-dead':
 				frames = Paths.getSparrowAtlas('characters/picoPixelsDEAD');
+				if (FlxG.save.data.cleanmode)
+					frames = Paths.getSparrowAtlas('characters/picoPixelsDEADCLEAN');
 				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
 				animation.addByPrefix('firstDeath', "BF Dies pixel", 24, false);
 				animation.addByPrefix('deathLoop', "Retry Loop", 24, true);
@@ -989,7 +991,10 @@ class Character extends FlxSprite
 				antialiasing = false;
 
 			case 'parents-christmas':
-				frames = Paths.getSparrowAtlas('characters/mom_dad_christmas_assets');
+				tex = Paths.getSparrowAtlas('characters/mom_dad_christmas_assets');
+				if (FlxG.save.data.cleanmode)
+					tex = Paths.getSparrowAtlas('characters/mom_dad_christmas_assetsCLEAN');
+				frames = tex;
 				animation.addByPrefix('idle', 'Parent Christmas Idle', 24, false);
 				animation.addByPrefix('singUP', 'Parent Up Note Dad', 24, false);
 				animation.addByPrefix('singDOWN', 'Parent Down Note Dad', 24, false);

@@ -22,8 +22,20 @@ using StringTools;
 class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
+	
+	var cleanweekData:Array<Dynamic> = [
+		['Tutorial'],
+		['Bopeebo', 'Fresh', 'Dadbattle'],
+		['Spookeez', 'South', 'Monster'],
+		['Pico', 'Philly', "Blammed"],
+		['Satin-Pants', "High", "Mom"],
+		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
+		['Senpai', 'Roses', 'Thorns'],
+		['Ugh', 'Guns', 'Stress'],
+		['iPhone', 'No Among Us', 'Among Us Drip']
+	];
 
-	var weekData:Array<Dynamic> = [
+	var normalweekData:Array<Dynamic> = [
 		['Tutorial'],
 		['Bopeebo', 'Fresh', 'Dadbattle'],
 		['Spookeez', 'South', 'Monster'],
@@ -34,6 +46,8 @@ class StoryMenuState extends MusicBeatState
 		['Ugh', 'Guns', 'Stress'],
 		['iPhone', 'No Among Us', 'Among Us Drip']
 	];
+
+	var weekData:Array<Dynamic> = [];
 	var curDifficulty:Int = OG.DifficultyStoryMode;
 
 	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true, true];
@@ -87,6 +101,15 @@ class StoryMenuState extends MusicBeatState
 		{
 			if (!FlxG.sound.music.playing)
 				FlxG.sound.playMusic(Paths.music('frogMenu'));
+		}
+
+		if (!FlxG.save.data.cleanmode)
+		{
+			weekData = normalweekData;
+		}
+		else
+		{
+			weekData = cleanweekData;
 		}
 
 		persistentUpdate = persistentDraw = true;

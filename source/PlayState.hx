@@ -43,6 +43,7 @@ import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 import openfl.Lib;
+import lime.app.Application;
 
 using StringTools;
 
@@ -142,6 +143,7 @@ class PlayState extends MusicBeatState
 
 	var talking:Bool = true;
 	public static var songScore:Int = 0;
+	var songTxt:FlxText;
 	var accuracyTxt:FlxText;
 	var ratingTxt:FlxText;
 	var scoreTxt:FlxText;
@@ -153,15 +155,17 @@ class PlayState extends MusicBeatState
 
 	var defaultCamZoom:Float = 1.05;
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+	var grpPixelNoteSplashes:FlxTypedGroup<PixelNoteSplash>;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
 
 	var inCutscene:Bool = false;
-
+	
+	public static var storyDifficultyText:String = "";
+	
 	#if desktop
 	// Discord RPC variables
-	public static var storyDifficultyText:String = "";
 	public static var player1RPC:String = "";
 	public static var player2RPC:String = "";
 	var songLength:Float = 0;
@@ -245,6 +249,10 @@ class PlayState extends MusicBeatState
 		var splash = new NoteSplash(100, 100, 0);
 		splash.alpha = 0.1;
 		grpNoteSplashes.add(splash);
+		grpPixelNoteSplashes = new FlxTypedGroup<PixelNoteSplash>();
+		var splashpixel = new PixelNoteSplash(100, 100, 0);
+		splashpixel.alpha = 0.1;
+		grpPixelNoteSplashes.add(splashpixel);
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -398,7 +406,7 @@ class PlayState extends MusicBeatState
 		                  var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.image('philly/street'));
 	                          add(street);
 		          }
-		          case 'milf' | 'satin-panties' | 'high':
+		          case 'milf' | 'satin-panties' | 'high' | 'mom' | 'satin-pants':
 		          {
 		                  curStage = 'limo';
 		                  defaultCamZoom = 0.90;
@@ -450,8 +458,11 @@ class PlayState extends MusicBeatState
 	                          curStage = 'mall';
 
 		                  defaultCamZoom = 0.80;
-
-		                  var bg:FlxSprite = new FlxSprite(-1000, -500).loadGraphic(Paths.image('christmas/bgWalls'));
+						  var bg:FlxSprite;
+						  if (FlxG.save.data.cleanmode)
+								bg = new FlxSprite(-1000, -500).loadGraphic(Paths.image('christmas/bgWallsCLEAN'));
+						  	else
+		                  		bg = new FlxSprite(-1000, -500).loadGraphic(Paths.image('christmas/bgWalls'));
 		                  bg.antialiasing = true;
 		                  bg.scrollFactor.set(0.2, 0.2);
 		                  bg.active = false;
@@ -504,7 +515,11 @@ class PlayState extends MusicBeatState
 		          case 'winter-horrorland':
 		          {
 		                  curStage = 'mallEvil';
-		                  var bg:FlxSprite = new FlxSprite(-400, -500).loadGraphic(Paths.image('christmas/evilBG'));
+						  var bg:FlxSprite;
+						  if (FlxG.save.data.cleanmode)
+							bg = new FlxSprite(-400, -500).loadGraphic(Paths.image('christmas/evilBGCLEAN'));
+						  else
+		                  	bg = new FlxSprite(-400, -500).loadGraphic(Paths.image('christmas/evilBG'));
 		                  bg.antialiasing = true;
 		                  bg.scrollFactor.set(0.2, 0.2);
 		                  bg.active = false;
@@ -926,6 +941,8 @@ class PlayState extends MusicBeatState
 				dad.y += 180;
 			case 'tankmannoamongus':
 				dad.y += 250;
+			case 'bf-pixel':
+				dad.y += 500;
 		}
 
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
@@ -1062,6 +1079,7 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
 		add(grpNoteSplashes);
+		add(grpPixelNoteSplashes);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 		player2Strums = new FlxTypedGroup<FlxSprite>();
@@ -1116,7 +1134,12 @@ class PlayState extends MusicBeatState
 		FULLhealthBar.visible = false;
 		add(FULLhealthBar);
 
-		accuracyTxt = new FlxText(1150, healthBarBG.y + 45, 0, "", 20);
+		songTxt = new FlxText(0, healthBarBG.y + 45, 0, "", 20);
+		songTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
+		songTxt.scrollFactor.set();
+		add(songTxt);
+
+		accuracyTxt = new FlxText(1150, songTxt.y - 25, 0, "", 20);
 		accuracyTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		accuracyTxt.scrollFactor.set();
 		add(accuracyTxt);
@@ -1173,11 +1196,13 @@ class PlayState extends MusicBeatState
 		scoreTxt.cameras = [camHUD];
 		healthTxt.cameras = [camHUD];
 		missesTxt.cameras = [camHUD];
+		songTxt.cameras = [camHUD];
 		accuracyTxt.cameras = [camHUD];
 		ratingTxt.cameras = [camHUD];
 		lengthTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
+		grpPixelNoteSplashes.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -1520,7 +1545,10 @@ class PlayState extends MusicBeatState
 		lastReportedPlayheadPosition = 0;
 
 		if (!paused)
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+			if (FlxG.save.data.cleanmode && (PlayState.SONG.song.toLowerCase() == 'no among us' || PlayState.SONG.song.toLowerCase() == 'h.e. no among us'))
+				FlxG.sound.playMusic(Paths.cleaninst(PlayState.SONG.song), 1, false);
+			else
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
 
@@ -1944,7 +1972,8 @@ class PlayState extends MusicBeatState
 		lengthTxt.text = Std.string(finalmin + ":" + finalsec);
 		lengthTxt.size = 40;
 
-
+		songTxt.text = Std.string("M.M. FNF v" + Application.current.meta.get('version') + " " + SONG.song + " " + storyDifficultyText);
+		songTxt.x = FlxG.width - (songTxt.width + 10);
 
 		scoreTxt.text = "Score:" + songScore;
 		if (health <= 0)
@@ -2753,10 +2782,19 @@ class PlayState extends MusicBeatState
 		}
 
 		if (daRating == 'sick')
-		{	
-			var noteSplash = grpNoteSplashes.recycle(NoteSplash);
-			noteSplash.setupNoteSplash(note.x, note.y, note.noteData);
-			grpNoteSplashes.add(noteSplash);
+		{
+			if (curStage.startsWith('school'))
+			{
+				var noteSplash = grpPixelNoteSplashes.recycle(PixelNoteSplash);
+				noteSplash.setupNoteSplash(note.x, note.y, note.noteData);
+				grpPixelNoteSplashes.add(noteSplash);
+			}
+			else
+			{
+				var noteSplash = grpNoteSplashes.recycle(NoteSplash);
+				noteSplash.setupNoteSplash(note.x, note.y, note.noteData);
+				grpNoteSplashes.add(noteSplash);
+			}
 			sicks++;
 		}
 
@@ -3430,6 +3468,11 @@ class PlayState extends MusicBeatState
 
 		// HARDCODING FOR MILF ZOOMS!
 		if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
+		{
+			FlxG.camera.zoom += 0.015;
+			camHUD.zoom += 0.03;
+		}
+		else if (curSong.toLowerCase() == 'mom' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;

@@ -149,7 +149,10 @@ class LoadingState extends MusicBeatState
 	
 	static function getSongPath()
 	{
-		return Paths.inst(PlayState.SONG.song);
+		if (FlxG.save.data.cleanmode && (PlayState.SONG.song.toLowerCase() == 'no among us' || PlayState.SONG.song.toLowerCase() == 'h.e. no among us'))
+			return Paths.cleaninst(PlayState.SONG.song);
+		else
+			return Paths.inst(PlayState.SONG.song);
 	}
 	
 	static function getVocalPath()

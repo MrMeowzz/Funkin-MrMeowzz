@@ -125,7 +125,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				FlxG.sound.music.fadeIn(4, 0.2, 1);
 			});
 		}
-		else if (PlayState.SONG.song.toLowerCase() == "no among us" && bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)
+		else if ((PlayState.SONG.song.toLowerCase() == "no among us" || PlayState.SONG.song.toLowerCase() == "h.e. no among us") && bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)
 		{
 			playingDeathSound = true;
 			coolStartDeath(0.2);

@@ -19,6 +19,7 @@ spirit
 tankman
 gf-tankmen
 bf-holding-gf
+tankmannoamongus
 tankman-pixel
 pico-pixel
 bf-amogus
