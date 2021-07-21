@@ -120,7 +120,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			playingDeathSound = true;
 			coolStartDeath(0.2);
-			FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25)), 1, false, null, true, function() 
+			var jeffclean:Array<Int> = [];
+			if (FlxG.save.data.cleanmode)
+				jeffclean = [1, 3, 8, 13, 17, 21];
+			FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, jeffclean)), 1, false, null, true, function() 
 			{ 
 				FlxG.sound.music.fadeIn(4, 0.2, 1);
 			});
@@ -129,7 +132,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			playingDeathSound = true;
 			coolStartDeath(0.2);
-			FlxG.sound.play(Paths.sound('Gameover-' + FlxG.random.int(1, 6)), 1, false, null, true, function() 
+			var noamongusclean:Array<Int> = [];
+			if (FlxG.save.data.cleanmode)
+				noamongusclean = [2, 5, 6];
+			FlxG.sound.play(Paths.sound('Gameover-' + FlxG.random.int(1, 6, noamongusclean)), 1, false, null, true, function() 
 			{ 
 				FlxG.sound.music.fadeIn(4, 0.2, 1);
 			});
