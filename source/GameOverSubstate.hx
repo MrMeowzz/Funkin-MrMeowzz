@@ -24,13 +24,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		
 		switch (daStage)
 		{
-			case 'school':
-				stageSuffix = '-pixel';
-				daBf = 'bf-pixel-dead';
-			case 'schoolEvil':
-				stageSuffix = '-pixel';
-				daBf = 'bf-pixel-dead';
-
 			default:
 				daBf = 'bf';
 		}
@@ -47,6 +40,12 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (PlayState.SONG.player1 == "pico-pixel")
 			daBf = 'pico-pixel-dead';
+
+		if (PlayState.SONG.player1 == 'bf-pixel')
+		{
+			stageSuffix = '-pixel';
+			daBf = 'bf-pixel-dead';
+		}
 
 		if (PlayState.SONG.player1 == "bf-amogus")
 			daBf = 'bf-amogus';

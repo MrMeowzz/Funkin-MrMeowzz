@@ -113,6 +113,14 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.overridespeed = OptionsState.DefaultValues[7];
 		}
+		if (FlxG.save.data.disabledmissstun == null)
+		{
+			FlxG.save.data.disabledmissstun = OptionsState.DefaultValues[8];
+		}
+		if (FlxG.save.data.misssounds == null)
+		{
+			FlxG.save.data.misssounds = OptionsState.DefaultValues[9];
+		}
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());

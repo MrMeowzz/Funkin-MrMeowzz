@@ -121,6 +121,7 @@ class ChartingState extends MusicBeatState
 				player1: 'bf',
 				player2: 'dad',
 				speed: 1,
+				notestyle: 'normal',
 				validScore: false
 			};
 		}
@@ -242,14 +243,14 @@ class ChartingState extends MusicBeatState
 
 		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
 
-		var player1DropDown = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
+		var player1DropDown = new FlxUIDropDownMenu(10, 125, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
 			_song.player1 = characters[Std.parseInt(character)];
 			updateHeads();
 		});
 		player1DropDown.selectedLabel = _song.player1;
 
-		var player2DropDown = new FlxUIDropDownMenu(140, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
+		var player2DropDown = new FlxUIDropDownMenu(140, 125, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
 			_song.player2 = characters[Std.parseInt(character)];
 			updateHeads();
@@ -257,13 +258,13 @@ class ChartingState extends MusicBeatState
 
 		player2DropDown.selectedLabel = _song.player2;
 
-		var Player1Txt:FlxText = new FlxText(player1DropDown.x, player1DropDown.y + 25, 0, "Player 1");
+		var Player1Txt:FlxText = new FlxText(player1DropDown.x, player1DropDown.y - 25, 0, "Player 1");
 
-		var Player2Txt:FlxText = new FlxText(player2DropDown.x, player2DropDown.y + 25, 0, "Player 2");
+		var Player2Txt:FlxText = new FlxText(player2DropDown.x, player2DropDown.y - 25, 0, "Player 2");
 
 		var switchingDifficultytxt:String = '';
 
-		var difficultyDropDown = new FlxUIDropDownMenu(270, 100, FlxUIDropDownMenu.makeStrIdLabelArray(CoolUtil.difficultyArray, true), function(difficulty:String)
+		var difficultyDropDown = new FlxUIDropDownMenu(270, 125, FlxUIDropDownMenu.makeStrIdLabelArray(CoolUtil.difficultyArray, true), function(difficulty:String)
 		{
 			switch (Std.parseInt(difficulty))
 			{
@@ -280,7 +281,20 @@ class ChartingState extends MusicBeatState
 
 		difficultyDropDown.selectedLabel = CoolUtil.difficultyString();
 
-		var difficultyTxt:FlxText = new FlxText(difficultyDropDown.x, difficultyDropDown.y + 25, 0, "Difficulty");
+		var difficultyTxt:FlxText = new FlxText(difficultyDropDown.x, difficultyDropDown.y - 25, 0, "Difficulty");
+
+		var noteStyles:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteStyles'));
+
+		var notestyleDropDown = new FlxUIDropDownMenu(270, 250, FlxUIDropDownMenu.makeStrIdLabelArray(noteStyles, true), function(style:String)
+		{
+			_song.notestyle = noteStyles[Std.parseInt(style)];
+			PlayState.SONG.notestyle = noteStyles[Std.parseInt(style)];
+			updateGrid();
+		});
+
+		notestyleDropDown.selectedLabel = _song.notestyle;
+
+		var notestyleTxt:FlxText = new FlxText(notestyleDropDown.x, notestyleDropDown.y - 25, 0, "Note Style");
 
 		var tab_group_song = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
@@ -302,6 +316,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(Player1Txt);
 		tab_group_song.add(stepperBPMTxt);
 		tab_group_song.add(stepperSpeedTxt);
+		tab_group_song.add(notestyleDropDown);
+		tab_group_song.add(notestyleTxt);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();

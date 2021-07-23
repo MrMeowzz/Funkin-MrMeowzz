@@ -13,22 +13,22 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed'];
+	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed', 'Miss Stun', 'Miss Sounds'];
 
-	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.'];
+	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.', 'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 'Whether to play miss sounds or not.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false];
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true];
 
-	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON'];
+	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON', 'Miss Stun OFF', 'Miss Sounds ON'];
 
-	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF'];
+	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF', 'Miss Stun ON', 'Miss Sounds OFF'];
 
-	var numberOptions:Array<Bool> = [false,false,false,false,false,false,false,true];
+	var numberOptions:Array<Bool> = [false,false,false,false,false,false,false,true,false,false];
 	
 	#if html5
-	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,false];
+	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,false,false,false];
 	#else
-	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,false];
+	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,false,false,false];
 	#end
 
 	var VisibleOptions:Array<String> = [];
@@ -66,7 +66,7 @@ class OptionsState extends MusicBeatState
 		numtxt.setFormat(Paths.font("vcr.ttf"), 30, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		numtxt.visible = false;
 		numtxt.screenCenter();
-		numtxt.y += 200;
+		numtxt.y += 250;
 		add(numtxt);
 
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
@@ -233,6 +233,18 @@ class OptionsState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenVisibleOptions();
 					regenOptions();
+				case "Miss Stun":
+					FlxG.save.data.disabledmissstun = !FlxG.save.data.disabledmissstun;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
+				case "Miss Sounds":
+					FlxG.save.data.misssounds = !FlxG.save.data.misssounds;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
 			}
 		}
 
@@ -330,6 +342,28 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.overridespeed)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.disabledmissstun)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.misssounds)
 		{
 			VisibleOptions.push(OptionsON[i]);
 		}
