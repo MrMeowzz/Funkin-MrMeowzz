@@ -21,7 +21,6 @@ class Note extends FlxSprite
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var altNote:Bool = false;
-	public var willMiss:Bool = false;
 	public var prevNote:Note;
 
 	public var sustainLength:Float = 0;
@@ -179,7 +178,7 @@ class Note extends FlxSprite
 
 		if (mustPress)
 		{
-			if (willMiss && !wasGoodHit)
+			if (!wasGoodHit)
 			{
 				tooLate = true;
 				canBeHit = false;

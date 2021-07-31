@@ -684,11 +684,11 @@ class ChartingState extends MusicBeatState
 			FlxG.switchState(new PlayState());
 		}
 
-		if (FlxG.keys.justPressed.E)
+		if (FlxG.keys.justPressed.E && !typingShit.hasFocus)
 		{
 			changeNoteSustain(Conductor.stepCrochet);
 		}
-		if (FlxG.keys.justPressed.Q)
+		if (FlxG.keys.justPressed.Q && !typingShit.hasFocus)
 		{
 			changeNoteSustain(-Conductor.stepCrochet);
 		}
@@ -963,8 +963,12 @@ class ChartingState extends MusicBeatState
 	function updateNoteUI():Void
 	{
 		if (curSelectedNote != null)
-			stepperSusLength.value = curSelectedNote[2];
-			check_altnote.checked = curSelectedNote[3];
+		{
+			if (curSelectedNote[2] != null)
+				stepperSusLength.value = curSelectedNote[2];
+			if (curSelectedNote[3] != null)
+				check_altnote.checked = curSelectedNote[3];
+		}
 	}
 
 	function updateGrid():Void
