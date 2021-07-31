@@ -33,6 +33,15 @@ class OutdatedSubState extends MusicBeatState
             "Pre-release build detected! Current version: "
             + ver
             + "\nRemember that there is probably bugs and unfinished features in this build!\nPress ACCEPT to close this!!";
+		#if html5
+		if (!prerelease)
+			txt.text =
+			"HEY! You're running an outdated version of Mr Meowzz's FNF!\nCurrent version is "
+			+ ver
+			+ " while the most recent version is v"
+			+ latestver
+			+ "! Please wait for Github to update this page or press BACK to ignore this!!";
+		#end
 		txt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		txt.screenCenter();
 		add(txt);
@@ -49,11 +58,13 @@ class OutdatedSubState extends MusicBeatState
             }
             else
             {
+				#if !html5
                 #if linux
 			    Sys.command('/usr/bin/xdg-open', ["https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest", "&"]);
 			    #else
 			    FlxG.openURL('https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest');
 			    #end
+				#end
             }
 		}
 		if (controls.BACK && !prerelease)
