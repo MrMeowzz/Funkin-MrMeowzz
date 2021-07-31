@@ -39,13 +39,13 @@ class FreeplayState extends MusicBeatState
 	{
 		#if html5
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 		#end
 		#if desktop
 		if (!FlxG.save.data.freeplaypreviews)
 		{
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 		}
 		#end
 
@@ -60,7 +60,7 @@ class FreeplayState extends MusicBeatState
 			if (FlxG.sound.music != null)
 			{
 				if (!FlxG.sound.music.playing)
-					FlxG.sound.playMusic(Paths.music('frogMenu'));
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			}
 		 */
 
@@ -298,7 +298,7 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 			#if desktop
 			if (FlxG.save.data.freeplaypreviews)
-				FlxG.sound.playMusic(Paths.music('frogMenu'));
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			#end
 		}
 
@@ -367,6 +367,11 @@ class FreeplayState extends MusicBeatState
 		if (curDifficulty > 3)
 			curDifficulty = 0;
 
+		if (songs[curSelected].songName.toLowerCase() == 'test' && curDifficulty < 2)
+		{
+			curDifficulty = 2;
+		}
+
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		#end
@@ -401,6 +406,18 @@ class FreeplayState extends MusicBeatState
 			curSelected = 0;
 
 		// selector.y = (70 * curSelected) + 30;
+
+		if (songs[curSelected].songName.toLowerCase() == 'test' && curDifficulty < 2)
+		{
+			curDifficulty = 2;
+			switch (curDifficulty)
+			{
+				case 2:
+					diffText.text = "< HARD >";
+				case 3:
+					diffText.text = "< HARD PLUS >";
+			}
+		}
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);

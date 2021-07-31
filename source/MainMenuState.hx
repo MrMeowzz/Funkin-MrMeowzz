@@ -35,6 +35,8 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
+	var fnfversion:String = '0.2.7.1';
+
 	override function create()
 	{
 		#if desktop
@@ -47,7 +49,7 @@ class MainMenuState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing)
 		{
-			FlxG.sound.playMusic(Paths.music('frogMenu'));
+			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 		}
 
 		persistentUpdate = persistentDraw = true;
@@ -97,8 +99,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var fnfversion = CoolUtil.coolTextFile(Paths.txt('fnfversion'));
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Mr Meowzz's FNF v" + Application.current.meta.get('version') + " Using FNF v" + fnfversion[0], 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Mr Meowzz's FNF v" + Application.current.meta.get('version') + " Using FNF v" + fnfversion, 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);

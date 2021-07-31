@@ -30,7 +30,8 @@ class PixelNoteSplash extends FlxSprite {
         }
         animation.play("note"+data+"-"+FlxG.random.int(0,1), true);
         updateHitbox();
-        offset.set(-20, -10);
+        offset.x += 90;
+		offset.y += 80;
     }
     override public function update(elapsed) {
         if (animation.curAnim.finished) {

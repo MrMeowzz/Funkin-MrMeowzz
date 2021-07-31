@@ -121,6 +121,14 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.misssounds = OptionsState.DefaultValues[9];
 		}
+		if (FlxG.save.data.countdown == null)
+		{
+			FlxG.save.data.countdown = OptionsState.DefaultValues[10];
+		}
+		if (FlxG.save.data.hitsounds == null)
+		{
+			FlxG.save.data.hitsounds = OptionsState.DefaultValues[11];
+		}
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
@@ -172,10 +180,10 @@ class TitleState extends MusicBeatState
 			// https://github.com/HaxeFlixel/flixel-addons/pull/348
 
 			// var music:FlxSound = new FlxSound();
-			// music.loadStream(Paths.music('frogIntro'));
+			// music.loadStream(Paths.music('frogIntroRemix'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-			FlxG.sound.playMusic(Paths.music('frogIntro'), 0);
+			FlxG.sound.playMusic(Paths.music('frogIntroRemix'), 0);
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
@@ -335,8 +343,33 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
-			FlxG.switchState(new MainMenuState());
+			// FlxG.switchState(new MainMenuState());
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
+	
+			var http = new haxe.Http("https://raw.githubusercontent.com/MrMeowzz/Funkin-MrMeowzz/main/latestver.downloadMe");
+
+			if (Application.current.meta.get('version').contains('PRE'))
+				OutdatedSubState.prerelease = true;
+				
+			http.onData = function (data:String)
+			{
+				if (Application.current.meta.get('version') != data && !OutdatedSubState.leftState && !Application.current.meta.get('version').contains('DEV'))
+				{
+					OutdatedSubState.latestver = data;
+					FlxG.switchState(new OutdatedSubState());
+				}
+				else
+				{
+					FlxG.switchState(new MainMenuState());
+				}
+			}
+				
+			http.onError = function (error) {
+				trace('error: $error');
+				FlxG.switchState(new MainMenuState());
+			}
+				
+			http.request();
 		}
 
 		if (pressedEnter && !skippedIntro)

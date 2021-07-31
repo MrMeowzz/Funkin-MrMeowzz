@@ -82,6 +82,10 @@ class ChartingState extends MusicBeatState
 	var leftIcon:HealthIcon;
 	var rightIcon:HealthIcon;
 
+	var hitsounds:Array<Note> = [];
+
+	var playHitsounds:Bool = true;
+
 	override function create()
 	{
 		curSection = lastSection;
@@ -203,6 +207,13 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.volume = vol;
 		};
 
+		var check_hitsounds = new FlxUICheckBox(125, 200, null, null, "Play hitsounds (in editor)", 100);
+		check_hitsounds.checked = true;
+		check_hitsounds.callback = function()
+		{
+			playHitsounds = check_hitsounds.checked;
+		};
+
 		var saveButton:FlxButton = new FlxButton(110, 8, "Save", function()
 		{
 			saveLevel();
@@ -302,6 +313,7 @@ class ChartingState extends MusicBeatState
 
 		tab_group_song.add(check_voices);
 		tab_group_song.add(check_mute_inst);
+		tab_group_song.add(check_hitsounds);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
@@ -582,6 +594,24 @@ class ChartingState extends MusicBeatState
 
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 
+		if (playHitsounds)
+		{
+			curRenderedNotes.forEach(function(note:Note)
+			{
+				if (FlxG.sound.music.playing)
+				{
+					if (strumLine.overlaps(note))
+					{
+						if (!hitsounds.contains(note))
+							{
+								hitsounds.push(note);
+								FlxG.sound.play(Paths.sound('hitsound'));
+							}
+					}
+				}
+			});
+		}
+
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
 		{
 			trace(curStep);
@@ -687,6 +717,7 @@ class ChartingState extends MusicBeatState
 				{
 					FlxG.sound.music.pause();
 					vocals.pause();
+					hitsounds.splice(0, hitsounds.length);
 				}
 				else
 				{
@@ -707,6 +738,8 @@ class ChartingState extends MusicBeatState
 			{
 				FlxG.sound.music.pause();
 				vocals.pause();
+
+				hitsounds.splice(0, hitsounds.length);
 
 				FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
 				vocals.time = FlxG.sound.music.time;
@@ -737,6 +770,7 @@ class ChartingState extends MusicBeatState
 				{
 					FlxG.sound.music.pause();
 					vocals.pause();
+					hitsounds.splice(0, hitsounds.length);
 
 					var daTime:Float = Conductor.stepCrochet * 2;
 
