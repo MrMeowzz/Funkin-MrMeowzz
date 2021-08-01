@@ -2569,9 +2569,8 @@ class PlayState extends MusicBeatState
 							daNote.y -= 45;
 						}
 					}
-					if (daNote.isSustainNote
-						&& daNote.y + daNote.offset.y >= strumLine.y + Note.swagWidth / 2
-						&& (!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
+					if ((!daNote.mustPress || daNote.wasGoodHit || daNote.prevNote.wasGoodHit && !daNote.canBeHit) 
+					&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
 					{
 						var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
 						swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y + Note.swagWidth / 2 - daNote.y) / daNote.scale.y;
@@ -3524,12 +3523,6 @@ class PlayState extends MusicBeatState
 			vocals.volume = 1;
 
 			if (!note.isSustainNote)
-			{
-				note.kill();
-				notes.remove(note, true);
-				note.destroy();
-			}
-			else if (FlxG.save.data.downscroll)
 			{
 				note.kill();
 				notes.remove(note, true);

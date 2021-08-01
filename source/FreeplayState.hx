@@ -76,7 +76,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
-			addWeek(['Test'], 1, ['bf-pixel']);
+			addWeek(['Test', 'Ridge'], 1, ['bf-pixel', 'dad']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
 			addWeek(['Bopeebo', 'Old Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
@@ -367,7 +367,7 @@ class FreeplayState extends MusicBeatState
 		if (curDifficulty > 3)
 			curDifficulty = 0;
 
-		if (songs[curSelected].songName.toLowerCase() == 'test' && curDifficulty < 2)
+		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2)
 		{
 			curDifficulty = 2;
 		}
@@ -407,7 +407,7 @@ class FreeplayState extends MusicBeatState
 
 		// selector.y = (70 * curSelected) + 30;
 
-		if (songs[curSelected].songName.toLowerCase() == 'test' && curDifficulty < 2)
+		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2)
 		{
 			curDifficulty = 2;
 			switch (curDifficulty)
