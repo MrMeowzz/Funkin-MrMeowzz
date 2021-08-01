@@ -526,7 +526,7 @@ class PauseSubState extends MusicBeatSubstate
 				case "spirit":
 					if (PlayState.SONG.player2 == 'spirit')
 						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
-					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter == 'bf-pixel'))
+					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
 						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
 						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
