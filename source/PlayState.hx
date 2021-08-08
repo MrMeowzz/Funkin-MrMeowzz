@@ -2090,13 +2090,18 @@ class PlayState extends MusicBeatState
 		else
 			healthTxt.text = "Health:" + healthBar.percent + "%";
 		missesTxt.text = "Misses:" + misses;
-		var accuracy:Float = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses)) * 100, 2);
+		var accuracy:Float;
+		if (FlxG.save.data.newaccuracy)
+			accuracy = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses + (goods * 0.025) + (bads * 0.25) + (shits * 0.75))) * 100, 2);
+		else
+			accuracy = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses)) * 100, 2);
+		 
 		if (accuracy < 0)
 		{
 			accuracyTxt.text = "Accuracy:0%";
 			accuracyTxt.x = FlxG.width - (accuracyTxt.width + 10);
 		}
-		else if (misses == 0 && goodnotes == 0 || accuracy == 100)
+		else if (misses == 0 && goodnotes == 0)
 		{
 			accuracyTxt.text = "Accuracy:100%";
 			accuracyTxt.x = FlxG.width - (accuracyTxt.width + 10);
@@ -2107,7 +2112,7 @@ class PlayState extends MusicBeatState
 			accuracyTxt.x = FlxG.width - (accuracyTxt.width + 10);
 		}
 
-		if (misses == 0 && goodnotes == 0 || accuracy == 100)
+		if (misses == 0)
 		{
 			if (sicks > 0 && goods == 0 && bads == 0 && shits == 0)
 				ratingTxt.text = "(MFC)";
@@ -2944,7 +2949,7 @@ class PlayState extends MusicBeatState
 			goods++;
 		}
 
-		if (daRating == 'sick')
+		if (daRating == 'sick' && FlxG.save.data.notesplashes)
 		{
 			if (SONG.notestyle == 'pixel')
 			{
@@ -3452,10 +3457,10 @@ class PlayState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('hitsound'));
 			}
 
-			if (note.noteData >= 0)
+			if (!note.isSustainNote)
 				health += 0.023 * gainmultiplier;
 			else
-				health += 0.004 * gainmultiplier;
+				health += 0.0115 * gainmultiplier;
 			
 			var altAnim:String = "";
 

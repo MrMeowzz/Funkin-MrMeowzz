@@ -13,22 +13,22 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed', 'Miss Stun', 'Miss Sounds', 'Timer Type', 'Hit Sounds'];
+	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed', 'Miss Stun', 'Miss Sounds', 'Timer Type', 'Hit Sounds', 'Experimental Accuracy', 'Note Splashes'];
 
-	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.', 'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 'Whether to play miss sounds or not.', 'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 'Plays a sound when a note is hit. Press P to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.'];
+	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.', 'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 'Whether to play miss sounds or not.', 'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 'Plays a sound when a note is hit. Press P to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.', 'Whether to use the Experimental Accuracy system or not.', 'Enables note splashes that occur when you get sick rating.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false];
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true];
 
-	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON', 'Miss Stun OFF', 'Miss Sounds ON', 'Countdown', 'Hit Sounds ON'];
+	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON', 'Miss Stun OFF', 'Miss Sounds ON', 'Countdown', 'Hit Sounds ON', 'Experimental Acc ON', 'Note Splashes ON'];
 
-	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF', 'Miss Stun ON', 'Miss Sounds OFF', 'Bar', 'Hit Sounds OFF'];
+	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF', 'Miss Stun ON', 'Miss Sounds OFF', 'Bar', 'Hit Sounds OFF', 'Experimental Acc OFF', 'Note Splashes OFF'];
 
-	var numberOptions:Array<Bool> = [false,false,false,false,false,false,false,true,false,false,false];
+	var numberOptions:Array<Bool> = [false,false,false,false,false,false,false,true,false,false,false,false,false];
 	
 	#if html5
-	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,false,false,false,false,false];
+	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,false,false,false,false,false,false,false];
 	#else
-	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,false,false,false,false,false];
+	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,false,false,false,false,false,false,false];
 	#end
 
 	var VisibleOptions:Array<String> = [];
@@ -265,6 +265,18 @@ class OptionsState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenVisibleOptions();
 					regenOptions();
+				case "Experimental Accuracy":
+					FlxG.save.data.newaccuracy = !FlxG.save.data.newaccuracy;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
+				case "Note Splashes":
+					FlxG.save.data.notesplashes = !FlxG.save.data.notesplashes;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
 			}
 		}
 
@@ -406,6 +418,28 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.hitsounds)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.newaccuracy)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.notesplashes)
 		{
 			VisibleOptions.push(OptionsON[i]);
 		}

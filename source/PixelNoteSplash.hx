@@ -25,13 +25,13 @@ class PixelNoteSplash extends FlxSprite {
         alpha = 0.6;
         if (Resize)
         {
-            setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+            setGraphicSize(Std.int(width * 5));
 		    updateHitbox();
         }
         animation.play("note"+data+"-"+FlxG.random.int(0,1), true);
         updateHitbox();
-        offset.x += 90;
-		offset.y += 80;
+        offset.x += 72;
+		offset.y += 64;
     }
     override public function update(elapsed) {
         if (animation.curAnim.finished) {
