@@ -86,6 +86,10 @@ class ChartingState extends MusicBeatState
 
 	var playHitsounds:Bool = true;
 
+	var notetypeDropDown:FlxUIDropDownMenu;
+
+	var notePlacedType:String = 'normal';
+
 	override function create()
 	{
 		curSection = lastSection;
@@ -398,6 +402,26 @@ class ChartingState extends MusicBeatState
 		{
 			_song.notes[curSection].altAnimPlayer = Std.parseInt(player);
 		});
+
+
+		var notetypes:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteTypeList'));
+		if (_song.notestyle == 'pixel')
+			notetypes = CoolUtil.coolTextFile(Paths.txt('noteTypeList-pixel'));
+		notetypeDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(notetypes, true), function(type:String)
+		{
+			notePlacedType = notetypes[Std.parseInt(type)];
+			updateNoteUI();
+			updateGrid();
+		});
+		var notetypeTxt:FlxText = new FlxText(notetypeDropDown.x, notetypeDropDown.y - 25, 0, "Note Type");
+
+		notetypeDropDown.selectedLabel = 'normal';
+
+		notetypeDropDown.scrollFactor.set();
+		notetypeTxt.scrollFactor.set();
+
+		add(notetypeDropDown);
+		add(notetypeTxt);
 
 		tab_group_section.add(stepperLength);
 		tab_group_section.add(stepperSectionBPM);
@@ -1020,14 +1044,33 @@ class ChartingState extends MusicBeatState
 			var daStrumTime = i[0];
 			var daSus = i[2];
 			var daAltnote = i[3];
-
-			var note:Note = new Note(daStrumTime, daNoteInfo % 4);
+			var daNotetype = i[4];
+			var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, daNotetype);
 			note.sustainLength = daSus;
 			note.altNote = daAltnote;
+			note.noteType = daNotetype;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
 			note.x = Math.floor(daNoteInfo * GRID_SIZE);
 			note.y = Math.floor(getYfromStrum((daStrumTime - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps)));
+			if (note.noteType == 'fire')
+			{
+				note.setGraphicSize(GRID_SIZE * 2, GRID_SIZE * 4);
+				if (FlxG.save.data.downscroll)
+					note.y -= 30;
+				else
+					note.y += 30;
+			}
+			if (note.noteType == 'halo')
+			{
+				note.setGraphicSize(GRID_SIZE * 4, GRID_SIZE * 2);
+				note.y -= 20;
+			}
+			if (note.noteType == 'poisonmusthit')
+			{
+				note.setGraphicSize(GRID_SIZE, GRID_SIZE + 10);
+				note.y += 5;
+			}
 
 			curRenderedNotes.add(note);
 
@@ -1119,6 +1162,9 @@ class ChartingState extends MusicBeatState
 		{
 			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus]);
 		}
+
+		trace('placed note type: ' + notePlacedType);
+		curSelectedNote[4] = notePlacedType;
 
 		trace(noteStrum);
 		trace(curSection);

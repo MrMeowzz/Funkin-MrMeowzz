@@ -21,6 +21,7 @@ class Note extends FlxSprite
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var altNote:Bool = false;
+	public var noteType:String = 'normal';
 	public var prevNote:Note;
 
 	public var sustainLength:Float = 0;
@@ -34,7 +35,7 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?noteCreationType:String = 'normal')
 	{
 		super();
 
@@ -76,6 +77,16 @@ class Note extends FlxSprite
 					animation.add('redhold', [3]);
 					animation.add('bluehold', [1]);
 				}
+				if (noteCreationType == 'fire')
+				{
+					loadGraphic(Paths.image('pixelUI/NOTE_fire-pixel'), true, 21, 31);
+					
+					animation.add('greenScroll', [6, 7, 6, 8], 8);
+					animation.add('redScroll', [9, 10, 9, 11], 8);
+					animation.add('blueScroll', [3, 4, 3, 5], 8);
+					animation.add('purpleScroll', [0, 1 ,0, 2], 8);
+					x -= 15;
+				}
 
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 				updateHitbox();
@@ -98,6 +109,60 @@ class Note extends FlxSprite
 				animation.addByPrefix('greenhold', 'green hold piece');
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
+				if (noteCreationType == 'halo')
+				{
+					frames = Paths.getSparrowAtlas('noteTypes/NOTE_halo');
+					animation.addByPrefix('greenScroll', 'Green Arrow');
+					animation.addByPrefix('redScroll', 'Red Arrow');
+					animation.addByPrefix('blueScroll', 'Blue Arrow');
+					animation.addByPrefix('purpleScroll', 'Purple Arrow');
+					x -= 165;
+				}
+				else if (noteCreationType == 'fire')
+				{
+					frames = Paths.getSparrowAtlas('noteTypes/NOTE_fire');
+					if(!FlxG.save.data.downscroll){
+						animation.addByPrefix('blueScroll', 'blue fire');
+						animation.addByPrefix('greenScroll', 'green fire');
+					}
+					else{
+						animation.addByPrefix('greenScroll', 'blue fire');
+						animation.addByPrefix('blueScroll', 'green fire');
+					}
+					animation.addByPrefix('redScroll', 'red fire');
+					animation.addByPrefix('purpleScroll', 'purple fire');
+
+					if(FlxG.save.data.downscroll)
+						flipY = true;
+
+					x -= 50;
+				}
+				else if (noteCreationType == 'poison')
+				{
+					frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
+
+					animation.addByPrefix('greenScroll', 'vertedUp');
+					animation.addByPrefix('redScroll', 'vertedRight');
+					animation.addByPrefix('blueScroll', 'vertedDown');
+					animation.addByPrefix('purpleScroll', 'vertedLeft');
+				}
+				else if (noteCreationType == 'poisonmusthit')
+				{
+					frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
+
+					animation.addByPrefix('greenScroll', 'hitUp');
+					animation.addByPrefix('redScroll', 'hitRight');
+					animation.addByPrefix('blueScroll', 'hitDown');
+					animation.addByPrefix('purpleScroll', 'hitLeft');
+				}
+				else if (noteCreationType == 'warning')
+				{
+					loadGraphic(Paths.image('noteTypes/warningNote'));
+				}
+				else if (noteCreationType == 'stun')
+				{
+					loadGraphic(Paths.image('noteTypes/stunNote'));
+				}
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
@@ -179,7 +244,10 @@ class Note extends FlxSprite
 		if (mustPress)
 		{
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
-			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
+			var safeZoneOffsetMultiplier:Float = 1;
+			if (FlxG.save.data.newhittimings)
+				safeZoneOffsetMultiplier = 1.5;
+			if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * safeZoneOffsetMultiplier)
 				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
 				canBeHit = true;
 			else

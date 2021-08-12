@@ -137,6 +137,14 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.notesplashes = OptionsState.DefaultValues[13];
 		}
+		if (FlxG.save.data.newhittimings == null)
+		{
+			FlxG.save.data.newhittimings = OptionsState.DefaultValues[14];
+		}
+		if (FlxG.save.data.ratingsfollowcamera == null)
+		{
+			FlxG.save.data.ratingsfollowcamera = OptionsState.DefaultValues[15];
+		}
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
