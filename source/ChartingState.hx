@@ -87,6 +87,7 @@ class ChartingState extends MusicBeatState
 	var playHitsounds:Bool = true;
 
 	var notetypeDropDown:FlxUIDropDownMenu;
+	var notetypeDropDownPixel:FlxUIDropDownMenu;
 
 	var notePlacedType:String = 'normal';
 
@@ -304,6 +305,11 @@ class ChartingState extends MusicBeatState
 		{
 			_song.notestyle = noteStyles[Std.parseInt(style)];
 			PlayState.SONG.notestyle = noteStyles[Std.parseInt(style)];
+			if (_song.notestyle == 'pixel')
+				notePlacedType = notetypeDropDownPixel.selectedLabel;
+			else
+				notePlacedType = notetypeDropDown.selectedLabel;
+
 			updateGrid();
 		});
 
@@ -405,23 +411,30 @@ class ChartingState extends MusicBeatState
 
 
 		var notetypes:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteTypeList'));
-		if (_song.notestyle == 'pixel')
-			notetypes = CoolUtil.coolTextFile(Paths.txt('noteTypeList-pixel'));
+		var notetypespixel:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteTypeList-pixel'));
 		notetypeDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(notetypes, true), function(type:String)
 		{
 			notePlacedType = notetypes[Std.parseInt(type)];
 			updateNoteUI();
 			updateGrid();
 		});
+		notetypeDropDownPixel = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(notetypespixel, true), function(type:String)
+		{
+			notePlacedType = notetypespixel[Std.parseInt(type)];
+			updateNoteUI();
+			updateGrid();
+		});
 		var notetypeTxt:FlxText = new FlxText(notetypeDropDown.x, notetypeDropDown.y - 25, 0, "Note Type");
 
 		notetypeDropDown.selectedLabel = 'normal';
+		notetypeDropDownPixel.selectedLabel = 'normal';
 
 		notetypeDropDown.scrollFactor.set();
+		notetypeDropDownPixel.scrollFactor.set();
 		notetypeTxt.scrollFactor.set();
 
-		add(notetypeDropDown);
 		add(notetypeTxt);
+		updateGrid();
 
 		tab_group_section.add(stepperLength);
 		tab_group_section.add(stepperSectionBPM);
@@ -566,7 +579,7 @@ class ChartingState extends MusicBeatState
 			}
 			else if (wname == 'note_susLength')
 			{
-				if (curSelectedNote != null)
+				if (curSelectedNote != null && (curSelectedNote[4] == 'normal' || curSelectedNote[4] == null))
 				{
 					curSelectedNote[2] = nums.value;
 					updateGrid();
@@ -1037,6 +1050,16 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		 */
+		remove(notetypeDropDown);
+		remove(notetypeDropDownPixel);
+		 if (_song.notestyle == 'pixel')
+		 {
+			add(notetypeDropDownPixel);
+		 }
+		 else
+		 {
+			 add(notetypeDropDown);
+		 }
 
 		for (i in sectionInfo)
 		{
@@ -1053,23 +1076,41 @@ class ChartingState extends MusicBeatState
 			note.updateHitbox();
 			note.x = Math.floor(daNoteInfo * GRID_SIZE);
 			note.y = Math.floor(getYfromStrum((daStrumTime - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps)));
-			if (note.noteType == 'fire')
+
+			if (!CoolUtil.coolTextFile(Paths.txt('noteTypeList-pixel')).contains(daNotetype) && daNotetype != null && _song.notestyle == 'pixel')
 			{
-				note.setGraphicSize(GRID_SIZE * 2, GRID_SIZE * 4);
-				if (FlxG.save.data.downscroll)
-					note.y -= 30;
-				else
-					note.y += 30;
+				daNotetype = 'normal';
 			}
-			if (note.noteType == 'halo')
+			if (daNotetype == 'fire')
+			{
+				if (_song.notestyle != 'pixel')
+				{
+					note.setGraphicSize(GRID_SIZE * 2, GRID_SIZE * 4);
+					if (FlxG.save.data.downscroll)
+						note.y -= 30;
+					else
+						note.y += 30;
+				}
+				else
+				{
+					note.setGraphicSize(GRID_SIZE, GRID_SIZE * 2);
+					note.y += 10;
+				}	
+			}
+			if (daNotetype == 'halo')
 			{
 				note.setGraphicSize(GRID_SIZE * 4, GRID_SIZE * 2);
 				note.y -= 20;
 			}
-			if (note.noteType == 'poisonmusthit')
+			if (daNotetype == 'poisonmusthit')
 			{
 				note.setGraphicSize(GRID_SIZE, GRID_SIZE + 10);
-				note.y += 5;
+				note.updateHitbox();
+			}
+			if (daNotetype == 'poison')
+			{
+				note.setGraphicSize(GRID_SIZE, GRID_SIZE + 5);
+				note.updateHitbox();
 			}
 
 			curRenderedNotes.add(note);

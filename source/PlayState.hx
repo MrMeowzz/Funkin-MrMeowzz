@@ -1711,6 +1711,11 @@ class PlayState extends MusicBeatState
 				swagNote.noteType = songNotes[4];
 				swagNote.scrollFactor.set(0, 0);
 
+				if (!CoolUtil.coolTextFile(Paths.txt('noteTypeList-pixel')).contains(swagNote.noteType) && swagNote.noteType != null && SONG.notestyle == 'pixel')
+				{
+					swagNote.noteType = 'normal';
+				}
+
 				var susLength:Float = swagNote.sustainLength;
 
 				susLength = susLength / Conductor.stepCrochet;
@@ -1763,7 +1768,7 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
 
-			if (PlayState.SONG.notestyle == 'pixel')
+			if (SONG.notestyle == 'pixel')
 			{
 				babyArrow.loadGraphic(Paths.image('pixelUI/arrows-pixels'), true, 17, 17);
 				babyArrow.animation.add('green', [6]);
