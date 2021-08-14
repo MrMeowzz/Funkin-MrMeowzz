@@ -86,6 +86,8 @@ class ChartingState extends MusicBeatState
 
 	var playHitsounds:Bool = true;
 
+	var HitsoundsPlayer:Int = 0;
+
 	var notetypeDropDown:FlxUIDropDownMenu;
 	var notetypeDropDownPixel:FlxUIDropDownMenu;
 
@@ -212,12 +214,30 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.volume = vol;
 		};
 
+		var check_mute_voices = new FlxUICheckBox(10, 225, null, null, "Mute Voices (in editor)", 100);
+		check_mute_voices.checked = false;
+		check_mute_voices.callback = function()
+		{
+			var vol:Float = 1;
+
+			if (check_mute_voices.checked)
+				vol = 0;
+
+			vocals.volume = vol;
+		};
+
 		var check_hitsounds = new FlxUICheckBox(125, 200, null, null, "Play hitsounds (in editor)", 100);
 		check_hitsounds.checked = true;
 		check_hitsounds.callback = function()
 		{
 			playHitsounds = check_hitsounds.checked;
 		};
+
+		var hitsoundsPlayerDropDown = new FlxUIDropDownMenu(125, 225, FlxUIDropDownMenu.makeStrIdLabelArray(["both", "player1", "player2"], true), function(player:String)
+		{
+			HitsoundsPlayer = Std.parseInt(player);
+		});
+		hitsoundsPlayerDropDown.selectedLabel = "both";
 
 		var saveButton:FlxButton = new FlxButton(110, 8, "Save", function()
 		{
@@ -323,7 +343,9 @@ class ChartingState extends MusicBeatState
 
 		tab_group_song.add(check_voices);
 		tab_group_song.add(check_mute_inst);
+		tab_group_song.add(check_mute_voices);
 		tab_group_song.add(check_hitsounds);
+		tab_group_song.add(hitsoundsPlayerDropDown);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
@@ -640,10 +662,14 @@ class ChartingState extends MusicBeatState
 					if (strumLine.overlaps(note))
 					{
 						if (!hitsounds.contains(note))
+						{
+							//sorry for if statement lol
+							if ((note.noteInfo < 4 && HitsoundsPlayer == 1 && _song.notes[curSection].mustHitSection) || (note.noteInfo > 3 && HitsoundsPlayer == 2 && _song.notes[curSection].mustHitSection) || (note.noteInfo > 3 && HitsoundsPlayer == 1 && !_song.notes[curSection].mustHitSection) || (note.noteInfo < 4 && HitsoundsPlayer == 2 && !_song.notes[curSection].mustHitSection) || HitsoundsPlayer == 0)
 							{
 								hitsounds.push(note);
 								FlxG.sound.play(Paths.sound('hitsound'));
 							}
+						}
 					}
 				}
 			});
@@ -1072,6 +1098,7 @@ class ChartingState extends MusicBeatState
 			note.sustainLength = daSus;
 			note.altNote = daAltnote;
 			note.noteType = daNotetype;
+			note.noteInfo = daNoteInfo;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
 			note.x = Math.floor(daNoteInfo * GRID_SIZE);
@@ -1087,20 +1114,23 @@ class ChartingState extends MusicBeatState
 				{
 					note.setGraphicSize(GRID_SIZE * 2, GRID_SIZE * 4);
 					if (FlxG.save.data.downscroll)
-						note.y -= 30;
+						note.offset.y += 30;
 					else
-						note.y += 30;
+						note.offset.y -= 30;
 				}
 				else
 				{
 					note.setGraphicSize(GRID_SIZE, GRID_SIZE * 2);
-					note.y += 10;
+					if (FlxG.save.data.downscroll)
+						note.offset.y += 10;
+					else
+						note.offset.y -= 10;				
 				}	
 			}
 			if (daNotetype == 'halo')
 			{
 				note.setGraphicSize(GRID_SIZE * 4, GRID_SIZE * 2);
-				note.y -= 20;
+				note.offset.y += 20;
 			}
 			if (daNotetype == 'poisonmusthit')
 			{
@@ -1146,7 +1176,7 @@ class ChartingState extends MusicBeatState
 
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData)
+			if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData && i.noteType == note.noteType)
 			{
 				curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
 			}
@@ -1162,7 +1192,7 @@ class ChartingState extends MusicBeatState
 	{
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if (i[0] == note.strumTime && i[1] % 4 == note.noteData)
+			if (i[0] == note.strumTime && i[1] % 4 == note.noteData && i[4] == note.noteType)
 			{
 				FlxG.log.add('FOUND EVIL NUMBER');
 				_song.notes[curSection].sectionNotes.remove(i);

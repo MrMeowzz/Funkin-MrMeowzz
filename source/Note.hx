@@ -21,6 +21,7 @@ class Note extends FlxSprite
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var altNote:Bool = false;
+	public var noteInfo:Int;
 	public var noteType:String = 'normal';
 	public var prevNote:Note;
 
@@ -80,11 +81,21 @@ class Note extends FlxSprite
 				if (noteCreationType == 'fire')
 				{
 					loadGraphic(Paths.image('pixelUI/NOTE_fire-pixel'), true, 21, 31);
-					
-					animation.add('greenScroll', [6, 7, 6, 8], 8);
-					animation.add('redScroll', [9, 10, 9, 11], 8);
-					animation.add('blueScroll', [3, 4, 3, 5], 8);
+
+					if(!FlxG.save.data.downscroll){
+						animation.add('blueScroll', [3, 4, 3, 5], 8);
+						animation.add('greenScroll', [6, 7, 6, 8], 8);
+					}
+					else{
+						animation.add('blueScroll', [6, 7, 6, 8], 8);
+						animation.add('greenScroll', [3, 4, 3, 5], 8);
+					}
+					animation.add('redScroll', [9, 10, 9, 11], 8);					
 					animation.add('purpleScroll', [0, 1 ,0, 2], 8);
+
+					if(FlxG.save.data.downscroll)
+						flipY = true;
+
 					x -= 15;
 				}
 
