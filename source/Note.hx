@@ -24,6 +24,7 @@ class Note extends FlxSprite
 	public var noteInfo:Int;
 	public var noteType:String = 'normal';
 	public var prevNote:Note;
+	public var noteEffect:Bool = false;
 
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
@@ -45,6 +46,8 @@ class Note extends FlxSprite
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
+		if (sustainNote)
+			noteType = noteCreationType;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
@@ -159,20 +162,51 @@ class Note extends FlxSprite
 				}
 				else if (noteCreationType == 'poisonmusthit')
 				{
-					frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
+					animation.addByPrefix('purpleholdend', 'poison hold end instance');
+					animation.addByPrefix('greenholdend', 'poison hold end instance');
+					animation.addByPrefix('redholdend', 'poison hold end instance');
+					animation.addByPrefix('blueholdend', 'poison hold end instance');
+					animation.addByPrefix('purplehold', 'poison hold piece instance');
+					animation.addByPrefix('greenhold', 'poison hold piece instance');
+					animation.addByPrefix('redhold', 'poison hold piece instance');
+					animation.addByPrefix('bluehold', 'poison hold piece instance');
+					if (!sustainNote)
+					{
+						frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
 
-					animation.addByPrefix('greenScroll', 'hitUp');
-					animation.addByPrefix('redScroll', 'hitRight');
-					animation.addByPrefix('blueScroll', 'hitDown');
-					animation.addByPrefix('purpleScroll', 'hitLeft');
+						animation.addByPrefix('greenScroll', 'hitUp');
+						animation.addByPrefix('redScroll', 'hitRight');
+						animation.addByPrefix('blueScroll', 'hitDown');
+						animation.addByPrefix('purpleScroll', 'hitLeft');
+					}					
 				}
 				else if (noteCreationType == 'warning')
 				{
-					loadGraphic(Paths.image('noteTypes/warningNote'));
+					animation.addByPrefix('purpleholdend', 'warning hold end instance');
+					animation.addByPrefix('greenholdend', 'warning hold end instance');
+					animation.addByPrefix('redholdend', 'warning hold end instance');
+					animation.addByPrefix('blueholdend', 'warning hold end instance');
+					animation.addByPrefix('purplehold', 'warning hold piece instance');
+					animation.addByPrefix('greenhold', 'warning hold piece instance');
+					animation.addByPrefix('redhold', 'warning hold piece instance');
+					animation.addByPrefix('bluehold', 'warning hold piece instance');
+					
+					if (!sustainNote)
+						loadGraphic(Paths.image('noteTypes/warningNote'));
 				}
 				else if (noteCreationType == 'stun')
 				{
-					loadGraphic(Paths.image('noteTypes/stunNote'));
+					animation.addByPrefix('purpleholdend', 'stun hold end instance');
+					animation.addByPrefix('greenholdend', 'stun hold end instance');
+					animation.addByPrefix('redholdend', 'stun hold end instance');
+					animation.addByPrefix('blueholdend', 'stun hold end instance');
+					animation.addByPrefix('purplehold', 'stun hold piece instance');
+					animation.addByPrefix('greenhold', 'stun hold piece instance');
+					animation.addByPrefix('redhold', 'stun hold piece instance');
+					animation.addByPrefix('bluehold', 'stun hold piece instance');
+
+					if (!sustainNote)
+						loadGraphic(Paths.image('noteTypes/stunNote'));
 				}
 
 				setGraphicSize(Std.int(width * 0.7));
@@ -254,18 +288,41 @@ class Note extends FlxSprite
 
 		if (mustPress)
 		{
-			// The * 0.5 is so that it's easier to hit them too late, instead of too early
-			var safeZoneOffsetMultiplier:Float = 1;
-			if (FlxG.save.data.newhittimings)
-				safeZoneOffsetMultiplier = 1.5;
-			if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * safeZoneOffsetMultiplier)
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
-				canBeHit = true;
-			else
+			if (noteType == 'halo')
+			{
+				// these though, REALLY hard to hit.
+				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.3)
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.2)) // also they're almost impossible to hit late!
+					canBeHit = true;
+				else
+					canBeHit = false;
+			}
+			else if (noteType == 'fire')
+			{
+				// make burning notes a lot harder to accidently hit because they're weirdchamp!
+				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.6)
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.4)) // also they're almost impossible to hit late!
+					canBeHit = true;
+				else
+					canBeHit = false;
+			}
+			else if (prevNote.noteEffect && isSustainNote)
+			{
 				canBeHit = false;
-
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset * Conductor.timeScale && !wasGoodHit)
 				tooLate = true;
+				noteEffect = true;
+			}
+			else
+			{
+				if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5)) // The * 0.5 is so that it's easier to hit them too late, instead of too early
+					canBeHit = true;
+				else
+					canBeHit = false;
+
+				if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset * Conductor.timeScale && !wasGoodHit)
+					tooLate = true;
+			}
 		}
 		else
 		{

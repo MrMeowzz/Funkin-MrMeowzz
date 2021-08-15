@@ -446,6 +446,11 @@ class ChartingState extends MusicBeatState
 			updateNoteUI();
 			updateGrid();
 		});
+		if (FlxG.save.data.fpscounter)
+		{
+			notetypeDropDown.y += 25;
+			notetypeDropDownPixel.y += 25;
+		}
 		var notetypeTxt:FlxText = new FlxText(notetypeDropDown.x, notetypeDropDown.y - 25, 0, "Note Type");
 
 		notetypeDropDown.selectedLabel = 'normal';
@@ -601,7 +606,7 @@ class ChartingState extends MusicBeatState
 			}
 			else if (wname == 'note_susLength')
 			{
-				if (curSelectedNote != null && (curSelectedNote[4] == 'normal' || curSelectedNote[4] == null))
+				if (curSelectedNote != null && (curSelectedNote[4] == 'normal' || curSelectedNote[4] == 'poisonmusthit' || curSelectedNote[4] == 'warning' || curSelectedNote[4] == 'stun' || curSelectedNote[4] == null))
 				{
 					curSelectedNote[2] = nums.value;
 					updateGrid();
@@ -892,7 +897,7 @@ class ChartingState extends MusicBeatState
 
 	function changeNoteSustain(value:Float):Void
 	{
-		if (curSelectedNote != null)
+		if (curSelectedNote != null && (curSelectedNote[4] == 'normal' || curSelectedNote[4] == 'poisonmusthit' || curSelectedNote[4] == 'warning' || curSelectedNote[4] == 'stun' || curSelectedNote[4] == null))
 		{
 			if (curSelectedNote[2] != null)
 			{

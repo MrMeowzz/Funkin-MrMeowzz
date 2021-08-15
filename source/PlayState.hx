@@ -1725,7 +1725,7 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, songNotes[4]);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 
@@ -2704,7 +2704,10 @@ class PlayState extends MusicBeatState
 					{
 						if (daNote.noteType == 'warning')
 						{
-							health -= 1;
+							if (!daNote.prevNote.noteEffect)
+								health -= 1;
+								daNote.noteEffect = true;
+								daNote.prevNote.noteEffect = true;
 						}
 						else if (daNote.noteType == 'stun')
 						{
@@ -2712,7 +2715,10 @@ class PlayState extends MusicBeatState
 						}
 						else if (daNote.noteType == 'poisonmusthit')
 						{
-							HealthDrain();
+							if (!daNote.prevNote.noteEffect)
+								HealthDrain();
+								daNote.noteEffect = true;
+								daNote.prevNote.noteEffect = true;
 						}
 						else
 						{
@@ -2965,7 +2971,7 @@ class PlayState extends MusicBeatState
 				score = 100;
 				bads++;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.29)
+			else if (noteDiff > Conductor.safeZoneOffset * 0.3)
 			{
 				daRating = 'good';
 				score = 200;
@@ -3553,6 +3559,13 @@ class PlayState extends MusicBeatState
 				goodnotes++;
 				if (FlxG.save.data.hitsounds)
 					FlxG.sound.play(Paths.sound('hitsound'));
+			}
+			if (note.isSustainNote && note.noteType == 'stun')
+			{
+				var camx = camFollow.x;
+				FlxTween.tween(camFollow, {x: camx+100}, 0.3, {ease:FlxEase.sineOut,type:FlxTweenType.BACKWARD});
+				FlxG.camera.shake(0.01, 0.15);
+				FlxG.camera.scroll.x += 30;
 			}
 
 			if (!note.isSustainNote)
