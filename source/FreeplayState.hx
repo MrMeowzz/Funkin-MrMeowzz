@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import flixel.util.FlxTimer;
 import openfl.Lib;
+import flixel.tweens.FlxTween;
 
 using StringTools;
 
@@ -34,6 +35,8 @@ class FreeplayState extends MusicBeatState
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
+
+	var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 
 	override function create()
 	{
@@ -109,7 +112,6 @@ class FreeplayState extends MusicBeatState
 
 		// LOAD CHARACTERS
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -347,15 +349,6 @@ class FreeplayState extends MusicBeatState
 		{
 			randomtimer.cancel();
 		}
-
-		#if desktop
-		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
-        {
-			FlxG.save.data.fullscreen = !FlxG.fullscreen;
-			FlxG.save.flush();
-        	FlxG.fullscreen = !FlxG.fullscreen;
-        }
-		#end
 	}
 
 	function changeDiff(change:Int = 0)
@@ -386,6 +379,60 @@ class FreeplayState extends MusicBeatState
 				diffText.text = "< HARD >";
 			case 3:
 				diffText.text = "< HARD PLUS >";
+		}
+	}
+
+	function iconColors(icon:String)
+	{
+		switch (icon)
+		{
+			case 'bf' | 'bf-car' | 'bf-christmas' | 'bf-pixel':
+				return 0xFF149DFF;
+			case 'bf-holding-gf':
+				var random:Int;
+				random = FlxG.random.int(0, 1);
+				if (random == 1)
+					return 0xFFA5004D;
+				else
+					return 0xFF149DFF;
+			case 'amogusguy' | 'bfamogus':
+				return 0xFFD8D8D8;
+			case 'dad':
+				return 0xFFAF66CE;
+			case 'gf' | 'gf-car' | 'gf-christmas' | 'gf-pixel' | 'gf-tankmen':
+				return 0xFFA5004D;
+			case 'monster' | 'monster-christmas':
+				return 0xFFF2D046;
+			case 'parents-christmas':
+				var random:Int;
+				random = FlxG.random.int(0, 1);
+				if (random == 1)
+					return 0xFFAF66CE;
+				else
+					return 0xFFD8558E;
+			case 'pico' | 'pico-speaker':
+				return 0xFFB7D855;
+			case 'senpai' | 'senpai-angry':
+				return 0xFFFA86C4;
+			case 'spirit':
+				return 0xFF30066B;
+			case 'spooky':
+				var random:Int;
+				random = FlxG.random.int(0, 1);
+				if (random == 1)
+					return 0xFFFD9013;
+				else
+					return 0xFFC3C3C3;
+			case 'mom' | 'mom-car':
+				return 0xFFD8558E;
+			case 'tankman' | 'tankmannoamongus':
+				return 0xFFF9B03A;
+			case 'bf-old':
+				return 0xFFE9FF48;
+			case 'face':
+				return 0xFFA1A1A1;
+			default:
+				return FlxColor.WHITE;
 		}
 	}
 
@@ -455,6 +502,7 @@ class FreeplayState extends MusicBeatState
 				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
+		FlxTween.color(bg, 0.5, bg.color, iconColors(Std.string(songs[curSelected].songCharacter)));
 	}
 }
 

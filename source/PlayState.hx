@@ -307,8 +307,9 @@ class PlayState extends MusicBeatState
 				storyDifficultyText = "Hard";
 			case 3:
 				storyDifficultyText = "Hard Plus";
-				gainmultiplier = 0.5;
-				losemultiplier = 2;
+				if (SONG.song.toLowerCase() != 'ugh')
+					gainmultiplier = 0.5;
+					losemultiplier = 2;
 		}
 
 		player1RPC = SONG.player1;
@@ -994,8 +995,6 @@ class PlayState extends MusicBeatState
 		// REPOSITIONING PER STAGE
 		switch (curStage)
 		{
-			case 'spooky' | "mallEvil" | "mall":
-				// nothing
 			case 'stage':
 				if (dad.curCharacter == 'bf-pixel')
 					dad.y -= 50;
@@ -1155,7 +1154,7 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		healthBar.createFilledBar(iconColors(SONG.player2), 0xFF66FF33);
 		// healthBar
 		add(healthBar);
 
@@ -1480,6 +1479,45 @@ class PlayState extends MusicBeatState
 				remove(black);
 			}
 		});
+	}
+
+	function iconColors(icon:String)
+	{
+		switch (icon)
+		{
+			case 'bf' | 'bf-car' | 'bf-christmas' | 'bf-pixel':
+				return 0xFF149DFF;
+			case 'bf-holding-gf':
+				return 0xFF149DFF;
+			case 'amogusguy' | 'bfamogus':
+				return 0xFFD8D8D8;
+			case 'dad':
+				return 0xFFAF66CE;
+			case 'gf' | 'gf-car' | 'gf-christmas' | 'gf-pixel' | 'gf-tankmen':
+				return 0xFFA5004D;
+			case 'monster' | 'monster-christmas':
+				return 0xFFF2D046;
+			case 'parents-christmas':
+				return 0xFFAF66CE;
+			case 'pico' | 'pico-speaker' | 'pico-pixel':
+				return 0xFFB7D855;
+			case 'senpai' | 'senpai-angry':
+				return 0xFFFFAA6F;
+			case 'spirit':
+				return 0xFFFF3C6E;
+			case 'spooky':
+				return 0xFFFD9013;
+			case 'mom' | 'mom-car':
+				return 0xFFD8558E;
+			case 'tankman' | 'tankmannoamongus' | 'tankman-pixel':
+				return FlxColor.WHITE;
+			case 'bf-old':
+				return 0xFFE9FF48;
+			case 'face':
+				return 0xFFA1A1A1;
+			default:
+				return 0xFFFF0000;
+		}
 	}
 
 	var startTimer:FlxTimer;
@@ -1992,12 +2030,19 @@ class PlayState extends MusicBeatState
 					iconP1.animation.play(SONG.player1);
 				else
 					iconP1.animation.play('bf-old');
-			else if (iconP2.animation.curAnim.name.startsWith('bf'))
+			else if (iconP2.animation.curAnim.name.startsWith('bf'))			
 				if (iconP2.animation.curAnim.name == 'bf-old')
+				{
 					iconP2.animation.play(SONG.player2);
+					healthBar.createFilledBar(iconColors(SONG.player2), 0xFF66FF33);
+					healthBar.updateFilledBar();
+				}
 				else
+				{
 					iconP2.animation.play('bf-old');
-
+					healthBar.createFilledBar(iconColors('bf-old'), 0xFF66FF33);
+					healthBar.updateFilledBar();
+				}					
 		}
 		if (FlxG.keys.justPressed.SIX && !inCutscene)
 		{
@@ -2816,15 +2861,6 @@ class PlayState extends MusicBeatState
 				});
 			}
 		}
-
-		#if desktop
-		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
-        {
-			FlxG.save.data.fullscreen = !FlxG.fullscreen;
-			FlxG.save.flush();
-        	FlxG.fullscreen = !FlxG.fullscreen;
-        }
-		#end
 	}
 
 	function endSong():Void

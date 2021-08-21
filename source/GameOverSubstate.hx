@@ -100,15 +100,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			}
 		}
 
-		#if desktop
-		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
-        {
-			FlxG.save.data.fullscreen = !FlxG.fullscreen;
-			FlxG.save.flush();	
-        	FlxG.fullscreen = !FlxG.fullscreen;
-        }
-		#end
-
 		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
 		{

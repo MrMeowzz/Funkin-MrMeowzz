@@ -76,6 +76,18 @@ class StoryMenuState extends MusicBeatState
 		"MEME TIME"
 	];
 
+	var weekColors:Array<FlxColor> = [
+		0xFFA5004D, // GF
+		0xFFAF66CE, // DAD
+		0xFFFD9013, // SPOOKY
+		0xFFB7D855, // PICO
+		0xFFD8558E, // MOM
+		0xFF800000, // PARENTS-CHRISTMAS
+		0xFFFA86C4, // SENPAI
+		0xFFF9B03A, // TANKMAN
+		0xFFD8D8D8
+	];
+
 	var txtWeekTitle:FlxText;
 
 	var curWeek:Int = 0;
@@ -91,6 +103,7 @@ class StoryMenuState extends MusicBeatState
 	var sprDifficulty:FlxSprite;
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
+	var BG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, FlxColor.WHITE);
 
 	override function create()
 	{
@@ -128,7 +141,6 @@ class StoryMenuState extends MusicBeatState
 		rankText.screenCenter(X);
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
-		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		add(grpWeekText);
@@ -150,7 +162,7 @@ class StoryMenuState extends MusicBeatState
 
 		for (i in 0...weekData.length)
 		{
-			var weekThing:MenuItem = new MenuItem(0, yellowBG.y + yellowBG.height + 10, i);
+			var weekThing:MenuItem = new MenuItem(0, BG.y + BG.height + 10, i);
 			weekThing.y += ((weekThing.height + 20) * i);
 			weekThing.targetY = i;
 			grpWeekText.add(weekThing);
@@ -238,10 +250,10 @@ class StoryMenuState extends MusicBeatState
 
 		trace("Line 150");
 
-		add(yellowBG);
+		add(BG);
 		add(grpWeekCharacters);
 
-		txtTracklist = new FlxText(FlxG.width * 0.05, yellowBG.x + yellowBG.height + 100, 0, "Tracks", 32);
+		txtTracklist = new FlxText(FlxG.width * 0.05, BG.x + BG.height + 100, 0, "Tracks", 32);
 		txtTracklist.alignment = CENTER;
 		txtTracklist.font = rankText.font;
 		txtTracklist.color = 0xFFe55777;
@@ -381,15 +393,6 @@ class StoryMenuState extends MusicBeatState
 			randomtimer.cancel();
 		}
 
-		#if desktop
-		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
-        {
-			FlxG.save.data.fullscreen = !FlxG.fullscreen;
-			FlxG.save.flush();
-        	FlxG.fullscreen = !FlxG.fullscreen;
-        }
-		#end
-
 		super.update(elapsed);
 	}
 
@@ -507,6 +510,9 @@ class StoryMenuState extends MusicBeatState
 				item.alpha = 0.6;
 			bullShit++;
 		}
+
+		FlxTween.color(txtTracklist, 0.5, txtTracklist.color, weekColors[curWeek]);
+		FlxTween.color(BG, 0.5, BG.color, weekColors[curWeek]);
 
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 
