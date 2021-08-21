@@ -395,7 +395,7 @@ class FreeplayState extends MusicBeatState
 					return 0xFFA5004D;
 				else
 					return 0xFF149DFF;
-			case 'amogusguy' | 'bfamogus':
+			case 'amogusguy' | 'bf-amogus':
 				return 0xFFD8D8D8;
 			case 'dad':
 				return 0xFFAF66CE;
@@ -431,6 +431,8 @@ class FreeplayState extends MusicBeatState
 				return 0xFFE9FF48;
 			case 'face':
 				return 0xFFA1A1A1;
+			case 'gf-amogus':
+				return 0xFFFBE30C;
 			default:
 				return FlxColor.WHITE;
 		}

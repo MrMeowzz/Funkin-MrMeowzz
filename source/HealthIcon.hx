@@ -45,7 +45,7 @@ class HealthIcon extends FlxSprite
 		animation.add('gf-car', [16, 51, 52], 0, false, isPlayer);
 		animation.add('gf-pixel', [16, 51, 52], 0, false, isPlayer);
 		animation.add('gf-tankmen', [16, 51, 52], 0, false, isPlayer);
-		animation.add('gf-amogus', [16, 51, 52], 0, false, isPlayer);
+		animation.add('gf-amogus', [67, 67, 67], 0, false, isPlayer);
 		animation.add('amogusguy', [62, 63, 64], 0, false, isPlayer);
 		animation.add('bf-amogus', [65, 66, 65], 0, false, isPlayer);
 		if (gftutorialicon)

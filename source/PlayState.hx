@@ -1154,7 +1154,7 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(iconColors(SONG.player2), 0xFF66FF33);
+		healthBar.createFilledBar(iconColors(SONG.player2), iconColors(SONG.player1));
 		// healthBar
 		add(healthBar);
 
@@ -1489,7 +1489,7 @@ class PlayState extends MusicBeatState
 				return 0xFF149DFF;
 			case 'bf-holding-gf':
 				return 0xFF149DFF;
-			case 'amogusguy' | 'bfamogus':
+			case 'amogusguy' | 'bf-amogus':
 				return 0xFFD8D8D8;
 			case 'dad':
 				return 0xFFAF66CE;
@@ -1515,8 +1515,13 @@ class PlayState extends MusicBeatState
 				return 0xFFE9FF48;
 			case 'face':
 				return 0xFFA1A1A1;
+			case 'gf-amogus':
+				return 0xFFFBE30C;
 			default:
+			if (SONG.player2 == icon)
 				return 0xFFFF0000;
+			else
+				return 0xFF66FF33;
 		}
 	}
 
@@ -2027,20 +2032,28 @@ class PlayState extends MusicBeatState
 		{
 			if (iconP1.animation.curAnim.name.startsWith('bf'))
 				if (iconP1.animation.curAnim.name == 'bf-old')
+				{
 					iconP1.animation.play(SONG.player1);
+					healthBar.createFilledBar(iconColors(SONG.player2), iconColors(SONG.player1));
+					healthBar.updateFilledBar();
+				}
 				else
+				{
 					iconP1.animation.play('bf-old');
+					healthBar.createFilledBar(iconColors(SONG.player2), iconColors('bf-old'));
+					healthBar.updateFilledBar();
+				}
 			else if (iconP2.animation.curAnim.name.startsWith('bf'))			
 				if (iconP2.animation.curAnim.name == 'bf-old')
 				{
 					iconP2.animation.play(SONG.player2);
-					healthBar.createFilledBar(iconColors(SONG.player2), 0xFF66FF33);
+					healthBar.createFilledBar(iconColors(SONG.player2), iconColors(SONG.player1));
 					healthBar.updateFilledBar();
 				}
 				else
 				{
 					iconP2.animation.play('bf-old');
-					healthBar.createFilledBar(iconColors('bf-old'), 0xFF66FF33);
+					healthBar.createFilledBar(iconColors('bf-old'), iconColors(SONG.player1));
 					healthBar.updateFilledBar();
 				}					
 		}
