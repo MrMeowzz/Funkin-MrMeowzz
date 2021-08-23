@@ -7,28 +7,28 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxTimer;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import openfl.Lib;
 
 using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed', 'Miss Stun', 'Miss Sounds', 'Timer Type', 'Hit Sounds', 'Experimental Accuracy', 'Note Splashes', 'New Hit Timings', 'Rating Location'];
+	var Options:Array<String> = ['Clean Mode', 'Preload Freeplay Previews', 'Freeplay Previews', 'Color Ratings', 'Fullscreen', 'FPS Counter', 'Downscroll', 'Override Song Scroll Speed', 'Miss Stun', 'Miss Sounds', 'Timer Type', 'Hit Sounds', 'Experimental Accuracy', 'Note Splashes', 'New Hit Timings', 'Rating Location', 'Notestyle', 'Tabi Notes Shake'];
 
-	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.', 'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 'Whether to play miss sounds or not.', 'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 'Plays a sound when a note is hit. Press P to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.', 'Whether to use the Experimental Accuracy system or not.', 'Enables note splashes that occur when you get sick rating.', 'Changes the hit timings of ratings and notes to a new system.', 'Whether for the ratings to be by gf or for them to follow the camera.'];
+	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.', 'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 'Disables the freeplay song previews.', 'Adds color to the ratings.', 'Makes the game fullscreen or windowed.', 'Toggles the visibility of the FPS Counter in the top left.', 'Whether to use downscroll or upscroll.', 'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold shift to increase or decrease faster.', 'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 'Whether to play miss sounds or not.', 'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 'Plays a sound when a note is hit. Press P to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.', 'Whether to use the Experimental Accuracy system or not.', 'Enables note splashes that occur when you get sick rating.', 'Changes the hit timings of ratings and notes to a new system.', 'Whether for the ratings to be by gf or for them to follow the camera.', 'Which notestyle should be used. Default uses the songs notestyle. Notestyle will not be changed if the song has notestyle override on.', 'Makes Tabi notes shake.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,false,false];
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,false,false,false,false];
 
-	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON', 'Miss Stun OFF', 'Miss Sounds ON', 'Countdown', 'Hit Sounds ON', 'Experimental Acc ON', 'Note Splashes ON', 'New Hit Timings ON', 'Follows Camera'];
+	var OptionsON:Array<String> = ['Clean Mode ON', 'Preload Freeplay PRVWs ON', 'Freeplay Previews ON', 'Color Ratings ON', 'Fullscreen ON', 'FPS Counter ON', 'Downscroll', 'Override Song Speed ON', 'Miss Stun OFF', 'Miss Sounds ON', 'Countdown', 'Hit Sounds ON', 'Experimental Acc ON', 'Note Splashes ON', 'New Hit Timings ON', 'Follows Camera', 'Notestyle', 'Tabi Notes Shake ON'];
 
-	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF', 'Miss Stun ON', 'Miss Sounds OFF', 'Bar', 'Hit Sounds OFF', 'Experimental Acc OFF', 'Note Splashes OFF', 'New Hit Timings OFF', 'By GF'];
-
-	var numberOptions:Array<Bool> = [false,false,false,false,false,false,false,true,false,false,false,false,false,false,false];
+	var OptionsOFF:Array<String> = ['Clean Mode OFF', 'Preload Freeplay PRVWs OFF', 'Freeplay Previews OFF', 'Color Ratings OFF', 'Fullscreen OFF', 'FPS Counter OFF', 'Upscroll', 'Override Song Speed OFF', 'Miss Stun ON', 'Miss Sounds OFF', 'Bar', 'Hit Sounds OFF', 'Experimental Acc OFF', 'Note Splashes OFF', 'New Hit Timings OFF', 'By GF', 'Notestyle', 'Tabi Notes Shake OFF'];
 	
 	#if html5
-	var DisabledOptions:Array<Bool> = [false,true,true,false,true,false,false,false,false,false,false,false,false,false,false];
+	var DisabledOptions:Array<Bool> = [false,true,true,false,true];
 	#else
-	var DisabledOptions:Array<Bool> = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+	var DisabledOptions:Array<Bool> = [];
 	#end
 
 	var VisibleOptions:Array<String> = [];
@@ -41,12 +41,17 @@ class OptionsState extends MusicBeatState
 
 	var numtxt:FlxText;
 
+	var notestyletxt:FlxText;
+
 	var timer:FlxTimer = new FlxTimer();
 
 	var songspeed:Float = 0.1;
 
+	var noteStyles:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteStyles'));
+
 	override function create()
 	{
+		noteStyles.insert(0, 'default');
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -69,6 +74,13 @@ class OptionsState extends MusicBeatState
 		numtxt.y += 250;
 		add(numtxt);
 
+		notestyletxt = new FlxText(0, 0, 0, "woah", 30);
+		notestyletxt.setFormat(Paths.font("vcr.ttf"), 30, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
+		notestyletxt.visible = false;
+		notestyletxt.screenCenter();
+		notestyletxt.y += 250;
+		add(notestyletxt);
+
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
 		add(grpOptionsTexts);
 
@@ -87,6 +99,10 @@ class OptionsState extends MusicBeatState
 			songspeed = FlxG.save.data.scrollspeed;
 
 		changeSelection();
+
+		FlxG.camera.zoom = 1.5;
+		FlxG.camera.y = FlxG.height;
+		FlxTween.tween(FlxG.camera, { zoom: 1, y: 0}, 1, { ease: FlxEase.quadIn });
 
 		super.create();
 	}
@@ -110,6 +126,10 @@ class OptionsState extends MusicBeatState
 				else if (FlxG.keys.pressed.SHIFT && songspeed - 0.4 < 0.1)
 					songspeed = 0.1;
 			}
+			else if (Options[curSelected] == 'Notestyle' && (noteStyles.indexOf(FlxG.save.data.notestyle) - 1) >= 0)
+			{
+				FlxG.save.data.notestyle = noteStyles[noteStyles.indexOf(FlxG.save.data.notestyle) - 1];
+			}
 					
 
 		if (controls.RIGHT_P)
@@ -120,6 +140,10 @@ class OptionsState extends MusicBeatState
 					songspeed += 0.4;
 				else if (FlxG.keys.pressed.SHIFT && songspeed + 0.4 > 10)
 					songspeed = 10;
+			}
+			else if (Options[curSelected] == 'Notestyle' && (noteStyles.indexOf(FlxG.save.data.notestyle) + 1) < noteStyles.length)
+			{
+				FlxG.save.data.notestyle = noteStyles[noteStyles.indexOf(FlxG.save.data.notestyle) + 1];
 			}
 		
 		if (FlxG.keys.justPressed.P)
@@ -136,6 +160,7 @@ class OptionsState extends MusicBeatState
 			songspeed = 10;
 
 		numtxt.text = Std.string(songspeed);
+		notestyletxt.text = FlxG.save.data.notestyle;
 
 		if (controls.BACK)
 		{
@@ -145,6 +170,8 @@ class OptionsState extends MusicBeatState
 				FlxG.save.data.scrollspeed = songspeed;
 				FlxG.save.flush();
 			}
+			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+			MainMenuState.transition = 'zoom';
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -285,6 +312,12 @@ class OptionsState extends MusicBeatState
 					regenOptions();
 				case "Rating Location":
 					FlxG.save.data.ratingsfollowcamera = !FlxG.save.data.ratingsfollowcamera;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
+				case "Tabi Notes Shake":
+					FlxG.save.data.tabinotesshake = !FlxG.save.data.tabinotesshake;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenVisibleOptions();
@@ -478,6 +511,21 @@ class OptionsState extends MusicBeatState
 		{
 			VisibleOptions.push(OptionsOFF[i]);
 		}
+
+		i++;
+
+		VisibleOptions.push(OptionsON[i]);
+
+		i++;
+
+		if (FlxG.save.data.tabinotesshake)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
 	}
 
 	public function regenOptions()
@@ -522,10 +570,14 @@ class OptionsState extends MusicBeatState
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
-				if (numberOptions[bullShit])
+				if (Options[bullShit] == 'Override Song Scroll Speed')
 					numtxt.visible = true;
 				else
 					numtxt.visible = false;
+				if (Options[bullShit] == 'Notestyle')
+					notestyletxt.visible = true;
+				else
+					notestyletxt.visible = false;
 			}
 			if (DisabledOptions[bullShit] && item.targetY != 0)
 			{

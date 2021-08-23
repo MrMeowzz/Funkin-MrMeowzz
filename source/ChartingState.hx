@@ -32,6 +32,8 @@ import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 import lime.app.Application;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
 using StringTools;
 
@@ -81,6 +83,7 @@ class ChartingState extends MusicBeatState
 
 	var leftIcon:HealthIcon;
 	var rightIcon:HealthIcon;
+	var gfIcon:HealthIcon;
 
 	var hitsounds:Array<Note> = [];
 
@@ -102,17 +105,22 @@ class ChartingState extends MusicBeatState
 
 		leftIcon = new HealthIcon('bf');
 		rightIcon = new HealthIcon('dad');
+		gfIcon = new HealthIcon('gf');
 		leftIcon.scrollFactor.set(1, 1);
 		rightIcon.scrollFactor.set(1, 1);
+		gfIcon.scrollFactor.set(1, 1);
 
 		leftIcon.setGraphicSize(0, 45);
 		rightIcon.setGraphicSize(0, 45);
+		gfIcon.setGraphicSize(0, 45);
 
 		add(leftIcon);
 		add(rightIcon);
+		add(gfIcon);
 
 		leftIcon.setPosition(0, -100);
 		rightIcon.setPosition(gridBG.width / 2, -100);
+		gfIcon.setPosition(gridBG.width / 4, -150);
 
 		var gridBlackLine:FlxSprite = new FlxSprite(gridBG.x + gridBG.width / 2).makeGraphic(2, Std.int(gridBG.height), FlxColor.BLACK);
 		add(gridBlackLine);
@@ -131,8 +139,10 @@ class ChartingState extends MusicBeatState
 				needsVoices: true,
 				player1: 'bf',
 				player2: 'dad',
+				gf: 'gf',
 				speed: 1,
 				notestyle: 'normal',
+				notestyleOverride: false,
 				validScore: false
 			};
 		}
@@ -184,6 +194,11 @@ class ChartingState extends MusicBeatState
 
 		updateSectionUI();
 		updateHeads();
+
+		FlxG.camera.zoom = 1.5;
+		FlxG.camera.x = FlxG.width * -1;
+
+		FlxTween.tween(FlxG.camera, { zoom: 1, x: 0}, 1, {ease: FlxEase.quadIn });
 
 		super.create();
 	}
@@ -278,6 +293,7 @@ class ChartingState extends MusicBeatState
 		var stepperBPMTxt:FlxText = new FlxText(stepperBPM.x + 75, stepperBPM.y, 0, "Song BPM");
 
 		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
+		var gfs:Array<String> = CoolUtil.coolTextFile(Paths.txt('gfList'));
 
 		var player1DropDown = new FlxUIDropDownMenu(10, 125, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
@@ -294,9 +310,18 @@ class ChartingState extends MusicBeatState
 
 		player2DropDown.selectedLabel = _song.player2;
 
+		var gfDropDown = new FlxUIDropDownMenu(10, 275, FlxUIDropDownMenu.makeStrIdLabelArray(gfs, true), function(gf:String)
+		{
+			_song.gf = gfs[Std.parseInt(gf)];
+			updateHeads();
+		});
+		gfDropDown.selectedLabel = _song.gf;
+
 		var Player1Txt:FlxText = new FlxText(player1DropDown.x, player1DropDown.y - 25, 0, "Player 1");
 
 		var Player2Txt:FlxText = new FlxText(player2DropDown.x, player2DropDown.y - 25, 0, "Player 2");
+
+		var gfTxt:FlxText = new FlxText(gfDropDown.x, gfDropDown.y - 25, 0, "Gf");
 
 		var switchingDifficultytxt:String = '';
 
@@ -335,6 +360,13 @@ class ChartingState extends MusicBeatState
 
 		notestyleDropDown.selectedLabel = _song.notestyle;
 
+		var check_notestyleOverride:FlxUICheckBox = new FlxUICheckBox(270, 200, null, null, "Override User Notestyle", 100);
+		check_notestyleOverride.checked = _song.notestyleOverride;
+		check_notestyleOverride.callback = function()
+		{
+			_song.notestyleOverride = check_notestyleOverride.checked;
+		};
+
 		var notestyleTxt:FlxText = new FlxText(notestyleDropDown.x, notestyleDropDown.y - 25, 0, "Note Style");
 
 		var tab_group_song = new FlxUI(null, UI_box);
@@ -345,13 +377,15 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(check_mute_voices);
 		tab_group_song.add(check_hitsounds);
-		tab_group_song.add(hitsoundsPlayerDropDown);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
 		tab_group_song.add(loadAutosaveBtn);
 		tab_group_song.add(stepperBPM);
 		tab_group_song.add(stepperSpeed);
+		tab_group_song.add(gfDropDown);
+		tab_group_song.add(gfTxt);
+		tab_group_song.add(hitsoundsPlayerDropDown);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(difficultyDropDown);
@@ -362,6 +396,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeedTxt);
 		tab_group_song.add(notestyleDropDown);
 		tab_group_song.add(notestyleTxt);
+		tab_group_song.add(check_notestyleOverride);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();
@@ -749,6 +784,8 @@ class ChartingState extends MusicBeatState
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
+
+			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width}, 1, {ease: FlxEase.quadIn });
 			FlxG.switchState(new PlayState());
 		}
 
@@ -1018,6 +1055,7 @@ class ChartingState extends MusicBeatState
 			leftIcon.animation.play(_song.player2);
 			rightIcon.animation.play(_song.player1);
 		}
+		gfIcon.animation.play(_song.gf);
 	}
 
 	function updateNoteUI():Void

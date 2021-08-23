@@ -87,13 +87,41 @@ class AltGameOverScreen extends MusicBeatState
 			}
 			else
 			{
+				FlxG.sound.music.stop();
 				PlayState.deathCounter = 0;
+
+				if (PlayState.isStoryMode)
+				{
+					OG.gunsCutsceneEnded = false;
+					OG.ughCutsceneEnded = false;
+					OG.stressCutsceneEnded = false;
+					OG.horrorlandCutsceneEnded = false;
+					FlxG.switchState(new StoryMenuState());
+				}
+				else
+				{
+					FlxG.switchState(new FreeplayState());
+				}
+			}
+		}
+
+		if (controls.BACK)
+		{
+			FlxG.sound.music.stop();
+			PlayState.deathCounter = 0;
+
+			if (PlayState.isStoryMode)
+			{
 				OG.gunsCutsceneEnded = false;
 				OG.ughCutsceneEnded = false;
 				OG.stressCutsceneEnded = false;
 				OG.horrorlandCutsceneEnded = false;
-				FlxG.sound.music.stop();
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(new StoryMenuState());
+			}
+			else
+			{
+
+				FlxG.switchState(new FreeplayState());
 			}
 		}
 

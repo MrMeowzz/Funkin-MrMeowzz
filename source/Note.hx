@@ -60,7 +60,7 @@ class Note extends FlxSprite
 
 			if (PlayState.SONG.notestyle == 'pixel')
 			{
-				loadGraphic(Paths.image('pixelUI/arrows-pixels'), true, 17, 17);
+				loadGraphic(Paths.image('noteStyles/arrows-pixels'), true, 17, 17);
 
 				animation.add('greenScroll', [6]);
 				animation.add('redScroll', [7]);
@@ -69,7 +69,7 @@ class Note extends FlxSprite
 
 				if (isSustainNote)
 				{
-					loadGraphic(Paths.image('pixelUI/arrowEnds'), true, 7, 6);
+					loadGraphic(Paths.image('noteStyles/arrowEnds-pixels'), true, 7, 6);
 
 					animation.add('purpleholdend', [4]);
 					animation.add('greenholdend', [6]);
@@ -81,25 +81,26 @@ class Note extends FlxSprite
 					animation.add('redhold', [3]);
 					animation.add('bluehold', [1]);
 				}
-				if (noteCreationType == 'fire')
+				switch (noteCreationType)
 				{
-					loadGraphic(Paths.image('pixelUI/NOTE_fire-pixel'), true, 21, 31);
+					case 'fire':
+						loadGraphic(Paths.image('pixelUI/NOTE_fire-pixel'), true, 21, 31);
 
-					if(!FlxG.save.data.downscroll){
-						animation.add('blueScroll', [3, 4, 3, 5], 8);
-						animation.add('greenScroll', [6, 7, 6, 8], 8);
-					}
-					else{
-						animation.add('blueScroll', [6, 7, 6, 8], 8);
-						animation.add('greenScroll', [3, 4, 3, 5], 8);
-					}
-					animation.add('redScroll', [9, 10, 9, 11], 8);					
-					animation.add('purpleScroll', [0, 1 ,0, 2], 8);
+						if(!FlxG.save.data.downscroll){
+							animation.add('blueScroll', [3, 4, 3, 5], 8);
+							animation.add('greenScroll', [6, 7, 6, 8], 8);
+						}
+						else{
+							animation.add('blueScroll', [6, 7, 6, 8], 8);
+							animation.add('greenScroll', [3, 4, 3, 5], 8);
+						}
+						animation.add('redScroll', [9, 10, 9, 11], 8);					
+						animation.add('purpleScroll', [0, 1 ,0, 2], 8);
 
-					if(FlxG.save.data.downscroll)
-						flipY = true;
+						if(FlxG.save.data.downscroll)
+							flipY = true;
 
-					x -= 15;
+						x -= 15;
 				}
 
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
@@ -107,7 +108,17 @@ class Note extends FlxSprite
 			}
 			else
 			{
-				frames = Paths.getSparrowAtlas('NOTE_assets');
+				switch (PlayState.SONG.notestyle)
+				{
+					case 'tabi':
+						frames = Paths.getSparrowAtlas('noteStyles/Tabi');
+					case 'kapi':
+						frames = Paths.getSparrowAtlas('noteStyles/Kapi');
+					case 'camellia':
+						frames = Paths.getSparrowAtlas('noteStyles/Camellia');
+					default:
+						frames = Paths.getSparrowAtlas('NOTE_assets');
+				}		
 
 				animation.addByPrefix('greenScroll', 'green instance');
 				animation.addByPrefix('redScroll', 'red instance');
@@ -123,90 +134,81 @@ class Note extends FlxSprite
 				animation.addByPrefix('greenhold', 'green hold piece');
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
-				if (noteCreationType == 'halo')
+				switch (noteCreationType)
 				{
-					frames = Paths.getSparrowAtlas('noteTypes/NOTE_halo');
-					animation.addByPrefix('greenScroll', 'Green Arrow');
-					animation.addByPrefix('redScroll', 'Red Arrow');
-					animation.addByPrefix('blueScroll', 'Blue Arrow');
-					animation.addByPrefix('purpleScroll', 'Purple Arrow');
-					x -= 165;
-				}
-				else if (noteCreationType == 'fire')
-				{
-					frames = Paths.getSparrowAtlas('noteTypes/NOTE_fire');
-					if(!FlxG.save.data.downscroll){
-						animation.addByPrefix('blueScroll', 'blue fire');
-						animation.addByPrefix('greenScroll', 'green fire');
-					}
-					else{
-						animation.addByPrefix('greenScroll', 'blue fire');
-						animation.addByPrefix('blueScroll', 'green fire');
-					}
-					animation.addByPrefix('redScroll', 'red fire');
-					animation.addByPrefix('purpleScroll', 'purple fire');
+					case 'halo':
+						frames = Paths.getSparrowAtlas('noteTypes/NOTE_halo');
+						animation.addByPrefix('greenScroll', 'Green Arrow');
+						animation.addByPrefix('redScroll', 'Red Arrow');
+						animation.addByPrefix('blueScroll', 'Blue Arrow');
+						animation.addByPrefix('purpleScroll', 'Purple Arrow');
+						x -= 165;
+					case 'fire':
+						frames = Paths.getSparrowAtlas('noteTypes/NOTE_fire');
+						if(!FlxG.save.data.downscroll){
+							animation.addByPrefix('blueScroll', 'blue fire');
+							animation.addByPrefix('greenScroll', 'green fire');
+						}
+						else{
+							animation.addByPrefix('greenScroll', 'blue fire');
+							animation.addByPrefix('blueScroll', 'green fire');
+						}
+						animation.addByPrefix('redScroll', 'red fire');
+						animation.addByPrefix('purpleScroll', 'purple fire');
 
-					if(FlxG.save.data.downscroll)
-						flipY = true;
+						if(FlxG.save.data.downscroll)
+							flipY = true;
 
-					x -= 50;
-				}
-				else if (noteCreationType == 'poison')
-				{
-					frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
-
-					animation.addByPrefix('greenScroll', 'vertedUp');
-					animation.addByPrefix('redScroll', 'vertedRight');
-					animation.addByPrefix('blueScroll', 'vertedDown');
-					animation.addByPrefix('purpleScroll', 'vertedLeft');
-				}
-				else if (noteCreationType == 'poisonmusthit')
-				{
-					animation.addByPrefix('purpleholdend', 'poison hold end instance');
-					animation.addByPrefix('greenholdend', 'poison hold end instance');
-					animation.addByPrefix('redholdend', 'poison hold end instance');
-					animation.addByPrefix('blueholdend', 'poison hold end instance');
-					animation.addByPrefix('purplehold', 'poison hold piece instance');
-					animation.addByPrefix('greenhold', 'poison hold piece instance');
-					animation.addByPrefix('redhold', 'poison hold piece instance');
-					animation.addByPrefix('bluehold', 'poison hold piece instance');
-					if (!sustainNote)
-					{
+						x -= 50;
+					case 'poison':
 						frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
 
-						animation.addByPrefix('greenScroll', 'hitUp');
-						animation.addByPrefix('redScroll', 'hitRight');
-						animation.addByPrefix('blueScroll', 'hitDown');
-						animation.addByPrefix('purpleScroll', 'hitLeft');
-					}					
-				}
-				else if (noteCreationType == 'warning')
-				{
-					animation.addByPrefix('purpleholdend', 'warning hold end instance');
-					animation.addByPrefix('greenholdend', 'warning hold end instance');
-					animation.addByPrefix('redholdend', 'warning hold end instance');
-					animation.addByPrefix('blueholdend', 'warning hold end instance');
-					animation.addByPrefix('purplehold', 'warning hold piece instance');
-					animation.addByPrefix('greenhold', 'warning hold piece instance');
-					animation.addByPrefix('redhold', 'warning hold piece instance');
-					animation.addByPrefix('bluehold', 'warning hold piece instance');
-					
-					if (!sustainNote)
-						loadGraphic(Paths.image('noteTypes/warningNote'));
-				}
-				else if (noteCreationType == 'stun')
-				{
-					animation.addByPrefix('purpleholdend', 'stun hold end instance');
-					animation.addByPrefix('greenholdend', 'stun hold end instance');
-					animation.addByPrefix('redholdend', 'stun hold end instance');
-					animation.addByPrefix('blueholdend', 'stun hold end instance');
-					animation.addByPrefix('purplehold', 'stun hold piece instance');
-					animation.addByPrefix('greenhold', 'stun hold piece instance');
-					animation.addByPrefix('redhold', 'stun hold piece instance');
-					animation.addByPrefix('bluehold', 'stun hold piece instance');
+						animation.addByPrefix('greenScroll', 'vertedUp');
+						animation.addByPrefix('redScroll', 'vertedRight');
+						animation.addByPrefix('blueScroll', 'vertedDown');
+						animation.addByPrefix('purpleScroll', 'vertedLeft');
+					case 'poisonmusthit':
+						animation.addByPrefix('purpleholdend', 'poison hold end instance');
+						animation.addByPrefix('greenholdend', 'poison hold end instance');
+						animation.addByPrefix('redholdend', 'poison hold end instance');
+						animation.addByPrefix('blueholdend', 'poison hold end instance');
+						animation.addByPrefix('purplehold', 'poison hold piece instance');
+						animation.addByPrefix('greenhold', 'poison hold piece instance');
+						animation.addByPrefix('redhold', 'poison hold piece instance');
+						animation.addByPrefix('bluehold', 'poison hold piece instance');
+						if (!sustainNote)
+						{
+							frames = Paths.getSparrowAtlas('noteTypes/BobNotes');
 
-					if (!sustainNote)
-						loadGraphic(Paths.image('noteTypes/stunNote'));
+							animation.addByPrefix('greenScroll', 'hitUp');
+							animation.addByPrefix('redScroll', 'hitRight');
+							animation.addByPrefix('blueScroll', 'hitDown');
+							animation.addByPrefix('purpleScroll', 'hitLeft');
+						}
+					case 'warning':
+						animation.addByPrefix('purpleholdend', 'warning hold end instance');
+						animation.addByPrefix('greenholdend', 'warning hold end instance');
+						animation.addByPrefix('redholdend', 'warning hold end instance');
+						animation.addByPrefix('blueholdend', 'warning hold end instance');
+						animation.addByPrefix('purplehold', 'warning hold piece instance');
+						animation.addByPrefix('greenhold', 'warning hold piece instance');
+						animation.addByPrefix('redhold', 'warning hold piece instance');
+						animation.addByPrefix('bluehold', 'warning hold piece instance');
+					
+						if (!sustainNote)
+							loadGraphic(Paths.image('noteTypes/warningNote'));
+					case 'stun':
+						animation.addByPrefix('purpleholdend', 'stun hold end instance');
+						animation.addByPrefix('greenholdend', 'stun hold end instance');
+						animation.addByPrefix('redholdend', 'stun hold end instance');
+						animation.addByPrefix('blueholdend', 'stun hold end instance');
+						animation.addByPrefix('purplehold', 'stun hold piece instance');
+						animation.addByPrefix('greenhold', 'stun hold piece instance');
+						animation.addByPrefix('redhold', 'stun hold piece instance');
+						animation.addByPrefix('bluehold', 'stun hold piece instance');
+
+						if (!sustainNote)
+							loadGraphic(Paths.image('noteTypes/stunNote'));	
 				}
 
 				setGraphicSize(Std.int(width * 0.7));

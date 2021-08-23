@@ -11,6 +11,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
@@ -268,6 +269,10 @@ class StoryMenuState extends MusicBeatState
 
 		trace("Line 165");
 
+		FlxG.camera.zoom = 1.5;
+		FlxG.camera.y = FlxG.height * -1;
+		FlxTween.tween(FlxG.camera, { zoom: 1, y: 0}, 1, { ease: FlxEase.quadIn });
+
 		super.create();
 	}
 
@@ -363,6 +368,8 @@ class StoryMenuState extends MusicBeatState
 			movedBack = true;
 			OG.SelectedStoryMode = curWeek;
 			OG.DifficultyStoryMode = curDifficulty;
+			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+			MainMenuState.transition = 'zoom';
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -438,6 +445,7 @@ class StoryMenuState extends MusicBeatState
 			{
 				OG.SelectedStoryMode = curWeek;
 				OG.DifficultyStoryMode = curDifficulty;
+				FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.height * -1}, 1, { ease: FlxEase.quadIn } );
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			});
 		}

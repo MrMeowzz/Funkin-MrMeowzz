@@ -7,6 +7,7 @@ using StringTools;
 
 class PixelNoteSplash extends FlxSprite {
     public function new(xPos:Float,yPos:Float,?data:Int = 0) {
+        if (data == null) data = 0;
         super(xPos,yPos);
         loadGraphic(Paths.image('pixelUI/noteSplashes-pixels'), true, 50, 50);
         animation.add("note1-0", [8, 9, 10, 11], 24, false);
@@ -21,6 +22,7 @@ class PixelNoteSplash extends FlxSprite {
         setupNoteSplash(xPos,xPos,data,true);
     }
     public function setupNoteSplash(xPos:Float, yPos:Float, ?data:Int = 0,Resize:Bool = false) {
+        if (data == null) data = 0;
         setPosition(xPos, yPos);
         alpha = 0.6;
         if (Resize)

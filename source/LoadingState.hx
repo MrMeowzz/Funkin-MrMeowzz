@@ -26,6 +26,19 @@ class LoadingState extends MusicBeatState
 	var logo:FlxSprite;
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
+
+	public static var weekData:Array<String> = [
+	'tutorial',
+	'week1',
+	'week2',
+	'week3',
+	'week4',
+	'week5',
+	'week6',
+	'week7',
+	'week8'
+	];
+
 	
 	function new(target:FlxState, stopMusic:Bool)
 	{
@@ -65,10 +78,11 @@ class LoadingState extends MusicBeatState
 				if (PlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
 				checkLibrary("shared");
-				if (PlayState.storyWeek > 0)
+				/*if (PlayState.storyWeek > 0)
 					checkLibrary("week" + PlayState.storyWeek);
 				else
-					checkLibrary("tutorial");
+					checkLibrary("tutorial");*/
+				checkLibrary(weekData[PlayState.storyWeek]);
 				
 				var fadeTime = 0.5;
 				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);

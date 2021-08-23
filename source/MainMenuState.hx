@@ -37,6 +37,8 @@ class MainMenuState extends MusicBeatState
 
 	var fnfversion:String = '0.2.7.1';
 
+	public static var transition = '';
+
 	override function create()
 	{
 		#if desktop
@@ -108,6 +110,18 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
+		switch (transition)
+		{
+			case 'zoomtilt':
+				FlxG.camera.angle = 45;
+				FlxG.camera.zoom = 0.75;
+				FlxTween.tween(FlxG.camera, { zoom: 1, angle: 0}, 0.5, {ease: FlxEase.quadIn });
+			case 'zoom':
+				FlxG.camera.zoom = 0.1;
+				FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
+		}
+		transition = '';
+
 		super.create();
 	}
 
@@ -140,7 +154,10 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				FlxG.switchState(new TitleState());
+				FlxTween.tween(FlxG.camera, { x: FlxG.width, zoom: 0.5 }, 1, { ease: FlxEase.quadIn, onComplete: function(twn:FlxTween)
+				{
+					FlxG.switchState(new TitleState());
+				} });
 			}
 
 			if (controls.ACCEPT)
@@ -174,7 +191,28 @@ class MainMenuState extends MusicBeatState
 						}
 						else
 						{
-							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
+							FlxFlicker.flicker(spr, 1, 0.06, false, false);
+							var daChoice:String = optionShit[curSelected];
+
+							//FlxG.camera.focusOn(menuItems.members[curSelected].getGraphicMidpoint());
+
+							var daZoom:Float = 1.5;
+							var daY:Float = 0;
+							var daAngle:Float = 0;
+							
+							switch (daChoice)
+							{
+								case 'story mode':
+									daZoom = 0.5;
+									daY = FlxG.height;
+								case 'options':
+									daZoom = 0.5;
+									daY = FlxG.height * -1;
+								case 'freeplay':
+									daAngle = -45;
+							}
+
+							FlxTween.tween(FlxG.camera, { zoom: daZoom, y: daY, angle: daAngle }, 1, { ease: FlxEase.quadIn, onComplete: function(twn:FlxTween)
 							{
 								var daChoice:String = optionShit[curSelected];
 
@@ -193,7 +231,8 @@ class MainMenuState extends MusicBeatState
 										// FlxTransitionableState.skipNextTransOut = true;
 										FlxG.switchState(new OptionsState());
 								}
-							});
+								FlxTween.tween(FlxG.camera, { zoom: 1 }, 1.5, { ease: FlxEase.quadIn });
+							} });
 						}
 					});
 				}
@@ -202,7 +241,12 @@ class MainMenuState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN && PlayState.SONG != null)
 		{
+			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 			FlxG.switchState(new ChartingState());
+
+			#if desktop
+			DiscordClient.changePresence("Chart Editor", null, null, true);
+			#end
 		}
 
 		super.update(elapsed);

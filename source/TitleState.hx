@@ -145,6 +145,14 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.ratingsfollowcamera = OptionsState.DefaultValues[15];
 		}
+		if (FlxG.save.data.notestyle == null)
+		{
+			FlxG.save.data.notestyle = 'default';
+		}
+		if (FlxG.save.data.tabinotesshake == null)
+		{
+			FlxG.save.data.tabinotesshake = OptionsState.DefaultValues[17];
+		}
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
@@ -360,14 +368,19 @@ class TitleState extends MusicBeatState
 				
 			http.onData = function (data:String)
 			{
-				if (Application.current.meta.get('version') != data && !OutdatedSubState.leftState && !Application.current.meta.get('version').contains('DEV'))
+				if (Std.parseFloat(Application.current.meta.get('version')) < Std.parseFloat(data) && !OutdatedSubState.leftState && !Application.current.meta.get('version').contains('DEV'))
 				{
 					OutdatedSubState.latestver = data;
 					FlxG.switchState(new OutdatedSubState());
 				}
 				else
 				{
-					FlxG.switchState(new MainMenuState());
+					FlxTween.tween(FlxG.camera, { zoom: 1.25, angle: 45 }, 1, {ease: FlxEase.quadIn, onComplete: function(tmr:FlxTween)
+					{						
+						FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
+						MainMenuState.transition = 'zoomtilt';
+						FlxG.switchState(new MainMenuState());
+					} });
 				}
 			}
 				
