@@ -97,4 +97,10 @@
 	<SubTexture name="up press instance 10001" x="1898" y="303" width="144" height="142" frameX="-6" frameY="-4" frameWidth="154" frameHeight="151"/>
 	<SubTexture name="up press instance 10002" x="158" y="398" width="154" height="151"/>
 	<SubTexture name="up press instance 10003" x="158" y="398" width="154" height="151"/>
+	<SubTexture name="warning hold end instance 10000" x="1405" y="503" width="51" height="64"/>
+	<SubTexture name="warning hold piece instance 10000" x="1460" y="508" width="51" height="44"/>
+	<SubTexture name="stun hold end instance 10000" x="1528" y="503" width="51" height="64"/>
+	<SubTexture name="stun hold piece instance 10000" x="1583" y="503" width="51" height="44"/>
+	<SubTexture name="poison hold end instance 10000" x="1649" y="503" width="51" height="64"/>
+	<SubTexture name="poison hold piece instance 10000" x="1704" y="503" width="51" height="44"/>
 </TextureAtlas>

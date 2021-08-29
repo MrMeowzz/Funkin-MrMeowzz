@@ -400,6 +400,13 @@ class PauseSubState extends MusicBeatSubstate
 
 						if (PlayState.SONG.song.toLowerCase() != 'test' || PlayState.SONG.player1 == 'bf-pixel')
 							menuItems.remove('bf-pixel');
+						if (OG.BSIDE)
+						{
+							if (menuItems.contains(PlayState.SONG.player2))
+								menuItems.remove(PlayState.SONG.player2);
+							menuItems.remove('tankman');
+							menuItems.remove('amog us');
+						}
 					}
 					else
 					{
@@ -411,6 +418,16 @@ class PauseSubState extends MusicBeatSubstate
 
 						if (PlayState.SONG.player1 == 'senpai-angry')
 							menuItems.remove('senpai');			
+
+						if (OG.BSIDE)
+						{
+							if (menuItems.contains(PlayState.SONG.player2))
+								menuItems.remove(PlayState.SONG.player2);
+							if (PlayState.SONG.player2 == 'senpai-angry')
+								menuItems.remove('senpai');
+							menuItems.remove('tankman');
+							menuItems.remove('pico');
+						}
 					}
 					regenMenu();
 					curSelected = 0;

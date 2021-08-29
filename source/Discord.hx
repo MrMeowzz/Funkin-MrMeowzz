@@ -68,7 +68,10 @@ class DiscordClient
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
 		var largeImageText:String = if(largeImageKey == 'icon') "v" + Application.current.meta.get('version') else if(largeImageKey.contains('dead')) "Died playing as " + PlayState.SONG.player1 else "Against " + largeImageKey;
 		var smallImageText:String = if(largeImageKey.contains('dead')) "Against " + smallImageKey else "Playing as " + smallImageKey;
-
+		if (largeImageText.contains('-bside'))
+			largeImageText = largeImageText.replace('-bside','');
+		if (smallImageText.contains('-bside'))
+			smallImageText = smallImageText.replace('-bside','');
 		if (endTimestamp > 0)
 		{
 			endTimestamp = startTimestamp + endTimestamp;

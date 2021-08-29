@@ -363,9 +363,12 @@ class TitleState extends MusicBeatState
 	
 			var http = new haxe.Http("https://raw.githubusercontent.com/MrMeowzz/Funkin-MrMeowzz/main/latestver.downloadMe");
 
-			if (Application.current.meta.get('version').contains('PRE'))
+			if (Application.current.meta.get('version').contains('PRE')) {
+
 				OutdatedSubState.prerelease = true;
-				
+				FlxG.switchState(new OutdatedSubState());
+			}
+			else {
 			http.onData = function (data:String)
 			{
 				if (Std.parseFloat(Application.current.meta.get('version')) < Std.parseFloat(data) && !OutdatedSubState.leftState && !Application.current.meta.get('version').contains('DEV'))
@@ -382,6 +385,7 @@ class TitleState extends MusicBeatState
 						FlxG.switchState(new MainMenuState());
 					} });
 				}
+			} 
 			}
 				
 			http.onError = function (error) {

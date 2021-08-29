@@ -90,9 +90,19 @@ class Paths
 		return 'songs:assets/songs/${song.toLowerCase()}/Voices.$SOUND_EXT';
 	}
 
+	inline static public function bsidevoices(song:String)
+	{
+		return 'songs:assets/songs/b-side/${song.toLowerCase()}/Voices.$SOUND_EXT';
+	}
+
 	inline static public function inst(song:String)
 	{
 		return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
+	}
+
+	inline static public function bsideinst(song:String)
+	{
+		return 'songs:assets/songs/b-side/${song.toLowerCase()}/Inst.$SOUND_EXT';
 	}
 
 	inline static public function cleaninst(song:String)

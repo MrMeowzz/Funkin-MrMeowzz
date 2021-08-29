@@ -168,6 +168,7 @@ class Note extends FlxSprite
 						animation.addByPrefix('blueScroll', 'vertedDown');
 						animation.addByPrefix('purpleScroll', 'vertedLeft');
 					case 'poisonmusthit':
+						frames = Paths.getSparrowAtlas('NOTE_assets');
 						animation.addByPrefix('purpleholdend', 'poison hold end instance');
 						animation.addByPrefix('greenholdend', 'poison hold end instance');
 						animation.addByPrefix('redholdend', 'poison hold end instance');
@@ -186,6 +187,7 @@ class Note extends FlxSprite
 							animation.addByPrefix('purpleScroll', 'hitLeft');
 						}
 					case 'warning':
+						frames = Paths.getSparrowAtlas('NOTE_assets');
 						animation.addByPrefix('purpleholdend', 'warning hold end instance');
 						animation.addByPrefix('greenholdend', 'warning hold end instance');
 						animation.addByPrefix('redholdend', 'warning hold end instance');
@@ -198,6 +200,7 @@ class Note extends FlxSprite
 						if (!sustainNote)
 							loadGraphic(Paths.image('noteTypes/warningNote'));
 					case 'stun':
+						frames = Paths.getSparrowAtlas('NOTE_assets');
 						animation.addByPrefix('purpleholdend', 'stun hold end instance');
 						animation.addByPrefix('greenholdend', 'stun hold end instance');
 						animation.addByPrefix('redholdend', 'stun hold end instance');

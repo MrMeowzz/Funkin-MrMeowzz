@@ -273,6 +273,8 @@ class StoryMenuState extends MusicBeatState
 		FlxG.camera.y = FlxG.height * -1;
 		FlxTween.tween(FlxG.camera, { zoom: 1, y: 0}, 1, { ease: FlxEase.quadIn });
 
+		OG.BSIDE = false;
+
 		super.create();
 	}
 

@@ -11,4 +11,6 @@ class OG
 	public static var ughCutsceneEnded:Bool = false;
 	public static var stressCutsceneEnded:Bool = false;
 	public static var horrorlandCutsceneEnded:Bool = false;
+	public static var MenuType:String = 'section';
+	public static var BSIDE:Bool = false;
 }

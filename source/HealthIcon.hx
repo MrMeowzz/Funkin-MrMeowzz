@@ -11,12 +11,36 @@ class HealthIcon extends FlxSprite
 	 */
 	public var sprTracker:FlxSprite;
 
-	public function new(char:String = 'bf', isPlayer:Bool = false, gftutorialicon:Bool = false)
+	public function new(char:String = 'bf', isPlayer:Bool = false, gftutorialicon:Bool = false, bsideicon:Bool = false)
 	{
 		super();
-		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
-
 		antialiasing = true;
+		if (bsideicon) {
+		loadGraphic(Paths.image('iconGrid-bside'), true, 150, 150);
+		animation.add('gf', [16, 24, 16], 0, false, isPlayer);
+		animation.add('bf', [0, 1, 0], 0, false, isPlayer);
+		animation.add('bf-car', [0, 1, 0], 0, false, isPlayer);
+		animation.add('bf-christmas', [0, 1, 0], 0, false, isPlayer);
+		animation.add('bf-pixel', [21, 29, 21], 0, false, isPlayer);
+		animation.add('spooky', [2, 3, 2], 0, false, isPlayer);
+		animation.add('pico', [4, 5, 4], 0, false, isPlayer);
+		animation.add('mom', [6, 7, 6], 0, false, isPlayer);
+		animation.add('mom-car', [6, 7, 6], 0, false, isPlayer);
+		animation.add('face', [10, 11, 10], 0, false, isPlayer);
+		animation.add('dad', [12, 13, 12], 0, false, isPlayer);
+		animation.add('senpai', [22, 25, 22], 0, false, isPlayer);
+		animation.add('senpai-angry', [26, 27, 26], 0, false, isPlayer);
+		animation.add('spirit', [23, 28, 23], 0, false, isPlayer);
+		animation.add('bf-old', [14, 15, 14], 0, false, isPlayer);
+		animation.add('parents-christmas', [17, 18, 17], 0, false, isPlayer);
+		animation.add('monster', [19, 20, 19], 0, false, isPlayer);
+		animation.add('monster-christmas', [19, 20, 19], 0, false, isPlayer);
+		animation.add('gf-christmas', [16, 24, 16], 0, false, isPlayer);
+		animation.add('gf-car', [16, 24, 16], 0, false, isPlayer);
+		animation.add('gf-pixel', [16, 24, 16], 0, false, isPlayer);
+		}
+		else {
+		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
 		animation.add('gf', [16, 51, 52], 0, false, isPlayer);
 		animation.add('bf', [0, 1, 30], 0, false, isPlayer);
 		animation.add('bf-holding-gf', [53, 54, 55], 0, false, isPlayer);
@@ -51,6 +75,7 @@ class HealthIcon extends FlxSprite
 		if (gftutorialicon)
 		{
 			animation.add('gf', [16, 49, 35], 0, false, isPlayer);
+		}
 		}
 		animation.play(char);
 		scrollFactor.set();
