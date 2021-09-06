@@ -129,9 +129,9 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.hitsounds = OptionsState.DefaultValues[11];
 		}
-		if (FlxG.save.data.newaccuracy == null)
+		if (FlxG.save.data.instantrestart == null)
 		{
-			FlxG.save.data.newaccuracy = OptionsState.DefaultValues[12];
+			FlxG.save.data.instantrestart = OptionsState.DefaultValues[12];
 		}
 		if (FlxG.save.data.notesplashes == null)
 		{

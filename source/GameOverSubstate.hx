@@ -15,6 +15,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
+	var bsidePrefix:String = "";
 	var playingDeathSound:Bool = false;
 	public static var daBf:String = '';
 
@@ -52,6 +53,11 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (daBf == 'bf' && FlxG.save.data.cleanmode)
 			daBf = 'bfclean';
+
+		if (OG.BSIDE)
+		{
+			bsidePrefix = 'b-side/';
+		}
 
 		bf = new Boyfriend(x, y, daBf);
 		add(bf);
@@ -144,7 +150,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public function coolStartDeath(banana:Float = 1)
 	{
-		FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix), banana);
+		FlxG.sound.playMusic(Paths.music(bsidePrefix + 'gameOver' + stageSuffix), banana);
 	}
 
 	override function beatHit()
@@ -163,7 +169,11 @@ class GameOverSubstate extends MusicBeatSubstate
 			isEnding = true;
 			bf.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
-			FlxG.sound.play(Paths.music('gameOverEnd' + stageSuffix));
+			FlxG.sound.play(Paths.music(bsidePrefix + 'gameOverEnd' + stageSuffix));
+			if (FlxG.save.data.instantrestart)
+			{
+				LoadingState.loadAndSwitchState(new PlayState());
+			}
 			new FlxTimer().start(0.7, function(tmr:FlxTimer)
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()

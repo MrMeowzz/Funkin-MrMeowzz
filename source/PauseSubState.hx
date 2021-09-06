@@ -47,7 +47,11 @@ class PauseSubState extends MusicBeatSubstate
 
 		super();
 
-		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+		var bside:String = '';
+		if (OG.BSIDE)
+			bside = 'b-side/';
+
+		pauseMusic = new FlxSound().loadEmbedded(Paths.music(bside + 'breakfast'), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
@@ -270,6 +274,12 @@ class PauseSubState extends MusicBeatSubstate
 			if (PlayState.SONG.gf != null)
 				gfVersion = PlayState.SONG.gf;
 			SelectionScreen = false;
+			var bsidecrap:String = '';
+
+			if (OG.BSIDE)
+			{
+				bsidecrap = 'b-side/';
+			}
 			/*
 			switch (PlayState.curStage)
 			{
@@ -310,7 +320,11 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.storyPlaylist.remove(PlayState.storyPlaylist[0]);
 					if (PlayState.storyPlaylist.length <= 0) 
 					{
-						FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+						if (OG.StoryMenuType != 'bside')
+						{
+							FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+						}
+
 						OG.gunsCutsceneEnded = false;
 						OG.ughCutsceneEnded = false;
 						OG.stressCutsceneEnded = false;
@@ -319,11 +333,11 @@ class PauseSubState extends MusicBeatSubstate
 					}
 					else
 					{
-						PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0].toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, bsidecrap + PlayState.storyPlaylist[0].toLowerCase());
 						if (!lastCharacter.startsWith("bf"))
 							PlayState.SONG.player1 = lastCharacter;
 						if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit'))
-							PlayState.SONG = Song.loadFromJson("swap" + PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0].toLowerCase());
+							PlayState.SONG = Song.loadFromJson("swap" + PlayState.storyPlaylist[0].toLowerCase() + difficulty, bsidecrap + PlayState.storyPlaylist[0].toLowerCase());
 
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 						LoadingState.loadAndSwitchState(new PlayState());
@@ -357,6 +371,10 @@ class PauseSubState extends MusicBeatSubstate
 					lastSelected = curSelected;
 					SelectionScreen = true;				
 					menuItems = CoolUtil.difficultyArray.copy();
+					if (OG.BSIDE)
+					{
+						menuItems = CoolUtil.bsidedifficultyArray.copy();
+					}
 					menuItems.push("BACK");
 					regenMenu();
 					curSelected = 0;
@@ -432,41 +450,43 @@ class PauseSubState extends MusicBeatSubstate
 					regenMenu();
 					curSelected = 0;
 					changeSelection();
-				case "EASY" | "NORMAL" | "HARD" | "HARD PLUS":
+				case "EASY" | "NORMAL" | "HARD" | "HARD PLUS" | "EASIER" | "STANDARD" | "FLIP" | "FLIP PLUS":
 					switch (daSelected)
 					{
-						case "EASY":
+						case "EASY" | "EASIER":
 							difficulty = '-easy';						
-						case "HARD":
+						case "HARD" | "FLIP":
 							difficulty = '-hard';
-						case "HARD PLUS":
+						case "HARD PLUS" | "FLIP PLUS":
 							difficulty = '-hardplus';
+						default:
+							difficulty = '';
 					}
 					if (CoolUtil.difficultyString() == daSelected)
 					{
 						close();
 						return;
 					}
-					var folder = PlayState.SONG.song.toLowerCase();
+					var folder = bsidecrap + PlayState.SONG.song.toLowerCase();
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, folder);
 					if (!lastCharacter.startsWith("bf"))
 						PlayState.SONG.player1 = lastCharacter;
 						
 					if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit'))
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("swaptutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("swaptutorial" + difficulty, bsidecrap + "tutorial");
 
 					PlayState.storyDifficulty = curSelected;
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "tankman":
 					if (PlayState.curStage == 'tank')
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 
 					if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
 					{
@@ -483,17 +503,17 @@ class PauseSubState extends MusicBeatSubstate
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "bf":						
-					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					PlayState.SONG.player1 = PlayState.SONG.player1;
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "pico":
 					if (PlayState.curStage == 'philly')
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
 					{
 						PlayState.SONG.player1 = "pico-pixel";
@@ -506,27 +526,27 @@ class PauseSubState extends MusicBeatSubstate
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "gf":
 					if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("swaptutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("swaptutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = gfVersion;
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "amog us":
 					if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = "bf-amogus";
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "monster":
 					if (PlayState.SONG.player2.startsWith('monster'))
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = "monster";
 					if (PlayState.curStage.startsWith('mall'))
 						PlayState.SONG.player1 += "-christmas";
@@ -534,11 +554,11 @@ class PauseSubState extends MusicBeatSubstate
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "mom":
 					if (PlayState.SONG.player2.startsWith('mom'))
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = "mom";
 					if (PlayState.curStage == 'limo')
 						PlayState.SONG.player1 += "-car";
@@ -546,11 +566,11 @@ class PauseSubState extends MusicBeatSubstate
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "senpai":
 					if (PlayState.SONG.player2.startsWith('senpai'))
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = "senpai";
 					if (PlayState.SONG.song.toLowerCase() == 'roses')
 						PlayState.SONG.player1 += "-angry";
@@ -558,21 +578,21 @@ class PauseSubState extends MusicBeatSubstate
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "spirit":
 					if (PlayState.SONG.player2 == 'spirit')
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter == 'spirit' || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = "spirit";
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "bf-pixel":
 					if (PlayState.SONG.player2 == 'bf-pixel')
-						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson("swap" + PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter == 'bf-pixel'))
-						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, PlayState.SONG.song.toLowerCase());
+						PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
 					else if (lastOpponent.startsWith("bf") && PlayState.SONG.song.toLowerCase() == "tutorial")
-						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, "tutorial");
+						PlayState.SONG = Song.loadFromJson("tutorial" + difficulty, bsidecrap + "tutorial");
 					PlayState.SONG.player1 = "bf-pixel";
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());

@@ -324,23 +324,44 @@ class PlayState extends MusicBeatState
 				}
 		}
 
+		if (storyDifficulty == 3)
+		{
+			if (SONG.song.toLowerCase() != 'ugh')
+			{
+				gainmultiplier = 0.5;
+				losemultiplier = 2;
+			}
+		}
+
 		#if desktop
 		// Making difficulty text for Discord Rich Presence.
-		switch (storyDifficulty)
+		if (OG.BSIDE)
 		{
-			case 0:
-				storyDifficultyText = "Easy";
-			case 1:
-				storyDifficultyText = "Normal";
-			case 2:
-				storyDifficultyText = "Hard";
-			case 3:
-				storyDifficultyText = "Hard Plus";
-				if (SONG.song.toLowerCase() != 'ugh')
-				{
-					gainmultiplier = 0.5;
-					losemultiplier = 2;
-				}
+			switch (storyDifficulty)
+			{
+				case 0:
+					storyDifficultyText = "Easier";
+				case 1:
+					storyDifficultyText = "Standard";
+				case 2:
+					storyDifficultyText = "Flip";
+				case 3:
+					storyDifficultyText = "Flip Plus";
+			}
+		}
+		else
+		{
+			switch (storyDifficulty)
+			{
+				case 0:
+					storyDifficultyText = "Easy";
+				case 1:
+					storyDifficultyText = "Normal";
+				case 2:
+					storyDifficultyText = "Hard";
+				case 3:
+					storyDifficultyText = "Hard Plus";
+			}
 		}
 
 		player1RPC = SONG.player1;
@@ -1369,7 +1390,7 @@ class PlayState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('ANGRY'));
 					schoolIntro(doof);
 				case 'tutorial' | 'bopeebo' | 'fresh' | 'dadbattle':
-					if (!SONG.player1.startsWith('gf') && SONG.player1 != "bf-amogus" && !SONG.player1.startsWith('monster'))
+					if (!SONG.player1.startsWith('gf') && SONG.player1 != "bf-amogus" && !SONG.player1.startsWith('monster') && !OG.BSIDE)
 						schoolIntro(doof);
 					else
 						startCountdown();
@@ -1461,15 +1482,19 @@ class PlayState extends MusicBeatState
 	{
 		inCutscene = true;
 		var bside:String = '';
+		var daColor:FlxColor = 0xFFff1b31;
 		if (OG.BSIDE)
-			bside = 'bside/';
+		{
+			bside = 'b-side/';
+			daColor = 0xFF2121C4;
+		}
 		
 		var black:FlxSprite = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 		black.scrollFactor.set();
 		add(black);
 
-		var red:FlxSprite = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, 0xFFff1b31);
-		red.scrollFactor.set();
+		var colorbg:FlxSprite = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, daColor);
+		colorbg.scrollFactor.set();
 
 		var senpaiEvil:FlxSprite = new FlxSprite();
 		senpaiEvil.frames = Paths.getSparrowAtlas('weeb/' + bside + 'senpaiCrazy');
@@ -1485,7 +1510,7 @@ class PlayState extends MusicBeatState
 
 			if (SONG.song.toLowerCase() == 'thorns')
 			{
-				add(red);
+				add(colorbg);
 			}
 		}
 
@@ -1518,7 +1543,7 @@ class PlayState extends MusicBeatState
 								FlxG.sound.play(Paths.sound('Senpai_Dies'), 1, false, null, true, function()
 								{
 									remove(senpaiEvil);
-									remove(red);
+									remove(colorbg);
 									FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
 									{
 										add(dialogueBox);
@@ -2308,10 +2333,7 @@ class PlayState extends MusicBeatState
 			healthTxt.text = "Health:" + healthBar.percent + "%";
 		missesTxt.text = "Misses:" + misses;
 		var accuracy:Float;
-		if (FlxG.save.data.newaccuracy)
-			accuracy = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses + (goods * 0.025) + (bads * 0.25) + (shits * 0.75))) * 100, 2);
-		else
-			accuracy = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses)) * 100, 2);
+		accuracy = FlxMath.roundDecimal(((goodnotes - misses) / (goodnotes + misses + (goods * 0.025) + (bads * 0.35) + (shits * 1.25))) * 100, 2);
 		 
 		if (accuracy < 0)
 		{
@@ -2738,7 +2760,7 @@ class PlayState extends MusicBeatState
 			}
 			switch (SONG.player1)
 			{
-				case 'pico' | 'tankman' | 'monster' | 'gf' | 'tankmannoamongus' | 'mom' | 'mom-car' | 'senpai' | 'senpai-angry':
+				case 'pico' | 'tankman' | 'monster' | 'gf' | 'tankmannoamongus' | 'mom' | 'senpai' | 'senpai-angry':
 					deadRPC = SONG.player1 + '-dead';
 				case 'monster-christmas' | 'gf-christmas':
 					deadRPC = SONG.player1.replace('-christmas','') + '-dead';
@@ -2843,7 +2865,7 @@ class PlayState extends MusicBeatState
 					if (SONG.notes[Math.floor(curStep / 16)] != null)
 					{
 						if (SONG.notes[Math.floor(curStep / 16)].altAnim)
-							if (SONG.notes[Math.floor(curStep / 16)].altAnimPlayer == 0 || SONG.notes[Math.floor(curStep / 16)].altAnimPlayer == 2)
+							if (SONG.notes[Math.floor(curStep / 16)].altAnimPlayer == 0 || SONG.notes[Math.floor(curStep / 16)].altAnimPlayer == 2 || SONG.notes[Math.floor(curStep / 16)].altAnimPlayer == null)
 								altAnim = '-alt';
 					}
 
@@ -3075,7 +3097,8 @@ class PlayState extends MusicBeatState
 
 			if (storyPlaylist.length <= 0)
 			{
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				if (OG.StoryMenuType != 'bside')
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
@@ -3130,7 +3153,11 @@ class PlayState extends MusicBeatState
 				FlxTransitionableState.skipNextTransOut = true;
 				prevCamFollow = camFollow;
 
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
+				var bsidecrap:String = '';
+				if (OG.BSIDE)
+					bsidecrap = 'b-side/';
+
+				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, bsidecrap + PlayState.storyPlaylist[0]);
 				if (!lastCharacter.startsWith("bf"))
 					PlayState.SONG.player1 = lastCharacter;
 				if (lastOpponent.startsWith("bf") && (lastCharacter.startsWith("monster") || lastStage == "philly" || lastStage == "tank" || lastCharacter.startsWith("mom") || lastCharacter.startsWith("senpai") || lastCharacter == 'spirit'))
@@ -3181,19 +3208,19 @@ class PlayState extends MusicBeatState
 		var daRating:String = "sick";
 		if (FlxG.save.data.newhittimings)
 		{
-			if (noteDiff > Conductor.safeZoneOffset * 0.75)
+			if (noteDiff > Conductor.safeZoneOffset * 0.625)
 			{
 				daRating = 'shit';
 				score = 50;
 				shits++;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.625)
+			else if (noteDiff > Conductor.safeZoneOffset * 0.5)
 			{
 				daRating = 'bad';
 				score = 100;
 				bads++;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.3)
+			else if (noteDiff > Conductor.safeZoneOffset * 0.325)
 			{
 				daRating = 'good';
 				score = 200;

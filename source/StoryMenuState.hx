@@ -36,7 +36,7 @@ class StoryMenuState extends MusicBeatState
 		['iPhone', 'No Among Us', 'Among Us Drip']
 	];
 
-	var normalweekData:Array<Dynamic> = [
+	var notcleanweekData:Array<Dynamic> = [
 		['Tutorial'],
 		['Bopeebo', 'Fresh', 'Dadbattle'],
 		['Spookeez', 'South', 'Monster'],
@@ -89,6 +89,16 @@ class StoryMenuState extends MusicBeatState
 		0xFFD8D8D8
 	];
 
+	var bsideweekColors:Array<FlxColor> = [
+		0xFF6800A5, // GF
+		0xFFD8558E, // DAD
+		0xFFC3C3C3, // SPOOKY
+		0xFF8978CC, // PICO
+		0xFFD8558E, // MOM
+		0xFFD8558E, // PARENTS-CHRISTMAS
+		0xFFC3C3C3 // SENPAI
+	];
+
 	var txtWeekTitle:FlxText;
 
 	var curWeek:Int = 0;
@@ -110,16 +120,21 @@ class StoryMenuState extends MusicBeatState
 	{
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-
+		
 		if (FlxG.sound.music != null)
 		{
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			{
+				if (OG.StoryMenuType != 'bside')
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				else
+					FlxG.sound.playMusic(Paths.music('freakyMenu-bside'));
+			}
 		}
 
 		if (!FlxG.save.data.cleanmode)
 		{
-			weekData = normalweekData;
+			weekData = notcleanweekData;
 		}
 		else
 		{
@@ -154,38 +169,19 @@ class StoryMenuState extends MusicBeatState
 		grpLocks = new FlxTypedGroup<FlxSprite>();
 		add(grpLocks);
 
-		trace("Line 70");
+		trace("Line 70 SIKEEEE THATS THE WRONG LINE NUMBER");
 		
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus - Story Mode", null);
 		#end
 
-		for (i in 0...weekData.length)
-		{
-			var weekThing:MenuItem = new MenuItem(0, BG.y + BG.height + 10, i);
-			weekThing.y += ((weekThing.height + 20) * i);
-			weekThing.targetY = i;
-			grpWeekText.add(weekThing);
+		if (OG.StoryMenuType == 'section')
+			regenSections();
+		else
+			regenWeeks();
 
-			weekThing.screenCenter(X);
-			weekThing.antialiasing = true;
-			// weekThing.updateHitbox();
-
-			// Needs an offset thingie
-			if (!weekUnlocked[i])
-			{
-				var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
-				lock.frames = ui_tex;
-				lock.animation.addByPrefix('lock', 'lock');
-				lock.animation.play('lock');
-				lock.ID = i;
-				lock.antialiasing = true;
-				grpLocks.add(lock);
-			}
-		}
-
-		trace("Line 96");
+		trace("Line 96 AGAIN SIKEEEE THATS THE WRONG LINE NUMBER");
 
 		for (char in 0...3)
 		{
@@ -222,7 +218,7 @@ class StoryMenuState extends MusicBeatState
 		difficultySelectors = new FlxGroup();
 		add(difficultySelectors);
 
-		trace("Line 124");
+		trace("Line 124 SIKEEEE THATS ALSO THE WRONG LINE NUMBER");
 
 		leftArrow = new FlxSprite(grpWeekText.members[0].x + grpWeekText.members[0].width + 10, grpWeekText.members[0].y + 10);
 		leftArrow.frames = ui_tex;
@@ -238,7 +234,6 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.addByPrefix('hard', 'HARD');
 		sprDifficulty.animation.addByPrefix('hardplus', 'PLUSHARD');
 		sprDifficulty.animation.play('easy');
-		changeDifficulty();
 
 		difficultySelectors.add(sprDifficulty);
 
@@ -249,7 +244,10 @@ class StoryMenuState extends MusicBeatState
 		rightArrow.animation.play('idle');
 		difficultySelectors.add(rightArrow);
 
-		trace("Line 150");
+		regenDifficultyFrames(OG.StoryMenuType == 'bside');
+		changeDifficulty();
+
+		trace("Line 150 SIKEEEE THATS ALSO THE WRONG LINE NUMBER TOO");
 
 		add(BG);
 		add(grpWeekCharacters);
@@ -267,13 +265,13 @@ class StoryMenuState extends MusicBeatState
 
 		updateText();
 
-		trace("Line 165");
+		trace("Line 165 IS ALSO THE WRONG LINE NUMBER SO SIKEEEE");
 
 		FlxG.camera.zoom = 1.5;
 		FlxG.camera.y = FlxG.height * -1;
 		FlxTween.tween(FlxG.camera, { zoom: 1, y: 0}, 1, { ease: FlxEase.quadIn });
 
-		OG.BSIDE = false;
+		//OG.BSIDE = false;
 
 		super.create();
 	}
@@ -289,6 +287,25 @@ class StoryMenuState extends MusicBeatState
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.5));
 
 		scoreText.text = "WEEK SCORE:" + lerpScore;
+		if (!selectedWeek)
+		{
+			if (OG.StoryMenuType == 'section')
+			{
+				scoreText.visible = false;
+				txtWeekTitle.visible = false;
+				sprDifficulty.visible = false;
+				leftArrow.visible = false;
+				rightArrow.visible = false;
+			}
+			else
+			{
+				scoreText.visible = true;
+				txtWeekTitle.visible = true;
+				sprDifficulty.visible = true;
+				leftArrow.visible = true;
+				rightArrow.visible = true;
+			}
+		}
 
 		txtWeekTitle.text = weekNames[curWeek].toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
@@ -360,16 +377,47 @@ class StoryMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				selectWeek();
+				if (OG.StoryMenuType != 'section')
+					selectWeek();
+				else
+					selectSection();
 			}
 		}
 
-		if (controls.BACK && !movedBack && !selectedWeek)
+		if (FlxG.keys.justPressed.BACKSPACE && !movedBack && !selectedWeek)
+		{
+			if (OG.StoryMenuType != 'section') {
+				curWeek = 0;
+				if (OG.StoryMenuType == 'bside')
+				{
+					FlxG.sound.music.stop();
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				}
+				regenSections();
+				changeWeek();
+			}
+			else
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				movedBack = true;
+				OG.SelectedStoryMode = curWeek;
+				OG.DifficultyStoryMode = curDifficulty;
+				FlxG.sound.music.stop();
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+				MainMenuState.transition = 'zoom';
+				FlxG.switchState(new MainMenuState());
+			}
+		}
+
+		if (FlxG.keys.justPressed.ESCAPE && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			OG.SelectedStoryMode = curWeek;
 			OG.DifficultyStoryMode = curDifficulty;
+			FlxG.sound.music.stop();
+			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
 			MainMenuState.transition = 'zoom';
 			FlxG.switchState(new MainMenuState());
@@ -439,8 +487,10 @@ class StoryMenuState extends MusicBeatState
 			}
 
 			PlayState.storyDifficulty = curDifficulty;
-
-			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
+			var bsidecrap:String = '';
+			if (OG.StoryMenuType == 'bside')
+				bsidecrap = 'b-side/';
+			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, bsidecrap + PlayState.storyPlaylist[0].toLowerCase());
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
@@ -449,6 +499,41 @@ class StoryMenuState extends MusicBeatState
 				OG.DifficultyStoryMode = curDifficulty;
 				FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.height * -1}, 1, { ease: FlxEase.quadIn } );
 				LoadingState.loadAndSwitchState(new PlayState(), true);
+			});
+		}
+	}
+
+	function selectSection()
+	{
+		if (weekUnlocked[curWeek])
+		{
+			if (stopspamming == false)
+			{
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+
+				grpWeekText.members[curWeek].startFlashing();
+				stopspamming = true;
+			}
+			
+			selectedWeek = true;
+
+			switch (curWeek)
+			{
+				case 1:
+					OG.StoryMenuType = 'bside';
+				default:
+					OG.StoryMenuType = 'normal';
+			}
+
+			new FlxTimer().start(1, function(tmr:FlxTimer)
+			{
+				curWeek = 0;
+				stopspamming = false;
+				selectedWeek = false;
+				regenWeeks();
+				changeWeek();
+				regenDifficultyFrames(OG.StoryMenuType == 'bside');
+				changeDifficulty();
 			});
 		}
 	}
@@ -503,11 +588,24 @@ class StoryMenuState extends MusicBeatState
 	function changeWeek(change:Int = 0):Void
 	{
 		curWeek += change;
-
-		if (curWeek >= weekData.length)
-			curWeek = 0;
-		if (curWeek < 0)
-			curWeek = weekData.length - 1;
+		switch (OG.StoryMenuType)
+		{
+			case 'section':
+				if (curWeek >= 2)
+					curWeek = 0;
+				if (curWeek < 0)
+					curWeek = 1;
+			case 'bside':
+				if (curWeek >= 7)
+					curWeek = 0;
+				if (curWeek < 0)
+					curWeek = 6;
+			default:
+				if (curWeek >= weekData.length)
+					curWeek = 0;
+				if (curWeek < 0)
+					curWeek = weekData.length - 1;
+		}
 
 		var bullShit:Int = 0;
 
@@ -521,12 +619,24 @@ class StoryMenuState extends MusicBeatState
 			bullShit++;
 		}
 
-		FlxTween.color(txtTracklist, 0.5, txtTracklist.color, weekColors[curWeek]);
-		FlxTween.color(BG, 0.5, BG.color, weekColors[curWeek]);
+		switch (OG.StoryMenuType)
+		{
+			case 'section':
+				FlxTween.color(txtTracklist, 0.5, txtTracklist.color, FlxColor.BLACK);
+				FlxTween.color(BG, 0.5, BG.color, FlxColor.BLACK);
+			case 'normal':
+				FlxTween.color(txtTracklist, 0.5, txtTracklist.color, weekColors[curWeek]);
+				FlxTween.color(BG, 0.5, BG.color, weekColors[curWeek]);
+			case 'bside':
+				FlxTween.color(txtTracklist, 0.5, txtTracklist.color, bsideweekColors[curWeek]);
+				FlxTween.color(BG, 0.5, BG.color, bsideweekColors[curWeek]);
+		}
+		
 
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 
-		updateText();
+		if (OG.StoryMenuType != 'section')
+			updateText();
 	}
 
 	function updateText()
@@ -537,6 +647,8 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.text = "Tracks\n\n";
 		grpWeekCharacters.members[0].flipX = false;
 		grpWeekCharacters.members[0].visible = true;
+		grpWeekCharacters.members[1].visible = true;
+		grpWeekCharacters.members[2].visible = true;
 
 		switch (grpWeekCharacters.members[0].animation.curAnim.name)
 		{
@@ -573,6 +685,13 @@ class StoryMenuState extends MusicBeatState
 
 		if (curWeek == 0 || curWeek == 8)
 			grpWeekCharacters.members[0].visible = false;
+		
+		if (OG.StoryMenuType == 'section')
+		{
+			grpWeekCharacters.members[1].visible = false;
+			grpWeekCharacters.members[2].visible = false;
+			grpWeekCharacters.members[0].visible = false;
+		}
 
 		var stringThing:Array<String> = weekData[curWeek];
 
@@ -589,5 +708,140 @@ class StoryMenuState extends MusicBeatState
 		#if !switch
 		intendedScore = Highscore.getWeekScore(curWeek, curDifficulty);
 		#end
+	}
+
+	function regenSections()
+	{
+		grpWeekText.clear();
+		grpLocks.clear(); // there probably aint any
+		OG.BSIDE = false;
+		OG.StoryMenuType = 'section';
+		for (i in 0...2)
+		{
+			var weekThing:MenuItem = new MenuItem(0, BG.y + BG.height + 10, i, 'sections');
+			weekThing.y += ((weekThing.height + 20) * i);
+			weekThing.targetY = i;
+			grpWeekText.add(weekThing);
+
+			weekThing.screenCenter(X);
+			weekThing.antialiasing = true;
+			// weekThing.updateHitbox();
+
+			// Needs an offset thingie
+			if (!weekUnlocked[i])
+			{
+				var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
+				lock.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+				lock.animation.addByPrefix('lock', 'lock');
+				lock.animation.play('lock');
+				lock.ID = i;
+				lock.antialiasing = true;
+				grpLocks.add(lock);
+			}
+		}
+	}
+
+	function regenWeeks()
+	{
+		grpWeekText.clear();
+		grpLocks.clear(); // there probably aint any
+		OG.BSIDE = false;
+		if (OG.StoryMenuType == 'bside') {
+		OG.BSIDE = true;
+		for (i in 0...7)
+		{
+			var weekThing:MenuItem = new MenuItem(0, BG.y + BG.height + 10, i, 'b-side');
+			weekThing.y += ((weekThing.height + 20) * i);
+			weekThing.targetY = i;
+			grpWeekText.add(weekThing);
+
+			weekThing.screenCenter(X);
+			weekThing.antialiasing = true;
+			// weekThing.updateHitbox();
+
+			// Needs an offset thingie
+			if (!weekUnlocked[i])
+			{
+				var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
+				lock.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+				lock.animation.addByPrefix('lock', 'lock');
+				lock.animation.play('lock');
+				lock.ID = i;
+				lock.antialiasing = true;
+				grpLocks.add(lock);
+			}
+		}
+		FlxG.sound.music.stop();
+		FlxG.sound.playMusic(Paths.music('freakyMenu-bside'));
+		}
+		else {
+		for (i in 0...weekData.length)
+		{
+			var weekThing:MenuItem = new MenuItem(0, BG.y + BG.height + 10, i, 'normal');
+			weekThing.y += ((weekThing.height + 20) * i);
+			weekThing.targetY = i;
+			grpWeekText.add(weekThing);
+
+			weekThing.screenCenter(X);
+			weekThing.antialiasing = true;
+			// weekThing.updateHitbox();
+
+			// Needs an offset thingie
+			if (!weekUnlocked[i])
+			{
+				var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
+				lock.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+				lock.animation.addByPrefix('lock', 'lock');
+				lock.animation.play('lock');
+				lock.ID = i;
+				lock.antialiasing = true;
+				grpLocks.add(lock);
+			}
+		}
+		}
+	}
+
+	function regenDifficultyFrames(bside:Bool)
+	{
+		if (bside)
+		{
+			leftArrow.x = grpWeekText.members[0].x + grpWeekText.members[0].width + 10;
+			leftArrow.y = grpWeekText.members[0].y + 10;
+			leftArrow.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets-bside');
+			leftArrow.animation.addByPrefix('idle', "arrow left");
+			leftArrow.animation.addByPrefix('press', "arrow push left");
+			sprDifficulty.x = leftArrow.x + 130;
+			sprDifficulty.y = leftArrow.y;
+			sprDifficulty.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets-bside');
+			sprDifficulty.animation.addByPrefix('easy', 'EASY');
+			sprDifficulty.animation.addByPrefix('normal', 'NORMAL');
+			sprDifficulty.animation.addByPrefix('hard', 'HARD');
+			sprDifficulty.animation.addByPrefix('hardplus', 'PLUSHARD');
+			rightArrow.x = sprDifficulty.x + sprDifficulty.width + 50;
+			rightArrow.y = leftArrow.y;
+			rightArrow.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets-bside');
+			rightArrow.animation.addByPrefix('idle', 'arrow right');
+			rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
+		}
+		else
+		{
+			leftArrow.x = grpWeekText.members[0].x + grpWeekText.members[0].width + 10;
+			leftArrow.y = grpWeekText.members[0].y + 10;
+			leftArrow.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+			leftArrow.animation.addByPrefix('idle', "arrow left");
+			leftArrow.animation.addByPrefix('press', "arrow push left");
+			sprDifficulty.x = leftArrow.x + 130;
+			sprDifficulty.y = leftArrow.y;
+			sprDifficulty.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+			sprDifficulty.animation.addByPrefix('easy', 'EASY');
+			sprDifficulty.animation.addByPrefix('normal', 'NORMAL');
+			sprDifficulty.animation.addByPrefix('hard', 'HARD');
+			sprDifficulty.animation.addByPrefix('hardplus', 'PLUSHARD');
+			rightArrow.x = sprDifficulty.x + sprDifficulty.width + 50;
+			rightArrow.y = leftArrow.y;
+			rightArrow.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+			rightArrow.animation.addByPrefix('idle', 'arrow right');
+			rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
+		}
 	}
 }

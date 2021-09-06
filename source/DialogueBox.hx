@@ -40,18 +40,28 @@ class DialogueBox extends FlxSpriteGroup
 
 		var bside:String = '';
 		if (OG.BSIDE)
-			bside = 'bside/';
+			bside = 'b-side/';
 
 		switch (PlayState.SONG.song.toLowerCase())
 		{
 			case 'senpai':
-				FlxG.sound.playMusic(Paths.music('Lunchbox'), 0);
-				FlxG.sound.music.fadeIn(1, 0, 0.8);
-			case 'thorns':
-				FlxG.sound.playMusic(Paths.music('LunchboxScary'), 0);
-				FlxG.sound.music.fadeIn(1, 0, 0.8);
-			case 'tutorial':
 				if (PlayState.isStoryMode)
+				{
+					FlxG.sound.playMusic(Paths.music('Lunchbox'), 0);
+					FlxG.sound.music.fadeIn(1, 0, 0.8);
+				}
+				else
+					FlxG.sound.music.stop();
+			case 'thorns':
+				if (PlayState.isStoryMode)
+				{
+					FlxG.sound.playMusic(Paths.music('LunchboxScary'), 0);
+					FlxG.sound.music.fadeIn(1, 0, 0.8);
+				}
+				else
+					FlxG.sound.music.stop();
+			case 'tutorial':
+				if (PlayState.isStoryMode && !OG.BSIDE)
 				{
 					FlxG.sound.playMusic(Paths.music('tutorialbg'), 0);
 					FlxG.sound.music.fadeIn(1, 0, 0.4);
@@ -59,7 +69,7 @@ class DialogueBox extends FlxSpriteGroup
 				else
 					FlxG.sound.music.stop();
 			case 'bopeebo' | 'fresh' | 'dadbattle':
-				if (PlayState.isStoryMode)
+				if (PlayState.isStoryMode && !OG.BSIDE)
 				{
 					FlxG.sound.playMusic(Paths.music('dadbg'), 0);
 					FlxG.sound.music.fadeIn(1, 0, 0.4);

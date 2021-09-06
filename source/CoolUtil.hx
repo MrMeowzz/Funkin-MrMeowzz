@@ -7,10 +7,14 @@ using StringTools;
 class CoolUtil
 {
 	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD", "HARD PLUS"];
+	public static var bsidedifficultyArray:Array<String> = ['EASIER', "STANDARD", "FLIP", "FLIP PLUS"];
 
 	public static function difficultyString():String
 	{
-		return difficultyArray[PlayState.storyDifficulty];
+		if (OG.BSIDE)
+			return bsidedifficultyArray[PlayState.storyDifficulty];
+		else
+			return difficultyArray[PlayState.storyDifficulty];
 	}
 
 	public static function coolTextFile(path:String):Array<String>

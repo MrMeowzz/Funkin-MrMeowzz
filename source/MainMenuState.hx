@@ -22,7 +22,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var curSelected:Int = 0;
+	var curSelected:Int = OG.SelectedMainMenu;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
@@ -154,6 +154,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
+				OG.SelectedMainMenu = curSelected;
 				FlxTween.tween(FlxG.camera, { x: FlxG.width, zoom: 0.5 }, 1, { ease: FlxEase.quadIn, onComplete: function(twn:FlxTween)
 				{
 					FlxG.switchState(new TitleState());
@@ -162,6 +163,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
+				OG.SelectedMainMenu = curSelected;
 				if (optionShit[curSelected] == 'kickstarter' || optionShit[curSelected] == 'donate')
 				{
 					#if linux
@@ -241,6 +243,7 @@ class MainMenuState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN && PlayState.SONG != null)
 		{
+			OG.SelectedMainMenu = curSelected;
 			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 			FlxG.switchState(new ChartingState());
 

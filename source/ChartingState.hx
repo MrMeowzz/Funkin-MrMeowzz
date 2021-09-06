@@ -325,7 +325,13 @@ class ChartingState extends MusicBeatState
 
 		var switchingDifficultytxt:String = '';
 
-		var difficultyDropDown = new FlxUIDropDownMenu(270, 125, FlxUIDropDownMenu.makeStrIdLabelArray(CoolUtil.difficultyArray, true), function(difficulty:String)
+		var difficultyarray:Array<String> = CoolUtil.difficultyArray.copy();
+		if (OG.BSIDE)
+		{
+			difficultyarray = CoolUtil.bsidedifficultyArray.copy();
+		}
+
+		var difficultyDropDown = new FlxUIDropDownMenu(270, 125, FlxUIDropDownMenu.makeStrIdLabelArray(difficultyarray, true), function(difficulty:String)
 		{
 			switch (Std.parseInt(difficulty))
 			{
@@ -360,7 +366,7 @@ class ChartingState extends MusicBeatState
 
 		notestyleDropDown.selectedLabel = _song.notestyle;
 
-		var check_notestyleOverride:FlxUICheckBox = new FlxUICheckBox(270, 200, null, null, "Override User Notestyle", 100);
+		var check_notestyleOverride:FlxUICheckBox = new FlxUICheckBox(400, 250, null, null, "Override User Notestyle", 100);
 		check_notestyleOverride.checked = _song.notestyleOverride;
 		check_notestyleOverride.callback = function()
 		{
@@ -547,14 +553,25 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.stop();
 			// vocals.stop();
 		}
-
-		if (FlxG.save.data.cleanmode && (daSong == 'no among us' || daSong == 'h.e. no among us'))
-			FlxG.sound.playMusic(Paths.cleaninst(daSong), 0.6);
+		
+		if (OG.BSIDE)
+		{
+			FlxG.sound.playMusic(Paths.bsideinst(daSong), 0.6);
+		}
 		else
-			FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
+		{
+			if (FlxG.save.data.cleanmode && (daSong == 'no among us' || daSong == 'h.e. no among us'))
+				FlxG.sound.playMusic(Paths.cleaninst(daSong), 0.6);
+			else
+				FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
+		}
 
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
 		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
+		if (OG.BSIDE)
+		{
+			vocals = new FlxSound().loadEmbedded(Paths.bsidevoices(daSong));
+		}
 		FlxG.sound.list.add(vocals);
 
 		FlxG.sound.music.pause();

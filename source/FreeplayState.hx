@@ -143,7 +143,7 @@ class FreeplayState extends MusicBeatState
 		add(grpVisible);
 		add(iconArray);
 
-		if (OG.MenuType == 'section')
+		if (OG.FreeplayMenuType == 'section')
 			regenSections();
 		else
 			regenSongs();
@@ -183,7 +183,7 @@ class FreeplayState extends MusicBeatState
 		add(scoreText);
 
 		changeSelection();
-		if (OG.MenuType != 'section')
+		if (OG.FreeplayMenuType != 'section')
 			changeDiff();
 
 		// FlxG.sound.playMusic(Paths.music('title'), 0);
@@ -302,7 +302,7 @@ class FreeplayState extends MusicBeatState
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
 
-		if (OG.MenuType == 'section')
+		if (OG.FreeplayMenuType == 'section')
 		{
 			scoreText.visible = false;
 			diffText.visible = false;
@@ -360,9 +360,9 @@ class FreeplayState extends MusicBeatState
 			downtimer.cancel();
 		}
 
-		if (controls.LEFT_P && OG.MenuType != 'section')
+		if (controls.LEFT_P && OG.FreeplayMenuType != 'section')
 			changeDiff(-1);
-		if (controls.RIGHT_P && OG.MenuType != 'section')
+		if (controls.RIGHT_P && OG.FreeplayMenuType != 'section')
 			changeDiff(1);
 
 		if (FlxG.keys.justPressed.ESCAPE)
@@ -383,7 +383,7 @@ class FreeplayState extends MusicBeatState
 		}
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
-			if (OG.MenuType != 'section') {
+			if (OG.FreeplayMenuType != 'section') {
 				regenSections();
 			}
 			else
@@ -406,19 +406,19 @@ class FreeplayState extends MusicBeatState
 
 		if (accepted)
 		{
-			if (OG.MenuType == 'section') {
+			if (OG.FreeplayMenuType == 'section') {
 			switch (sections[curSelected].section.toLowerCase())
 			{
 				case 'bside':				
-					OG.MenuType = 'bside';
+					OG.FreeplayMenuType = 'bside';
 				default:
-					OG.MenuType = 'normal';
+					OG.FreeplayMenuType = 'normal';
 			}
 			curSelected = 0;
 			regenSongs();
 			changeDiff();
 			}
-			else if (OG.MenuType == 'bside')
+			else if (OG.FreeplayMenuType == 'bside')
 			{
 				var poop:String = Highscore.formatSong(bsidesongs[curSelected].songName.toLowerCase(), curDifficulty);
 
@@ -502,17 +502,33 @@ class FreeplayState extends MusicBeatState
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		#end
-
-		switch (curDifficulty)
+		if (OG.FreeplayMenuType == 'bside')
 		{
-			case 0:
-				diffText.text = "< EASY >";
-			case 1:
-				diffText.text = '< NORMAL >';
-			case 2:
-				diffText.text = "< HARD >";
-			case 3:
-				diffText.text = "< HARD PLUS >";
+			switch (curDifficulty)
+			{
+				case 0:
+					diffText.text = "< EASIER >";
+				case 1:
+					diffText.text = '< STANDARD >';
+				case 2:
+					diffText.text = "< FLIP >";
+				case 3:
+					diffText.text = "< FLIP PLUS >";
+			}
+		}
+		else
+		{
+			switch (curDifficulty)
+			{
+				case 0:
+					diffText.text = "< EASY >";
+				case 1:
+					diffText.text = '< NORMAL >';
+				case 2:
+					diffText.text = "< HARD >";
+				case 3:
+					diffText.text = "< HARD PLUS >";
+			}
 		}
 	}
 
@@ -549,7 +565,7 @@ class FreeplayState extends MusicBeatState
 			case 'senpai' | 'senpai-angry':
 				return 0xFFFA86C4;
 			case 'spirit':
-				return 0xFF30066B;
+				return 0xFF320691;
 			case 'spooky':
 				var random:Int;
 				random = FlxG.random.int(0, 1);
@@ -618,14 +634,14 @@ class FreeplayState extends MusicBeatState
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected += change;
-		if (OG.MenuType == 'section') 
+		if (OG.FreeplayMenuType == 'section') 
 		{
 			if (curSelected < 0)
 				curSelected = sections.length - 1;
 			if (curSelected >= sections.length)
 				curSelected = 0;
 		}
-		else if (OG.MenuType == 'bside')
+		else if (OG.FreeplayMenuType == 'bside')
 		{
 			if (curSelected < 0)
 				curSelected = bsidesongs.length - 1;
@@ -643,7 +659,7 @@ class FreeplayState extends MusicBeatState
 		
 
 		// selector.y = (70 * curSelected) + 30;
-		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2 && OG.MenuType != 'section')
+		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2 && OG.FreeplayMenuType != 'section')
 		{
 			curDifficulty = 2;
 			switch (curDifficulty)
@@ -656,7 +672,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		#if !switch
-		if (OG.MenuType == 'bside')
+		if (OG.FreeplayMenuType == 'bside')
 			intendedScore = Highscore.getScore(bsidesongs[curSelected].songName, curDifficulty);
 		else
 			intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
@@ -666,7 +682,7 @@ class FreeplayState extends MusicBeatState
 		#if PRELOAD_ALL
 		if (FlxG.save.data.freeplaypreviews)
 		{
-			if (OG.MenuType == 'section')
+			if (OG.FreeplayMenuType == 'section')
 			{
 				switch (curSelected)
 				{
@@ -676,13 +692,13 @@ class FreeplayState extends MusicBeatState
 						FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[1].songName), 0);
 				}
 			}
-			else if (OG.MenuType == 'bside')
+			else if (OG.FreeplayMenuType == 'bside')
 			{
 				FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[curSelected].songName), 0);
 			}
 			else
 			{
-				if (FlxG.save.data.cleanmode && (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'h.e no among us') && OG.MenuType != 'section')
+				if (FlxG.save.data.cleanmode && (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'h.e no among us') && OG.FreeplayMenuType != 'section')
 					FlxG.sound.playMusic(Paths.cleaninst(songs[curSelected].songName), 0);
 				else
 					FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
@@ -714,9 +730,9 @@ class FreeplayState extends MusicBeatState
 				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
-		if (OG.MenuType == 'section')
+		if (OG.FreeplayMenuType == 'section')
 			FlxTween.color(bg, 0.5, bg.color, iconColors(Std.string(sections[curSelected].Character)));
-		else if (OG.MenuType == 'bside')
+		else if (OG.FreeplayMenuType == 'bside')
 			FlxTween.color(bg, 0.5, bg.color, bsideiconColors(Std.string(bsidesongs[curSelected].songCharacter)));
 		else
 			FlxTween.color(bg, 0.5, bg.color, iconColors(Std.string(songs[curSelected].songCharacter)));
@@ -727,7 +743,7 @@ class FreeplayState extends MusicBeatState
 		grpVisible.clear();
 		iconArray.clear();
 		OG.BSIDE = false;
-		OG.MenuType = 'section';
+		OG.FreeplayMenuType = 'section';
 		for (i in 0...sections.length)
 		{
 			var optionText:Alphabet;
@@ -756,10 +772,8 @@ class FreeplayState extends MusicBeatState
 		grpVisible.clear();
 		iconArray.clear();
 		OG.BSIDE = false;
-		OG.MenuType == 'normal';
-		if (OG.MenuType == 'bside') {
+		if (OG.FreeplayMenuType == 'bside') {
 		OG.BSIDE = true;
-		OG.MenuType == 'bside';
 		for (i in 0...bsidesongs.length)
 		{
 			var songText:Alphabet;
@@ -778,8 +792,8 @@ class FreeplayState extends MusicBeatState
 			// songText.x += 40;
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 			// songText.screenCenter(X);
-			changeSelection();
 		}
+		changeSelection();
 		}
 		else {
 		for (i in 0...songs.length)
@@ -802,8 +816,8 @@ class FreeplayState extends MusicBeatState
 			// songText.x += 40;
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 			// songText.screenCenter(X);
-			changeSelection();
 		}
+		changeSelection();
 		}
 	}
 }

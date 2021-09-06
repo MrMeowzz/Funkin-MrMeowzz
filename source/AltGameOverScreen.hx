@@ -77,6 +77,10 @@ class AltGameOverScreen extends MusicBeatState
 				cancelButton.visible = false;
 				FlxG.sound.music.stop();
 				FlxG.sound.play(Paths.music('gameOverEnd'), 1, false, null, true);
+				if (FlxG.save.data.instantrestart)
+				{
+					LoadingState.loadAndSwitchState(new PlayState());
+				}
 				new FlxTimer().start(0.7, function(tmr:FlxTimer)
 				{
 					FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
