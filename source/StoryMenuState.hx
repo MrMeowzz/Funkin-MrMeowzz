@@ -36,7 +36,7 @@ class StoryMenuState extends MusicBeatState
 		['iPhone', 'No Among Us', 'Among Us Drip']
 	];
 
-	var notcleanweekData:Array<Dynamic> = [
+	var weekData:Array<Dynamic> = [
 		['Tutorial'],
 		['Bopeebo', 'Fresh', 'Dadbattle'],
 		['Spookeez', 'South', 'Monster'],
@@ -48,7 +48,26 @@ class StoryMenuState extends MusicBeatState
 		['iPhone', 'No Among Us', 'Among Us Drip']
 	];
 
-	var weekData:Array<Dynamic> = [];
+	var bsideweekData:Array<Dynamic> = [
+		['Tutorial'],
+		['Bopeebo', 'Fresh', 'Dadbattle'],
+		['Spookeez', 'South'],
+		['Pico', 'Philly', "Blammed"],
+		['Satin-Panties', "High", "Milf"],
+		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
+		['Senpai', 'Roses', 'Thorns']
+	];
+
+	var cleanbsideweekData:Array<Dynamic> = [
+		['Tutorial'],
+		['Bopeebo', 'Fresh', 'Dadbattle'],
+		['Spookeez', 'South'],
+		['Pico', 'Philly', "Blammed"],
+		['Satin-Pants', "High", "Mom"],
+		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
+		['Senpai', 'Roses', 'Thorns']
+	];
+
 	var curDifficulty:Int = OG.DifficultyStoryMode;
 
 	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true, true];
@@ -132,13 +151,10 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		if (!FlxG.save.data.cleanmode)
-		{
-			weekData = notcleanweekData;
-		}
-		else
+		if (FlxG.save.data.cleanmode)
 		{
 			weekData = cleanweekData;
+			bsideweekData = cleanbsideweekData;
 		}
 
 		persistentUpdate = persistentDraw = true;
@@ -474,6 +490,9 @@ class StoryMenuState extends MusicBeatState
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 
+			if (OG.StoryMenuType == 'bside')
+				PlayState.storyPlaylist = bsideweekData[curWeek];
+
 			var diffic = "";
 
 			switch (curDifficulty)
@@ -694,6 +713,8 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		var stringThing:Array<String> = weekData[curWeek];
+		if (OG.StoryMenuType == 'bside')
+			stringThing = bsideweekData[curWeek];
 
 		for (i in stringThing)
 		{
