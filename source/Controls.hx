@@ -11,6 +11,8 @@ import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
+using StringTools;
+
 #if (haxe >= "4.0.0")
 enum abstract Action(String) to String from String
 {
@@ -232,7 +234,7 @@ class Controls extends FlxActionSet
 		for (action in digitalActions)
 			byName[action.name] = action;
 
-		setKeyboardScheme(scheme, false);
+		loadKeyBinds();
 	}
 	#else
 	public function new(name, scheme:KeyboardScheme = null)
@@ -262,7 +264,7 @@ class Controls extends FlxActionSet
 			
 		if (scheme == null)
 			scheme = None;
-		setKeyboardScheme(scheme, false);
+		loadKeyBinds();
 	}
 	#end
 
@@ -472,8 +474,12 @@ class Controls extends FlxActionSet
 
 	inline static function addKeys(action:FlxActionDigital, keys:Array<FlxKey>, state:FlxInputState)
 	{
-		for (key in keys)
-			action.addKey(key, state);
+		for (key in keys) {
+			if (Std.string(key) != null)
+			{
+				action.addKey(key, state);
+			}
+		}
 	}
 
 	static function removeKeys(action:FlxActionDigital, keys:Array<FlxKey>)
@@ -487,80 +493,34 @@ class Controls extends FlxActionSet
 		}
 	}
 
-	public function setKeyboardScheme(scheme:KeyboardScheme, reset = true)
+	public function loadKeyBinds()
 	{
-		if (reset)
-			removeKeyboard();
+		removeKeyboard();
+		if (gamepadsAdded.length != 0)
+			removeGamepad();
+		KeyBinds.keyCheck();
 
-		keyboardScheme = scheme;
-		
-		#if (haxe >= "4.0.0")
-		switch (scheme)
-		{
-			case Solo:
-				inline bindKeys(Control.UP, [W, FlxKey.UP, K]);
-				inline bindKeys(Control.DOWN, [S, FlxKey.DOWN, J]);
-				inline bindKeys(Control.LEFT, [A, FlxKey.LEFT, H]);
-				inline bindKeys(Control.RIGHT, [D, FlxKey.RIGHT, L]);
-				inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
-				inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-				inline bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
-				inline bindKeys(Control.RESET, [R]);
-			case Duo(true):
-				inline bindKeys(Control.UP, [W]);
-				inline bindKeys(Control.DOWN, [S]);
-				inline bindKeys(Control.LEFT, [A]);
-				inline bindKeys(Control.RIGHT, [D]);
-				inline bindKeys(Control.ACCEPT, [G, Z]);
-				inline bindKeys(Control.BACK, [H, X]);
-				inline bindKeys(Control.PAUSE, [ONE]);
-				inline bindKeys(Control.RESET, [R]);
-			case Duo(false):
-				inline bindKeys(Control.UP, [FlxKey.UP]);
-				inline bindKeys(Control.DOWN, [FlxKey.DOWN]);
-				inline bindKeys(Control.LEFT, [FlxKey.LEFT]);
-				inline bindKeys(Control.RIGHT, [FlxKey.RIGHT]);
-				inline bindKeys(Control.ACCEPT, [O]);
-				inline bindKeys(Control.BACK, [P]);
-				inline bindKeys(Control.PAUSE, [ENTER]);
-				inline bindKeys(Control.RESET, [BACKSPACE]);
-			case None: // nothing
-			case Custom: // nothing
-		}
-		#else
-		switch (scheme)
-		{
-			case Solo:
-				bindKeys(Control.UP, [W, FlxKey.UP, K]);
-				bindKeys(Control.DOWN, [S, FlxKey.DOWN, J]);
-				bindKeys(Control.LEFT, [A, FlxKey.LEFT, H]);
-				bindKeys(Control.RIGHT, [D, FlxKey.RIGHT, L]);
-				bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
-				bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-				bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
-				bindKeys(Control.RESET, [R]);
-			case Duo(true):
-				bindKeys(Control.UP, [W]);
-				bindKeys(Control.DOWN, [S]);
-				bindKeys(Control.LEFT, [A]);
-				bindKeys(Control.RIGHT, [D]);
-				bindKeys(Control.ACCEPT, [G, Z]);
-				bindKeys(Control.BACK, [H, X]);
-				bindKeys(Control.PAUSE, [ONE]);
-				bindKeys(Control.RESET, [R]);
-			case Duo(false):
-				bindKeys(Control.UP, [FlxKey.UP]);
-				bindKeys(Control.DOWN, [FlxKey.DOWN]);
-				bindKeys(Control.LEFT, [FlxKey.LEFT]);
-				bindKeys(Control.RIGHT, [FlxKey.RIGHT]);
-				bindKeys(Control.ACCEPT, [O]);
-				bindKeys(Control.BACK, [P]);
-				bindKeys(Control.PAUSE, [ENTER]);
-				bindKeys(Control.RESET, [BACKSPACE]);
-			case None: // nothing
-			case Custom: // nothing
-		}
-		#end
+		var buttons = new Map<Control,Array<FlxGamepadInputID>>();
+
+		buttons.set(Control.UP,[FlxGamepadInputID.fromString(FlxG.save.data.gpupBind)]);
+		buttons.set(Control.LEFT,[FlxGamepadInputID.fromString(FlxG.save.data.gpleftBind)]);
+		buttons.set(Control.DOWN,[FlxGamepadInputID.fromString(FlxG.save.data.gpdownBind)]);
+		buttons.set(Control.RIGHT,[FlxGamepadInputID.fromString(FlxG.save.data.gprightBind)]);
+		buttons.set(Control.ACCEPT,[FlxGamepadInputID.A]);
+		buttons.set(Control.BACK,[FlxGamepadInputID.B]);
+		buttons.set(Control.PAUSE,[FlxGamepadInputID.START]);
+		buttons.set(Control.RESET,[FlxGamepadInputID.fromString(FlxG.save.data.gpkillBind)]);
+
+		addGamepad(0,buttons);
+
+		inline bindKeys(Control.UP, [FlxKey.fromString(FlxG.save.data.upBind), FlxKey.UP]);
+		inline bindKeys(Control.DOWN, [FlxKey.fromString(FlxG.save.data.downBind), FlxKey.DOWN]);
+		inline bindKeys(Control.LEFT, [FlxKey.fromString(FlxG.save.data.leftBind), FlxKey.LEFT]);
+		inline bindKeys(Control.RIGHT, [FlxKey.fromString(FlxG.save.data.rightBind), FlxKey.RIGHT]);
+		inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
+		inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
+		inline bindKeys(Control.PAUSE, [ENTER, ESCAPE]);
+		inline bindKeys(Control.RESET, [FlxKey.fromString(FlxG.save.data.killBind)]);
 	}
 
 	function removeKeyboard()
@@ -677,8 +637,12 @@ class Controls extends FlxActionSet
 
 	inline static function addButtons(action:FlxActionDigital, buttons:Array<FlxGamepadInputID>, state, id)
 	{
-		for (button in buttons)
-			action.addGamepad(button, state, id);
+		for (button in buttons) {
+			if (Std.string(button) != null)
+			{
+				action.addGamepad(button, state, id);
+			}
+		}
 	}
 
 	static function removeButtons(action:FlxActionDigital, gamepadID:Int, buttons:Array<FlxGamepadInputID>)
@@ -720,7 +684,7 @@ class Controls extends FlxActionSet
 		switch (device)
 		{
 			case Keys:
-				setKeyboardScheme(None);
+				loadKeyBinds();
 			case Gamepad(id):
 				removeGamepad(id);
 		}

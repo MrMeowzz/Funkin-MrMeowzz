@@ -9,11 +9,12 @@ class Highscore
 	#else
 	public static var songScores:Map<String, Int> = new Map<String, Int>();
 	#end
+	public static var mod:String = 'normal';
 
 
 	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0):Void
 	{
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = formatSong(song, diff, true);
 
 
 		#if !switch
@@ -38,7 +39,7 @@ class Highscore
 		#end
 
 
-		var daWeek:String = formatSong('week' + week, diff);
+		var daWeek:String = formatSong('week' + week, diff, true);
 
 		if (songScores.exists(daWeek))
 		{
@@ -60,7 +61,7 @@ class Highscore
 		FlxG.save.flush();
 	}
 
-	public static function formatSong(song:String, diff:Int):String
+	public static function formatSong(song:String, diff:Int, addmod:Bool = false):String
 	{
 		var daSong:String = song;
 
@@ -71,23 +72,29 @@ class Highscore
 		else if (diff == 3 || diff == 7)
 			daSong += '-hardplus';
 
+		if (addmod) {
+		refreshmod();
+
+		daSong += '-' + mod;
+		}
+
 		return daSong;
 	}
 
 	public static function getScore(song:String, diff:Int):Int
 	{
-		if (!songScores.exists(formatSong(song, diff)))
-			setScore(formatSong(song, diff), 0);
+		if (!songScores.exists(formatSong(song, diff, true)))
+			setScore(formatSong(song, diff, true), 0);
 
-		return songScores.get(formatSong(song, diff));
+		return songScores.get(formatSong(song, diff, true));
 	}
 
 	public static function getWeekScore(week:Int, diff:Int):Int
 	{
-		if (!songScores.exists(formatSong('week' + week, diff)))
-			setScore(formatSong('week' + week, diff), 0);
+		if (!songScores.exists(formatSong('week' + week, diff, true)))
+			setScore(formatSong('week' + week, diff, true), 0);
 
-		return songScores.get(formatSong('week' + week, diff));
+		return songScores.get(formatSong('week' + week, diff, true));
 	}
 
 	public static function load():Void
@@ -96,5 +103,14 @@ class Highscore
 		{
 			songScores = FlxG.save.data.songScores;
 		}
+	}
+
+	public static function refreshmod():Void
+	{
+		trace(OG.BSIDE);
+		if (OG.BSIDE)
+			mod = 'bside';
+		else
+			mod = 'normal';
 	}
 }

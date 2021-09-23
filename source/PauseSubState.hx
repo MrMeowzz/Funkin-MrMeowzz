@@ -70,27 +70,34 @@ class PauseSubState extends MusicBeatSubstate
 		add(levelInfo);
 
 		var bpmlevelInfo:FlxText = new FlxText(20, 15 + 32, 0, "", 32);
-		bpmlevelInfo.text += "BPM:" + PlayState.SONG.bpm;
+		bpmlevelInfo.text += "BPM:" + PlayState.SONG.bpm * PlayState.songMultiplier;
 		bpmlevelInfo.scrollFactor.set();
 		bpmlevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		bpmlevelInfo.updateHitbox();
 		add(bpmlevelInfo);
 
 		var speedlevelInfo:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
-		speedlevelInfo.text += "SPEED:" + PlayState.SONG.speed;
+		speedlevelInfo.text += "SPEED:" + PlayState.SONG.speed * PlayState.songMultiplier;
 		speedlevelInfo.scrollFactor.set();
 		speedlevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		speedlevelInfo.updateHitbox();
 		add(speedlevelInfo);
 
-		var levelDifficulty:FlxText = new FlxText(20, 15 + 96, 0, "", 32);
+		var ratelevelInfo:FlxText = new FlxText(20, 15 + 96, 0, "", 32);
+		ratelevelInfo.text += "RATE:" + PlayState.songMultiplier;
+		ratelevelInfo.scrollFactor.set();
+		ratelevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
+		ratelevelInfo.updateHitbox();
+		add(ratelevelInfo);
+
+		var levelDifficulty:FlxText = new FlxText(20, 15 + 128, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyString();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
-		var deathMenuCounter:FlxText = new FlxText(20, 15 + 128, 0, "", 32);
+		var deathMenuCounter:FlxText = new FlxText(20, 15 + 160, 0, "", 32);
 		if (FlxG.save.data.cleanmode)
 			deathMenuCounter.text = "Deaths: " + PlayState.deathCounter;
 		else
@@ -100,7 +107,7 @@ class PauseSubState extends MusicBeatSubstate
 		deathMenuCounter.updateHitbox();
 		add(deathMenuCounter);
 
-		modeText = new FlxText(20, 15 + 160, 0, "", 32);
+		modeText = new FlxText(20, 15 + 192, 0, "", 32);
 		modeText.scrollFactor.set();
 		modeText.setFormat(Paths.font('vcr.ttf'), 32);
 		modeText.updateHitbox();
@@ -161,6 +168,7 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.alpha = 0;
 		bpmlevelInfo.alpha = 0;
 		speedlevelInfo.alpha = 0;
+		ratelevelInfo.alpha = 0;
 		deathMenuCounter.alpha = 0;
 		sicks.alpha = 0;
 		goods.alpha = 0;
@@ -170,6 +178,7 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		bpmlevelInfo.x = FlxG.width - (bpmlevelInfo.width + 20);
 		speedlevelInfo.x = FlxG.width - (speedlevelInfo.width + 20);
+		ratelevelInfo.x = FlxG.width - (ratelevelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 		deathMenuCounter.x = FlxG.width - (deathMenuCounter.width + 20);
 		modeText.x = FlxG.width - (modeText.width + 20);
@@ -182,8 +191,9 @@ class PauseSubState extends MusicBeatSubstate
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(bpmlevelInfo, {alpha: 1, y: bpmlevelInfo.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 		FlxTween.tween(speedlevelInfo, {alpha: 1, y: speedlevelInfo.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
-		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
-		FlxTween.tween(deathMenuCounter, {alpha: 1, y: deathMenuCounter.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.1});
+		FlxTween.tween(ratelevelInfo, {alpha: 1, y: ratelevelInfo.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.1});
+		FlxTween.tween(deathMenuCounter, {alpha: 1, y: deathMenuCounter.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.3});
 
 		FlxTween.tween(sicks, {alpha: 1, y: sicks.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(goods, {alpha: 1, y: goods.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
@@ -305,6 +315,8 @@ class PauseSubState extends MusicBeatSubstate
 					difficulty = '-hard';
 				case 3:
 					difficulty = '-hardplus';
+				default:
+					difficulty = '';
 			}
 
 			switch (daSelected)
@@ -315,15 +327,15 @@ class PauseSubState extends MusicBeatSubstate
 					curSelected = lastSelected;
 					changeSelection();
 				case "Skip Song":
-					var difficulty = "";
 					PlayState.deathCounter = 0;
 					PlayState.storyPlaylist.remove(PlayState.storyPlaylist[0]);
+					PlayState.campaignScore += PlayState.songScore;
 					if (PlayState.storyPlaylist.length <= 0) 
 					{
 						if (OG.StoryMenuType != 'bside')
-						{
 							FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
-						}
+						if (PlayState.SONG.validScore)
+							Highscore.saveWeekScore(PlayState.storyWeek, PlayState.campaignScore, PlayState.storyDifficulty);
 
 						OG.gunsCutsceneEnded = false;
 						OG.ughCutsceneEnded = false;

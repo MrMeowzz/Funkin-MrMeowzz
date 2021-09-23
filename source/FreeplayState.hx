@@ -16,6 +16,7 @@ import flixel.util.FlxTimer;
 import openfl.Lib;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.input.gamepad.FlxGamepad;
 
 using StringTools;
 
@@ -26,6 +27,9 @@ class FreeplayState extends MusicBeatState
 	var bsidesongs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
+
+	public static var rate:Float = 1.0;
+
 	var curSelected:Int = OG.SelectedFreeplay;
 	var curDifficulty:Int = OG.DifficultyFreeplay;
 
@@ -34,6 +38,7 @@ class FreeplayState extends MusicBeatState
 	var diffText:FlxText;
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
+	var previewtext:FlxText;
 
 	private var grpVisible:FlxTypedGroup<Alphabet>;
 	private var iconArray:FlxTypedGroup<HealthIcon>;
@@ -119,7 +124,7 @@ class FreeplayState extends MusicBeatState
 
 		addBSideWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
 
-		addBSideWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster']);
+		addBSideWeek(['Spookeez', 'South'], 2, ['spooky']);
 
 		addBSideWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
 
@@ -172,13 +177,27 @@ class FreeplayState extends MusicBeatState
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		// scoreText.alignment = RIGHT;
 
-		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
+		#if desktop
+		var scoreBGHeight = 105;
+		#else
+		var scoreBGHeight = 66;
+		#end
+
+		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), scoreBGHeight, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
+
+		previewtext = new FlxText(scoreText.x, scoreText.y + 66, 0, "Rate: " + rate + "x", 24);
+		previewtext.font = scoreText.font;
+
 		add(diffText);
+
+		#if desktop
+		add(previewtext);
+		#end
 
 		add(scoreText);
 
@@ -306,13 +325,25 @@ class FreeplayState extends MusicBeatState
 		{
 			scoreText.visible = false;
 			diffText.visible = false;
+			#if desktop
+			scoreBG.setGraphicSize(Std.int(FlxG.width * 0.35), 45);
+			scoreBG.y = -31;
+			#else
 			scoreBG.visible = false;
+			#end
+			previewtext.y = 5;
 		}
 		else
 		{
 			scoreText.visible = true;
 			diffText.visible = true;
+			#if desktop
+			scoreBG.setGraphicSize(Std.int(FlxG.width * 0.35), 105);
+			scoreBG.y = 0;
+			#else
 			scoreBG.visible = true;
+			#end
+			previewtext.y = scoreText.y + 66;
 		}
 
 		var upP = controls.UP_P;
@@ -360,12 +391,54 @@ class FreeplayState extends MusicBeatState
 			downtimer.cancel();
 		}
 
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
+		#if desktop
+		if (FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER))
+		{
+			if (controls.LEFT_P)
+			{
+				rate -= 0.05;
+			}
+			if (controls.RIGHT_P)
+			{
+				rate += 0.05;
+			}
+
+			if (rate > 3)
+			{
+				rate = 3;
+			}
+			else if (rate < 0.5)
+			{
+				rate = 0.5;
+			}
+
+			previewtext.text = "Rate: " + rate + "x";
+		}
+		else
+		{
+			if (controls.LEFT_P && OG.FreeplayMenuType != 'section')
+				changeDiff(-1);
+			if (controls.RIGHT_P && OG.FreeplayMenuType != 'section')
+				changeDiff(1);
+		}
+		#else
 		if (controls.LEFT_P && OG.FreeplayMenuType != 'section')
 			changeDiff(-1);
 		if (controls.RIGHT_P && OG.FreeplayMenuType != 'section')
 			changeDiff(1);
+		#end
 
-		if (FlxG.keys.justPressed.ESCAPE)
+		#if desktop
+		@:privateAccess
+		{
+			if (FlxG.sound.music.playing)
+				lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, rate);
+		}
+		#end
+
+		if (FlxG.keys.justPressed.ESCAPE || (gamepad != null && gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B))
 		{
 			OG.SelectedFreeplay = curSelected;
 			OG.DifficultyFreeplay = curDifficulty;
@@ -381,7 +454,7 @@ class FreeplayState extends MusicBeatState
 			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
 			MainMenuState.transition = 'zoom';
 		}
-		if (FlxG.keys.justPressed.BACKSPACE)
+		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B))
 		{
 			if (OG.FreeplayMenuType != 'section') {
 				regenSections();
@@ -404,9 +477,11 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (accepted)
+		if (accepted || FlxG.keys.justPressed.SEVEN)
 		{
+			PlayState.songMultiplier = rate;
 			if (OG.FreeplayMenuType == 'section') {
+			if (!FlxG.keys.justPressed.SEVEN) {
 			switch (sections[curSelected].section.toLowerCase())
 			{
 				case 'bside':				
@@ -417,6 +492,7 @@ class FreeplayState extends MusicBeatState
 			curSelected = 0;
 			regenSongs();
 			changeDiff();
+			}
 			}
 			else if (OG.FreeplayMenuType == 'bside')
 			{
@@ -435,7 +511,11 @@ class FreeplayState extends MusicBeatState
 				OG.SelectedFreeplay = curSelected;
 				OG.DifficultyFreeplay = curDifficulty;
 				FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
-				LoadingState.loadAndSwitchState(new PlayState());
+				if (FlxG.keys.justPressed.SEVEN) {
+					LoadingState.loadAndSwitchState(new ChartingState());
+				}
+				else
+					LoadingState.loadAndSwitchState(new PlayState());
 			}
 			else {
 			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
@@ -453,7 +533,11 @@ class FreeplayState extends MusicBeatState
 			OG.SelectedFreeplay = curSelected;
 			OG.DifficultyFreeplay = curDifficulty;
 			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
-			LoadingState.loadAndSwitchState(new PlayState());
+			if (FlxG.keys.justPressed.SEVEN) {
+				LoadingState.loadAndSwitchState(new ChartingState());
+			}
+			else
+				LoadingState.loadAndSwitchState(new PlayState());
 			}
 		}
 
@@ -494,7 +578,7 @@ class FreeplayState extends MusicBeatState
 		if (curDifficulty > 3)
 			curDifficulty = 0;
 
-		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2)
+		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2 && OG.FreeplayMenuType == 'normal')
 		{
 			curDifficulty = 2;
 		}

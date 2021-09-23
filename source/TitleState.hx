@@ -153,6 +153,12 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.tabinotesshake = OptionsState.DefaultValues[17];
 		}
+		if (FlxG.save.data.milliseconds == null)
+		{
+			FlxG.save.data.milliseconds = OptionsState.DefaultValues[18];
+		}
+		PlayerSettings.player1.controls.loadKeyBinds();
+		KeyBinds.keyCheck();
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());

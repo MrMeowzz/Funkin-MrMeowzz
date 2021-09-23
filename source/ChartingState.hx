@@ -94,7 +94,11 @@ class ChartingState extends MusicBeatState
 	var notetypeDropDown:FlxUIDropDownMenu;
 	var notetypeDropDownPixel:FlxUIDropDownMenu;
 
+	var stepperRate:FlxUINumericStepper;
+
 	var notePlacedType:String = 'normal';
+
+	public var rate:Float = 1.0;
 
 	override function create()
 	{
@@ -501,7 +505,18 @@ class ChartingState extends MusicBeatState
 		notetypeDropDownPixel.scrollFactor.set();
 		notetypeTxt.scrollFactor.set();
 
+		stepperRate = new FlxUINumericStepper(10, 55, 0.05, 1, 0.5, 3, 2);
+		stepperRate.name = 'song_rate';
+		stepperRate.value = PlayState.songMultiplier;
+		rate = PlayState.songMultiplier;
+		var stepperRateTxt:FlxText = new FlxText(stepperRate.x, stepperRate.y + 25, 0, "Rate");
+		stepperRate.scrollFactor.set();
+		stepperRateTxt.scrollFactor.set();
+
 		add(notetypeTxt);
+		#if desktop
+		add(stepperRateTxt);
+		#end
 		updateGrid();
 
 		tab_group_section.add(stepperLength);
@@ -671,6 +686,10 @@ class ChartingState extends MusicBeatState
 				_song.notes[curSection].bpm = Std.int(nums.value);
 				updateGrid();
 			}
+			else if (wname == 'song_rate')
+			{
+				rate = nums.value;
+			}
 		}
 
 		// FlxG.log.add(id + " WEED " + sender + " WEED " + data + " WEED " + params);
@@ -731,6 +750,30 @@ class ChartingState extends MusicBeatState
 				}
 			});
 		}
+		#if desktop
+		if (FlxG.sound.music != null)
+		{
+			if (FlxG.sound.music.playing)
+			{
+				@:privateAccess
+				{
+					lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, rate);
+					try
+					{
+						if (vocals != null && vocals.length > 0)
+						{
+							lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, rate);
+						}
+					}
+					catch(e)
+					{
+						trace("failed to pitch vocals");
+					}
+			
+				}	
+			}
+		}
+		#end
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
 		{
@@ -803,7 +846,22 @@ class ChartingState extends MusicBeatState
 			vocals.stop();
 
 			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width}, 1, {ease: FlxEase.quadIn });
+			PlayState.songMultiplier = stepperRate.value;
 			FlxG.switchState(new PlayState());
+		}
+
+		if (controls.BACK)
+		{
+			OG.gunsCutsceneEnded = false;
+			OG.ughCutsceneEnded = false;
+			OG.stressCutsceneEnded = false;
+			OG.horrorlandCutsceneEnded = false;
+			FlxG.switchState(new MainMenuState());
+			FlxG.sound.music.stop();
+			vocals.stop();
+			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+			MainMenuState.transition = 'zoom';
 		}
 
 		if (FlxG.keys.justPressed.E && !typingShit.hasFocus)
@@ -934,6 +992,8 @@ class ChartingState extends MusicBeatState
 			+ curBeat
 			+ "\nDifficulty: "
 			+ CoolUtil.difficultyString()
+			+ "\nRate: "
+			+ rate
 			+ "\n\n\nMr Meowzz's FNF\nChart Editor\nv" 
 			+ Application.current.meta.get('version');
 
@@ -1138,6 +1198,9 @@ class ChartingState extends MusicBeatState
 		 {
 			 add(notetypeDropDown);
 		 }
+		 #if desktop
+		 add(stepperRate);
+		 #end
 
 		for (i in sectionInfo)
 		{

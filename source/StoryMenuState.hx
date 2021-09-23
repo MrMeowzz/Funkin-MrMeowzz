@@ -17,6 +17,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
 import openfl.Lib;
+import flixel.input.gamepad.FlxGamepad;
 
 using StringTools;
 
@@ -335,6 +336,8 @@ class StoryMenuState extends MusicBeatState
 			lock.y = grpWeekText.members[lock.ID].y;
 		});
 
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
 		if (!movedBack)
 		{
 			if (!selectedWeek)
@@ -400,7 +403,7 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.keys.justPressed.BACKSPACE && !movedBack && !selectedWeek)
+		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B) && !movedBack && !selectedWeek)
 		{
 			if (OG.StoryMenuType != 'section') {
 				curWeek = 0;
@@ -426,7 +429,7 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.keys.justPressed.ESCAPE && !movedBack && !selectedWeek)
+		if (FlxG.keys.justPressed.ESCAPE || (gamepad != null && gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B) && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
@@ -489,6 +492,7 @@ class StoryMenuState extends MusicBeatState
 			PlayState.storyPlaylist = weekData[curWeek];
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
+			PlayState.songMultiplier = 1;
 
 			if (OG.StoryMenuType == 'bside')
 				PlayState.storyPlaylist = bsideweekData[curWeek];

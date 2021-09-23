@@ -62,9 +62,9 @@ class Conductor
 
 	public static function changeBPM(newBpm:Int)
 	{
-		bpm = newBpm;
+		bpm = Std.int(newBpm * PlayState.songMultiplier);
 
-		crochet = ((60 / bpm) * 1000);
-		stepCrochet = crochet / 4;
+		crochet = ((60 / newBpm) * 1000) / PlayState.songMultiplier;
+		stepCrochet = (crochet / 4) * PlayState.songMultiplier;
 	}
 }

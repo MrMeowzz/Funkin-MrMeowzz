@@ -1297,6 +1297,9 @@ class Character extends FlxSprite
 				danced = !danced;
 			}
 		}
+		//since im not changing all of the framerates manually
+		if (animation.curAnim.frameRate == 24)
+			animation.curAnim.frameRate = Std.int(24 * PlayState.songMultiplier);
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
