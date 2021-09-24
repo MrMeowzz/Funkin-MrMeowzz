@@ -236,6 +236,8 @@ class FreeplayState extends MusicBeatState
 		FlxG.camera.zoom = 1.5;
 		FlxTween.tween(FlxG.camera, { zoom: 1, angle: 0}, 0.75, {ease: FlxEase.quadIn });
 
+		rate = PlayState.songMultiplier;
+
 		super.create();
 	}
 

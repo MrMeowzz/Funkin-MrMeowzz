@@ -3026,6 +3026,7 @@ class PlayState extends MusicBeatState
 								health -= 1;
 								daNote.noteEffect = true;
 								daNote.prevNote.noteEffect = true;
+								boyfriend.playAnim("hit", true);
 						}
 						else if (daNote.noteType == 'stun')
 						{
@@ -3083,6 +3084,10 @@ class PlayState extends MusicBeatState
 								}									
 							}
 						}
+					}
+					else if ((daNote.noteType == 'fire' || daNote.noteType == 'halo' || daNote.noteType == 'poison') && (daNote.tooLate || !daNote.wasGoodHit) && !boyfriend.animation.curAnim.name.startsWith('sing'))
+					{
+						boyfriend.playAnim("avoid", true);
 					}
 
 					daNote.active = false;
@@ -3706,6 +3711,7 @@ class PlayState extends MusicBeatState
 							// lol death
 							health = 0;
 							FlxG.sound.play(Paths.sound('noteTypes/death'));
+							boyfriend.playAnim("hit", true);
 						}
 						else if (coolNote.noteType == 'fire')
 						{
@@ -3732,6 +3738,7 @@ class PlayState extends MusicBeatState
 									}
 								}
 							});
+							boyfriend.playAnim("hit", true);
 						}
 						else if (coolNote.noteType == 'poison')
 						{
@@ -3744,6 +3751,15 @@ class PlayState extends MusicBeatState
 							FlxTween.tween(camFollow, {x: camx+100}, 0.3, {ease:FlxEase.sineOut,type:FlxTweenType.BACKWARD});
 							FlxG.camera.shake(0.01, 0.15);
 							FlxG.camera.scroll.x += 30;
+							boyfriend.playAnim("avoid", true);
+						}
+						else if (coolNote.noteType == 'warning')
+						{
+							boyfriend.playAnim("avoid", true);
+						}
+						else if (coolNote.noteType == 'poisonmusthit')
+						{
+							boyfriend.playAnim("avoid", true);
 						}
 					}
 				}
@@ -4337,7 +4353,19 @@ class PlayState extends MusicBeatState
 					boyfriend.playAnim('hey', true);
 
 				if (boyfriend.curCharacter == "tankman")
-					FlxG.sound.play(Paths.sound('ugh'));
+				{
+					tankmansoundthing = new FlxSound().loadEmbedded(Paths.sound('ugh'));
+					FlxG.sound.list.add(tankmansoundthing);
+					tankmansoundthing.play();
+					#if desktop
+					@:privateAccess
+					{	
+						if (tankmansoundthing.playing)	
+							lime.media.openal.AL.sourcef(tankmansoundthing._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);					
+					}
+					trace("pitched the tankman sound thingy to " + songMultiplier);
+					#end
+				}
 
 				gf.playAnim('cheer', true);
 				if (boyfriend.curCharacter == "gf")
@@ -4352,7 +4380,19 @@ class PlayState extends MusicBeatState
 				boyfriend.playAnim('hey', true);
 
 			if (boyfriend.curCharacter == "tankman")
-				FlxG.sound.play(Paths.sound('ugh'));
+			{
+				tankmansoundthing = new FlxSound().loadEmbedded(Paths.sound('ugh'));
+				FlxG.sound.list.add(tankmansoundthing);
+				tankmansoundthing.play();
+				#if desktop
+				@:privateAccess
+				{	
+					if (tankmansoundthing.playing)	
+						lime.media.openal.AL.sourcef(tankmansoundthing._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);					
+				}
+				trace("pitched the tankman sound thingy to " + songMultiplier);
+				#end
+			}
 
 			dad.playAnim('cheer', true);
 		} }
@@ -4364,7 +4404,19 @@ class PlayState extends MusicBeatState
 					boyfriend.playAnim('hey', true);
 
 				if (boyfriend.curCharacter == "tankman")
-					FlxG.sound.play(Paths.sound('ugh'));
+				{
+					tankmansoundthing = new FlxSound().loadEmbedded(Paths.sound('ugh'));
+					FlxG.sound.list.add(tankmansoundthing);
+					tankmansoundthing.play();
+					#if desktop
+					@:privateAccess
+					{	
+						if (tankmansoundthing.playing)	
+							lime.media.openal.AL.sourcef(tankmansoundthing._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);					
+					}
+					trace("pitched the tankman sound thingy to " + songMultiplier);
+					#end
+				}
 
 				dad.playAnim('cheer', true);
 			}

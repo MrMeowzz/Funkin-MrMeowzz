@@ -70,7 +70,7 @@ class PauseSubState extends MusicBeatSubstate
 		add(levelInfo);
 
 		var bpmlevelInfo:FlxText = new FlxText(20, 15 + 32, 0, "", 32);
-		bpmlevelInfo.text += "BPM:" + PlayState.SONG.bpm * PlayState.songMultiplier;
+		bpmlevelInfo.text += "BPM:" + Std.int(PlayState.SONG.bpm * PlayState.songMultiplier);
 		bpmlevelInfo.scrollFactor.set();
 		bpmlevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		bpmlevelInfo.updateHitbox();

@@ -505,11 +505,11 @@ class ChartingState extends MusicBeatState
 		notetypeDropDownPixel.scrollFactor.set();
 		notetypeTxt.scrollFactor.set();
 
-		stepperRate = new FlxUINumericStepper(10, 55, 0.05, 1, 0.5, 3, 2);
+		stepperRate = new FlxUINumericStepper(135, 35, 0.05, 1, 0.5, 3, 2);
 		stepperRate.name = 'song_rate';
 		stepperRate.value = PlayState.songMultiplier;
 		rate = PlayState.songMultiplier;
-		var stepperRateTxt:FlxText = new FlxText(stepperRate.x, stepperRate.y + 25, 0, "Rate");
+		var stepperRateTxt:FlxText = new FlxText(stepperRate.x, stepperRate.y - 25, 0, "Rate");
 		stepperRate.scrollFactor.set();
 		stepperRateTxt.scrollFactor.set();
 
@@ -862,6 +862,7 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
 			MainMenuState.transition = 'zoom';
+			PlayState.songMultiplier = stepperRate.value;
 		}
 
 		if (FlxG.keys.justPressed.E && !typingShit.hasFocus)
