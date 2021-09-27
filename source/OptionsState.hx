@@ -35,11 +35,12 @@ class OptionsState extends MusicBeatState
 	'Notestyle', 
 	'Tabi Notes Shake', 
 	'Note Timing', 
-	'Key Bindings'];
+	'Key Bindings',
+	'Skip Countdown'];
 
 	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,false,false,false,false,true,false];
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,false,false,false,false,true,false,false];
 
 	var OptionsON:Array<String> = ['Clean Mode ON', 
 	'Preload Freeplay PRVWs ON', 
@@ -60,7 +61,8 @@ class OptionsState extends MusicBeatState
 	'Notestyle', 
 	'Tabi Notes Shake ON', 
 	'Show Note Timing', 
-	'Key Bindings'];
+	'Key Bindings',
+	'Skip Countdown'];
 
 	var OptionsOFF:Array<String> = ['Clean Mode OFF', 
 	'Preload Freeplay PRVWs OFF', 
@@ -81,7 +83,8 @@ class OptionsState extends MusicBeatState
 	'Notestyle', 
 	'Tabi Notes Shake OFF', 
 	'Do not Show Note Timing', 
-	'Key Bindings'];
+	'Key Bindings',
+	'Do not Skip Countdown'];
 	
 	#if html5
 	var DisabledOptions:Array<Bool> = [false,true,true,false,true];
@@ -191,7 +194,8 @@ class OptionsState extends MusicBeatState
 	'Which notestyle should be used. Default uses the songs notestyle. Notestyle will not be changed if the song has notestyle override on.', 
 	'Makes Tabi notes shake.', 
 	'Shows the note timing in milliseconds for each note pressed.', 
-	'Change keybinds for gameplay.'];
+	'Change keybinds for gameplay.',
+	'Skips the countdown before the song starts.'];
 
 		if (controls.UP_P)
 		{
@@ -455,6 +459,12 @@ class OptionsState extends MusicBeatState
 					regenOptions();
 				case "Key Bindings":
 					openSubState(new KeyBindMenu());
+				case "Skip Countdown":
+					FlxG.save.data.skipcountdown = !FlxG.save.data.skipcountdown;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
 			}
 		}
 
@@ -674,6 +684,17 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		VisibleOptions.push(OptionsON[i]);
+
+		i++;
+
+		if (FlxG.save.data.skipcountdown)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
 	}
 
 	public function regenOptions()

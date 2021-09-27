@@ -280,7 +280,7 @@ class Note extends FlxSprite
 						prevNote.animation.play('redhold');
 				}
 
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
+				prevNote.scale.y *= Conductor.stepCrochet / PlayState.songMultiplier / 100 * 1.5 * PlayState.SONG.speed;
 				prevNote.updateHitbox();
 				// prevNote.setGraphicSize();
 			}
@@ -320,8 +320,8 @@ class Note extends FlxSprite
 			else
 			{
 				if (FlxG.save.data.newhittimings) {
-				if (strumTime - Conductor.songPosition  <= (((166 * Conductor.timeScale) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1)))
-					&& strumTime - Conductor.songPosition >= (((-166 * Conductor.timeScale) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1))))
+				if (strumTime - Conductor.songPosition  <= (((166 * Conductor.timeScale)))
+					&& strumTime - Conductor.songPosition >= (((-166 * Conductor.timeScale))))
 					canBeHit = true;
 				else
 					canBeHit = false;

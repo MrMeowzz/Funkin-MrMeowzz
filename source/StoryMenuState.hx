@@ -421,8 +421,6 @@ class StoryMenuState extends MusicBeatState
 				movedBack = true;
 				OG.SelectedStoryMode = curWeek;
 				OG.DifficultyStoryMode = curDifficulty;
-				FlxG.sound.music.stop();
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
 				MainMenuState.transition = 'zoom';
 				FlxG.switchState(new MainMenuState());
@@ -435,8 +433,11 @@ class StoryMenuState extends MusicBeatState
 			movedBack = true;
 			OG.SelectedStoryMode = curWeek;
 			OG.DifficultyStoryMode = curDifficulty;
-			FlxG.sound.music.stop();
-			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			if (OG.StoryMenuType == 'bside')
+			{
+				FlxG.sound.music.stop();
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			}
 			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
 			MainMenuState.transition = 'zoom';
 			FlxG.switchState(new MainMenuState());

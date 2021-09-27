@@ -21,24 +21,18 @@ class PixelNoteSplash extends FlxSprite {
 		animation.add("note3-1", [28, 29, 30, 31], 24, false);
         setupNoteSplash(xPos,xPos,data,true);
     }
-    public function setupNoteSplash(xPos:Float, yPos:Float, ?data:Int = 0,Resize:Bool = false) {
+    public function setupNoteSplash(xPos:Float, yPos:Float, ?data:Int = 0,Creation:Bool = false) {
         if (data == null) data = 0;
         setPosition(xPos, yPos);
         alpha = 0.6;
-        if (Resize)
+        if (Creation)
         {
             setGraphicSize(Std.int(width * 5));
 		    updateHitbox();
+            offset.x += 75;
+		    offset.y += 67;
         }
         animation.play("note"+data+"-"+FlxG.random.int(0,1), true);
-        updateHitbox();
-        offset.x += 72;
-		offset.y += 64;
-    }
-    override public function update(elapsed) {
-        if (animation.curAnim.finished) {
-            kill();
-        }
-        super.update(elapsed);
+        animation.finishCallback = function(name) kill();
     }
 }

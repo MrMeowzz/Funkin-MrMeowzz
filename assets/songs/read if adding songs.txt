@@ -1,0 +1,1 @@
+make the length of inst and voices ogg files twice as they are supposed to be or issues will occur probably

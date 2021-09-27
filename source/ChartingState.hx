@@ -760,7 +760,7 @@ class ChartingState extends MusicBeatState
 					lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, rate);
 					try
 					{
-						if (vocals != null && vocals.length > 0)
+						if (vocals != null && vocals.length / 2 > 0)
 						{
 							lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, rate);
 						}
@@ -773,6 +773,8 @@ class ChartingState extends MusicBeatState
 				}	
 			}
 		}
+		if (FlxG.sound.music != null && FlxG.sound.music.playing)
+			FlxG.sound.music.endTime = FlxG.sound.music.length / 2;
 		#end
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
@@ -984,7 +986,11 @@ class ChartingState extends MusicBeatState
 
 		bpmTxt.text = bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
 			+ " / "
+			#if desktop
+			+ Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 2 / 1000, 2))
+			#else
 			+ Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))
+			#end
 			+ "\nSection: "
 			+ curSection
 			+ "\nCurStep: "

@@ -39,6 +39,8 @@ class MainMenuState extends MusicBeatState
 
 	public static var transition = '';
 
+	var canAccept:Bool = true;
+
 	override function create()
 	{
 		#if desktop
@@ -154,6 +156,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
+				canAccept = false;
 				OG.SelectedMainMenu = curSelected;
 				FlxTween.tween(FlxG.camera, { x: FlxG.width, zoom: 0.5 }, 1, { ease: FlxEase.quadIn, onComplete: function(twn:FlxTween)
 				{
@@ -161,7 +164,7 @@ class MainMenuState extends MusicBeatState
 				} });
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT && canAccept)
 			{
 				OG.SelectedMainMenu = curSelected;
 				if (optionShit[curSelected] == 'kickstarter' || optionShit[curSelected] == 'donate')

@@ -157,6 +157,10 @@ class TitleState extends MusicBeatState
 		{
 			FlxG.save.data.milliseconds = OptionsState.DefaultValues[18];
 		}
+		if (FlxG.save.data.skipcountdown == null)
+		{
+			FlxG.save.data.skipcountdown = OptionsState.DefaultValues[20];
+		}
 		PlayerSettings.player1.controls.loadKeyBinds();
 		KeyBinds.keyCheck();
 
@@ -188,6 +192,7 @@ class TitleState extends MusicBeatState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
+	var titleTextController:FlxSprite;
 
 	function startIntro()
 	{
@@ -251,8 +256,18 @@ class TitleState extends MusicBeatState
 		titleText.antialiasing = true;
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
+
+		titleTextController = new FlxSprite(100, FlxG.height * 0.8);
+		titleTextController.frames = Paths.getSparrowAtlas('titleStart');
+		titleTextController.animation.addByPrefix('idle', "Press Start to Begin", 24);
+		titleTextController.animation.addByPrefix('press', "START PRESSED", 24);
+		titleTextController.antialiasing = true;
+		titleTextController.animation.play('idle');
+		titleTextController.updateHitbox();
+		titleTextController.visible = false;
 		// titleText.screenCenter(X);
 		add(titleText);
+		add(titleTextController);
 
 		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
 		logo.screenCenter();
@@ -344,6 +359,17 @@ class TitleState extends MusicBeatState
 			if (gamepad.justPressed.B)
 				pressedEnter = true;
 			#end
+			if (gamepad.justPressed.ANY)
+			{
+				titleText.visible = false;
+				titleTextController.visible = true;
+			}
+		}
+
+		if (FlxG.keys.justPressed.ANY)
+		{
+			titleText.visible = true;
+			titleTextController.visible = false;
 		}
 
 		if (pressedEnter && !transitioning && skippedIntro)
@@ -357,6 +383,7 @@ class TitleState extends MusicBeatState
 			#end
 
 			titleText.animation.play('press');
+			titleTextController.animation.play('press');
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);
 			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
@@ -478,7 +505,7 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 10:
 				createCoolText([curWacky[0]]);
-				if (curWacky[0] == 'pico said dababy')
+				if (curWacky[0] == 'pico said dababy' && !skippedIntro)
 					FlxG.sound.play(Paths.sound('dababypico'));
 			// credTextShit.visible = true;
 			case 12:

@@ -190,6 +190,8 @@ class FreeplayState extends MusicBeatState
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
 
+		rate = PlayState.songMultiplier;
+
 		previewtext = new FlxText(scoreText.x, scoreText.y + 66, 0, "Rate: " + rate + "x", 24);
 		previewtext.font = scoreText.font;
 
@@ -235,8 +237,6 @@ class FreeplayState extends MusicBeatState
 		FlxG.camera.angle = -45;
 		FlxG.camera.zoom = 1.5;
 		FlxTween.tween(FlxG.camera, { zoom: 1, angle: 0}, 0.75, {ease: FlxEase.quadIn });
-
-		rate = PlayState.songMultiplier;
 
 		super.create();
 	}
@@ -789,6 +789,7 @@ class FreeplayState extends MusicBeatState
 				else
 					FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 			}
+			FlxG.sound.music.endTime = FlxG.sound.music.length / 2;
 		}
 		#end
 

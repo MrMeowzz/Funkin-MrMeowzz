@@ -16,6 +16,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.input.gamepad.FlxGamepad;
 
 using StringTools;
 
@@ -35,6 +36,15 @@ class PauseSubState extends MusicBeatSubstate
 	var lastSelected:Int = 0;
 
 	var SelectionScreen:Bool = false;
+
+	var ratelevelInfo:FlxText;
+
+	var speedlevelInfo:FlxText;
+
+	var bpmlevelInfo:FlxText;
+
+	var rate:Float = PlayState.songMultiplier;
+	var originalrate:Float = PlayState.songMultiplier;
 
 	public function new(x:Float, y:Float)
 	{
@@ -57,6 +67,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		FlxG.sound.list.add(pauseMusic);
 
+		rate = PlayState.songMultiplier;
+		originalrate = rate;
+
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
@@ -69,22 +82,22 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.updateHitbox();
 		add(levelInfo);
 
-		var bpmlevelInfo:FlxText = new FlxText(20, 15 + 32, 0, "", 32);
-		bpmlevelInfo.text += "BPM:" + Std.int(PlayState.SONG.bpm * PlayState.songMultiplier);
+		bpmlevelInfo = new FlxText(20, 15 + 32, 0, "", 32);
+		bpmlevelInfo.text += "BPM:" + Std.int(PlayState.SONG.bpm * rate);
 		bpmlevelInfo.scrollFactor.set();
 		bpmlevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		bpmlevelInfo.updateHitbox();
 		add(bpmlevelInfo);
 
-		var speedlevelInfo:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
-		speedlevelInfo.text += "SPEED:" + PlayState.SONG.speed * PlayState.songMultiplier;
+		speedlevelInfo = new FlxText(20, 15 + 64, 0, "", 32);
+		speedlevelInfo.text += "SPEED:" + PlayState.SONG.speed * rate;
 		speedlevelInfo.scrollFactor.set();
 		speedlevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		speedlevelInfo.updateHitbox();
 		add(speedlevelInfo);
 
-		var ratelevelInfo:FlxText = new FlxText(20, 15 + 96, 0, "", 32);
-		ratelevelInfo.text += "RATE:" + PlayState.songMultiplier;
+		ratelevelInfo = new FlxText(20, 15 + 96, 0, "", 32);
+		ratelevelInfo.text += "RATE:" + rate;
 		ratelevelInfo.scrollFactor.set();
 		ratelevelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		ratelevelInfo.updateHitbox();
@@ -267,11 +280,72 @@ class PauseSubState extends MusicBeatSubstate
 				curSelected = lastSelected;
 				changeSelection();
 			}
-			else
+			else if (originalmenuItems.contains('Resume'))
 			{
 				close();
 			}
 		}
+
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
+		#if desktop
+		if (FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER))
+		{
+			if (controls.LEFT_P)
+			{
+				rate -= 0.05;
+			}
+			if (controls.RIGHT_P)
+			{
+				rate += 0.05;
+			}
+
+			if (rate > 3)
+			{
+				rate = 3;
+			}
+			else if (rate < 0.5)
+			{
+				rate = 0.5;
+			}
+			PlayState.songMultiplier = rate;
+			if ((controls.LEFT_P || controls.RIGHT_P) && originalmenuItems.contains('Resume'))
+			{
+				var Selected = curSelected;
+				originalmenuItems.remove('Resume');
+				lastSelected -= 1;
+				if (menuItems.contains('Exit to menu'))
+				{
+					if (Selected > 0)
+						Selected -= 1;
+					regenMenu();
+					curSelected = Selected;
+					changeSelection();
+				}				
+			}
+			else if ((controls.LEFT_P || controls.RIGHT_P) && !originalmenuItems.contains('Resume') && rate == originalrate)
+			{
+				var Selected = curSelected;					
+				originalmenuItems.insert(0, 'Resume');
+				lastSelected += 1;
+				if (menuItems.contains('Exit to menu'))
+				{
+					Selected += 1;
+					regenMenu();
+					curSelected = Selected;
+					changeSelection();
+				}
+				
+			}
+			
+			ratelevelInfo.text = "RATE:" + rate;
+			bpmlevelInfo.text = "BPM:" + Std.int(PlayState.SONG.bpm * rate);
+			speedlevelInfo.text = "SPEED:" + PlayState.SONG.speed * rate;
+			bpmlevelInfo.x = FlxG.width - (bpmlevelInfo.width + 20);
+			speedlevelInfo.x = FlxG.width - (speedlevelInfo.width + 20);
+			ratelevelInfo.x = FlxG.width - (ratelevelInfo.width + 20);
+		}
+		#end
 
 		if (accepted)
 		{
@@ -474,7 +548,7 @@ class PauseSubState extends MusicBeatSubstate
 						default:
 							difficulty = '';
 					}
-					if (CoolUtil.difficultyString() == daSelected)
+					if (CoolUtil.difficultyString() == daSelected && originalmenuItems.contains('Resume'))
 					{
 						close();
 						return;

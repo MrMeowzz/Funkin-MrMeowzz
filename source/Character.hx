@@ -1299,7 +1299,7 @@ class Character extends FlxSprite
 			}
 		}
 		//since im not changing all of the framerates manually
-		if (animation.curAnim.frameRate == 24)
+		if (animation.curAnim.frameRate == 24 && !animation.curAnim.name.toLowerCase().contains('death'))
 			animation.curAnim.frameRate = Std.int(24 * PlayState.songMultiplier);
 	}
 
