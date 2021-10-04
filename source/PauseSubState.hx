@@ -55,6 +55,17 @@ class PauseSubState extends MusicBeatSubstate
 
 		originalmenuItems = menuItems;
 
+		if (OG.currentCutsceneEnded)
+		{
+			switch (PlayState.SONG.song.toLowerCase())
+			{
+				case 'stress' | 'guns' | 'ugh':
+					originalmenuItems.insert(2, 'Restart Cutscene');
+				default:
+					originalmenuItems.insert(2, 'Restart Song with Dialog');
+			}
+		}
+
 		super();
 
 		var bside:String = '';
@@ -289,7 +300,7 @@ class PauseSubState extends MusicBeatSubstate
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		#if desktop
-		if (FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER))
+		if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)) && !PlayState.isStoryMode)
 		{
 			if (controls.LEFT_P)
 			{
@@ -404,6 +415,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.deathCounter = 0;
 					PlayState.storyPlaylist.remove(PlayState.storyPlaylist[0]);
 					PlayState.campaignScore += PlayState.songScore;
+					OG.currentCutsceneEnded = false;
 					if (PlayState.storyPlaylist.length <= 0) 
 					{
 						if (OG.StoryMenuType != 'bside')
@@ -411,10 +423,6 @@ class PauseSubState extends MusicBeatSubstate
 						if (PlayState.SONG.validScore)
 							Highscore.saveWeekScore(PlayState.storyWeek, PlayState.campaignScore, PlayState.storyDifficulty);
 
-						OG.gunsCutsceneEnded = false;
-						OG.ughCutsceneEnded = false;
-						OG.stressCutsceneEnded = false;
-						OG.horrorlandCutsceneEnded = false;
 						FlxG.switchState(new StoryMenuState());
 					}
 					else
@@ -433,12 +441,13 @@ class PauseSubState extends MusicBeatSubstate
 				case "Restart Song":
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					FlxG.resetState();
+				case "Restart Song with Dialog" | "Restart Cutscene":
+					OG.currentCutsceneEnded = false;
+					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
+					FlxG.resetState();
 				case "Exit to menu":
 					PlayState.deathCounter = 0;
-					OG.gunsCutsceneEnded = false;
-					OG.ughCutsceneEnded = false;
-					OG.stressCutsceneEnded = false;
-					OG.horrorlandCutsceneEnded = false;
+					OG.currentCutsceneEnded = false;
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width}, 1, {ease: FlxEase.quadIn });
 					FlxG.switchState(new MainMenuState());
 				case "Toggle Practice Mode":

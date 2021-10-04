@@ -854,10 +854,7 @@ class ChartingState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			OG.gunsCutsceneEnded = false;
-			OG.ughCutsceneEnded = false;
-			OG.stressCutsceneEnded = false;
-			OG.horrorlandCutsceneEnded = false;
+			OG.currentCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
 			FlxG.sound.music.stop();
 			vocals.stop();

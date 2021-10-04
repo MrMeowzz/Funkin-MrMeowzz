@@ -36,11 +36,12 @@ class OptionsState extends MusicBeatState
 	'Tabi Notes Shake', 
 	'Note Timing', 
 	'Key Bindings',
-	'Skip Countdown'];
+	'Skip Countdown',
+	'Cutscenes and Dialog'];
 
 	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,false,false,false,false,true,false,false];
+	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,false,false,false,false,true,false,false,true];
 
 	var OptionsON:Array<String> = ['Clean Mode ON', 
 	'Preload Freeplay PRVWs ON', 
@@ -62,7 +63,8 @@ class OptionsState extends MusicBeatState
 	'Tabi Notes Shake ON', 
 	'Show Note Timing', 
 	'Key Bindings',
-	'Skip Countdown'];
+	'Skip Countdown',
+	'Cutscenes and Dialog ON'];
 
 	var OptionsOFF:Array<String> = ['Clean Mode OFF', 
 	'Preload Freeplay PRVWs OFF', 
@@ -84,7 +86,8 @@ class OptionsState extends MusicBeatState
 	'Tabi Notes Shake OFF', 
 	'Do not Show Note Timing', 
 	'Key Bindings',
-	'Do not Skip Countdown'];
+	'Do not Skip Countdown',
+	'Cutscenes and Dialog OFF'];
 	
 	#if html5
 	var DisabledOptions:Array<Bool> = [false,true,true,false,true];
@@ -195,7 +198,8 @@ class OptionsState extends MusicBeatState
 	'Makes Tabi notes shake.', 
 	'Shows the note timing in milliseconds for each note pressed.', 
 	'Change keybinds for gameplay.',
-	'Skips the countdown before the song starts.'];
+	'Skips the countdown before the song starts.',
+	'Toggles the cutscenes and dialog in story mode.'];
 
 		if (controls.UP_P)
 		{
@@ -465,6 +469,12 @@ class OptionsState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenVisibleOptions();
 					regenOptions();
+				case "Cutscenes and Dialog":
+					FlxG.save.data.storymodedialog = !FlxG.save.data.storymodedialog;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenVisibleOptions();
+					regenOptions();
 			}
 		}
 
@@ -688,6 +698,17 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.skipcountdown)
+		{
+			VisibleOptions.push(OptionsON[i]);
+		}
+		else
+		{
+			VisibleOptions.push(OptionsOFF[i]);
+		}
+
+		i++;
+
+		if (FlxG.save.data.storymodedialog)
 		{
 			VisibleOptions.push(OptionsON[i]);
 		}

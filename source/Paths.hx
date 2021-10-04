@@ -129,4 +129,9 @@ class Paths
 	{
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
 	}
+
+	inline static public function getPortraitAtlas(key:String, ?library:String)
+	{
+		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/portraits/portrait.xml', library));
+	}
 }

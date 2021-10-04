@@ -24,6 +24,8 @@ using StringTools;
 class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
+
+	var controlstext:FlxText;
 	
 	var cleanweekData:Array<Dynamic> = [
 		['Tutorial'],
@@ -252,6 +254,9 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.addByPrefix('hardplus', 'PLUSHARD');
 		sprDifficulty.animation.play('easy');
 
+		controlstext = new FlxText(871, 582, 0, "Press the -> and <- keys to toggle difficulty.", 14);
+		add(controlstext);
+
 		difficultySelectors.add(sprDifficulty);
 
 		rightArrow = new FlxSprite(sprDifficulty.x + sprDifficulty.width + 50, leftArrow.y);
@@ -313,6 +318,7 @@ class StoryMenuState extends MusicBeatState
 				sprDifficulty.visible = false;
 				leftArrow.visible = false;
 				rightArrow.visible = false;
+				controlstext.visible = false;
 			}
 			else
 			{
@@ -321,6 +327,7 @@ class StoryMenuState extends MusicBeatState
 				sprDifficulty.visible = true;
 				leftArrow.visible = true;
 				rightArrow.visible = true;
+				controlstext.visible = true;
 			}
 		}
 

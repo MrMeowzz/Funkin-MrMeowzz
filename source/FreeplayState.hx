@@ -39,6 +39,7 @@ class FreeplayState extends MusicBeatState
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
 	var previewtext:FlxText;
+	var controlstext:FlxText;
 
 	private var grpVisible:FlxTypedGroup<Alphabet>;
 	private var iconArray:FlxTypedGroup<HealthIcon>;
@@ -98,7 +99,7 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Bopeebo', 'Old Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
-			addWeek(['Spookeez', 'South'], 2, ['spooky']);
+			addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster']);
 
 		if (StoryMenuState.weekUnlocked[3] || isDebug)
 			addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
@@ -194,12 +195,22 @@ class FreeplayState extends MusicBeatState
 
 		previewtext = new FlxText(scoreText.x, scoreText.y + 66, 0, "Rate: " + rate + "x", 24);
 		previewtext.font = scoreText.font;
+		
+		controlstext = new FlxText(scoreText.x, scoreText.y + 96, 0, "", 16);
+		#if desktop
+		controlstext.text = "Press the -> and <- keys to toggle difficulty.\nHold shift to toggle the rate.";
+		#else
+		controlstext.text = "Press the -> and <- keys to toggle difficulty.";
+		controlstext.y -= 30;
+		#end
+		controlstext.x = FlxG.width - controlstext.width;
 
 		add(diffText);
 
 		#if desktop
 		add(previewtext);
 		#end
+		add(controlstext);
 
 		add(scoreText);
 
@@ -327,6 +338,7 @@ class FreeplayState extends MusicBeatState
 		{
 			scoreText.visible = false;
 			diffText.visible = false;
+			controlstext.visible = false;
 			#if desktop
 			scoreBG.setGraphicSize(Std.int(FlxG.width * 0.35), 45);
 			scoreBG.y = -31;
@@ -339,6 +351,7 @@ class FreeplayState extends MusicBeatState
 		{
 			scoreText.visible = true;
 			diffText.visible = true;
+			controlstext.visible = true;
 			#if desktop
 			scoreBG.setGraphicSize(Std.int(FlxG.width * 0.35), 105);
 			scoreBG.y = 0;
@@ -394,6 +407,14 @@ class FreeplayState extends MusicBeatState
 		}
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+		#if desktop
+		if (gamepad != null && gamepad.justPressed.ANY)
+			controlstext.text = "Press the -> and <- keys to toggle difficulty.\nHold left shoulder to toggle the rate.";
+		else if (FlxG.keys.justPressed.ANY)
+			controlstext.text = "Press the -> and <- keys to toggle difficulty.\nHold shift to toggle the rate.";
+
+		controlstext.x = FlxG.width - controlstext.width;
+		#end
 
 		#if desktop
 		if (FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER))
@@ -444,10 +465,7 @@ class FreeplayState extends MusicBeatState
 		{
 			OG.SelectedFreeplay = curSelected;
 			OG.DifficultyFreeplay = curDifficulty;
-			OG.gunsCutsceneEnded = false;
-			OG.ughCutsceneEnded = false;
-			OG.stressCutsceneEnded = false;
-			OG.horrorlandCutsceneEnded = false;
+			OG.currentCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
 			#if desktop
 			if (FlxG.save.data.freeplaypreviews)
@@ -465,10 +483,7 @@ class FreeplayState extends MusicBeatState
 			{
 				OG.SelectedFreeplay = curSelected;
 				OG.DifficultyFreeplay = curDifficulty;
-				OG.gunsCutsceneEnded = false;
-				OG.ughCutsceneEnded = false;
-				OG.stressCutsceneEnded = false;
-				OG.horrorlandCutsceneEnded = false;
+				OG.currentCutsceneEnded = false;
 				FlxG.switchState(new MainMenuState());
 				#if desktop
 				if (FlxG.save.data.freeplaypreviews)
@@ -579,11 +594,6 @@ class FreeplayState extends MusicBeatState
 			curDifficulty = 3;
 		if (curDifficulty > 3)
 			curDifficulty = 0;
-
-		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2 && OG.FreeplayMenuType == 'normal')
-		{
-			curDifficulty = 2;
-		}
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
@@ -745,17 +755,6 @@ class FreeplayState extends MusicBeatState
 		
 
 		// selector.y = (70 * curSelected) + 30;
-		if ((songs[curSelected].songName.toLowerCase() == 'test' || songs[curSelected].songName.toLowerCase() == 'ridge') && curDifficulty < 2 && OG.FreeplayMenuType != 'section')
-		{
-			curDifficulty = 2;
-			switch (curDifficulty)
-			{
-				case 2:
-					diffText.text = "< HARD >";
-				case 3:
-					diffText.text = "< HARD PLUS >";
-			}
-		}
 
 		#if !switch
 		if (OG.FreeplayMenuType == 'bside')

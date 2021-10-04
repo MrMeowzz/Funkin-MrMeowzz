@@ -94,10 +94,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 			if (PlayState.isStoryMode)
 			{
-				OG.gunsCutsceneEnded = false;
-				OG.ughCutsceneEnded = false;
-				OG.stressCutsceneEnded = false;
-				OG.horrorlandCutsceneEnded = false;
+				OG.currentCutsceneEnded = false;
 				FlxG.switchState(new StoryMenuState());
 			}
 			else

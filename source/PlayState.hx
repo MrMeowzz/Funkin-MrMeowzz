@@ -294,44 +294,20 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.song.toLowerCase())
 		{
-			case 'dadbattle' | 'fresh' | 'bopeebo' | 'tutorial':
-				if (!OG.BSIDE)
-				{
-					if (SONG.player1 == "tankman")
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/TankDialogue'));
-					else if (SONG.player1 == "pico")
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/PicoDialogue'));
-					else
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue'));
-				}
 			case 'senpai' | 'thorns':
 				if (OG.BSIDE)
-				{
 					dialogue = CoolUtil.coolTextFile(Paths.txt('b-side/' + SONG.song.toLowerCase() + '/Dialogue'));
-				}
 				else
-				{
-					if (SONG.player1 == "tankman-pixel")
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/TankDialogue'));
-					else if (SONG.player1 == "pico-pixel")
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/PicoDialogue'));
-					else
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue'));
-				}
+					dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue'));
 			case 'roses':
 				if (OG.BSIDE)
-				{
 					dialogue = CoolUtil.coolTextFile(Paths.txt('b-side/' + SONG.song.toLowerCase() + '/Dialogue'));
-				}
 				else
-				{
-					if (SONG.player1 == "tankman-pixel")
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/TankDialogue' + clean));
-					else if (SONG.player1 == "pico-pixel")
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/PicoDialogue' + clean));
-					else
-						dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue' + clean));
-				}
+					dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue' + clean));
+			case 'tutorial' | 'bopeebo' | 'fresh' | 'dadbattle' | 'spookeez' | 'south' | 'monster' | 'pico' | 'philly' | 'satin-pants'| 'satin-panties' | 'high' | 'milf' | 'mom' | 'cocoa' | 'eggnog' | 'winter-horrorland': //list every song in weeks 0-5 ._.
+				dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue'));
+			case 'blammed':
+				dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/Dialogue' + clean));
 		}
 
 		if (storyDifficulty == 3)
@@ -943,7 +919,11 @@ class PlayState extends MusicBeatState
 			remove(tankground);
 			
 			runningtank = new FlxSprite(FlxG.width + 1000, 500);
-       		runningtank.frames = Paths.getSparrowAtlas('tankmanKilled1');
+			if (FlxG.save.data.cleanmode)
+				runningtank.frames = Paths.getSparrowAtlas('tankmanKilled1CLEAN');
+			else
+				runningtank.frames = Paths.getSparrowAtlas('tankmanKilled1');
+
         	runningtank.antialiasing = true;
         	runningtank.animation.addByPrefix("run", "tankman running", Std.int(24 * PlayState.songMultiplier), true);
         	runningtank.animation.addByPrefix("shot", "John Shot " + FlxG.random.int(1,2), Std.int(24 * PlayState.songMultiplier), false);
@@ -1353,13 +1333,12 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
-		if (isStoryMode)
+		if (isStoryMode && FlxG.save.data.storymodedialog && !OG.currentCutsceneEnded)
 		{
+			OG.currentCutsceneEnded = true;
 			switch (curSong.toLowerCase())
 			{
 				case "winter-horrorland":
-				if (OG.horrorlandCutsceneEnded == false)
-				{
 					var blackScreen:FlxSprite = new FlxSprite(0, 0).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
 					add(blackScreen);
 					blackScreen.scrollFactor.set();
@@ -1384,27 +1363,45 @@ class PlayState extends MusicBeatState
 								ease: FlxEase.quadInOut,
 								onComplete: function(twn:FlxTween)
 								{
-									OG.horrorlandCutsceneEnded = true;
-									startCountdown();
+									if (!OG.BSIDE && SONG.player1.startsWith('bf'))
+										schoolIntro(doof);
+									else
+									{
+										OG.currentCutsceneEnded = false;
+										startCountdown();
+									}
 								}
 							});
 						});
 					});
-				}
 
 				case 'senpai' | 'thorns':
-					schoolIntro(doof);
-				case 'roses':
-					FlxG.sound.play(Paths.sound('ANGRY'));
-					schoolIntro(doof);
-				case 'tutorial' | 'bopeebo' | 'fresh' | 'dadbattle':
-					if (!SONG.player1.startsWith('gf') && SONG.player1 != "bf-amogus" && !SONG.player1.startsWith('monster') && !OG.BSIDE)
+					if (SONG.player1.startsWith('bf'))
 						schoolIntro(doof);
 					else
+					{
+						OG.currentCutsceneEnded = false;
 						startCountdown();
+					}
+				case 'roses':
+					if (SONG.player1.startsWith('bf')) {
+						FlxG.sound.play(Paths.sound('ANGRY'));
+						schoolIntro(doof);
+					}
+					else
+					{
+						OG.currentCutsceneEnded = false;
+						startCountdown();
+					}
+				case 'tutorial' | 'bopeebo' | 'fresh' | 'dadbattle' | 'spookeez' | 'south' | 'monster' | 'pico' | 'blammed' | 'philly' | 'satin-pants'| 'satin-panties' | 'high' | 'milf' | 'mom' | 'cocoa' | 'eggnog': //copy and paste go brrrrr
+					if (!OG.BSIDE && SONG.player1.startsWith('bf'))
+						schoolIntro(doof);
+					else
+					{
+						OG.currentCutsceneEnded = false;
+						startCountdown();
+					}
 				case 'guns':
-				if (OG.gunsCutsceneEnded == false)
-				{
 					inCutscene = true;
 					#if desktop
 						DiscordClient.changePresence("in Guns Cutscene", SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC);
@@ -1415,17 +1412,10 @@ class PlayState extends MusicBeatState
 					add(black);
 					black.scrollFactor.set();
 					if (FlxG.save.data.cleanmode)
-						FlxG.switchState(new VideoState('assets/week7/videos/gunsCutsceneCLEAN.webm', function() {OG.gunsCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+						FlxG.switchState(new VideoState('assets/week7/videos/gunsCutsceneCLEAN.webm', function() {FlxG.switchState(new PlayState());}));
 					else
-						FlxG.switchState(new VideoState('assets/week7/videos/gunsCutscene.webm', function() {OG.gunsCutsceneEnded = true; FlxG.switchState(new PlayState());}));
-				}
-				else
-				{
-					startCountdown();
-				}
+						FlxG.switchState(new VideoState('assets/week7/videos/gunsCutscene.webm', function() {FlxG.switchState(new PlayState());}));
 				case 'ugh':
-				if (OG.ughCutsceneEnded == false)
-				{
 					inCutscene = true;
 					#if desktop
 						DiscordClient.changePresence("in Ugh Cutscene", SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC);
@@ -1436,17 +1426,10 @@ class PlayState extends MusicBeatState
 					add(black);
 					black.scrollFactor.set();
 					if (FlxG.save.data.cleanmode)
-						FlxG.switchState(new VideoState('assets/week7/videos/ughCutsceneCLEAN.webm', function() {OG.ughCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+						FlxG.switchState(new VideoState('assets/week7/videos/ughCutsceneCLEAN.webm', function() {FlxG.switchState(new PlayState());}));
 					else
-						FlxG.switchState(new VideoState('assets/week7/videos/ughCutscene.webm', function() {OG.ughCutsceneEnded = true; FlxG.switchState(new PlayState());}));
-				}
-				else
-				{
-					startCountdown();
-				}
+						FlxG.switchState(new VideoState('assets/week7/videos/ughCutscene.webm', function() {FlxG.switchState(new PlayState());}));
 				case 'stress':
-				if (OG.stressCutsceneEnded == false)
-				{
 					inCutscene = true;
 					#if desktop
 						DiscordClient.changePresence("in Stress Cutscene", SONG.song + " (" + storyDifficultyText + modeText + ")", player2RPC);
@@ -1457,15 +1440,11 @@ class PlayState extends MusicBeatState
 					add(black);
 					black.scrollFactor.set();
 					if (FlxG.save.data.cleanmode)
-						FlxG.switchState(new VideoState('assets/week7/videos/stressCutsceneCLEAN.webm', function() {OG.stressCutsceneEnded = true; FlxG.switchState(new PlayState());}));
+						FlxG.switchState(new VideoState('assets/week7/videos/stressCutsceneCLEAN.webm', function() {FlxG.switchState(new PlayState());}));
 					else
-						FlxG.switchState(new VideoState('assets/week7/videos/stressCutscene.webm', function() {OG.stressCutsceneEnded = true; FlxG.switchState(new PlayState());}));
-				}
-				else
-				{
-					startCountdown();
-				}
+						FlxG.switchState(new VideoState('assets/week7/videos/stressCutscene.webm', function() {FlxG.switchState(new PlayState());}));
 				default:
+					OG.currentCutsceneEnded = false;
 					startCountdown();
 			}
 		}
@@ -3173,10 +3152,7 @@ class PlayState extends MusicBeatState
 				Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 			#end
 		}
-		OG.gunsCutsceneEnded = false;
-		OG.ughCutsceneEnded = false;
-		OG.stressCutsceneEnded = false;
-		OG.horrorlandCutsceneEnded = false;
+		OG.currentCutsceneEnded = false;
 
 		if (isStoryMode)
 		{
@@ -3320,19 +3296,19 @@ class PlayState extends MusicBeatState
 		daRating = "sick";
 		if (FlxG.save.data.newhittimings)
 		{
-			if (noteDiff > Conductor.safeZoneOffset * 0.7)
+			if (noteDiff > Conductor.safeZoneOffset * 0.8 || noteDiff < Conductor.safeZoneOffset * -0.8)
 			{
 				daRating = 'shit';
 				score = 50;
 				shits++;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.5)
+			else if (noteDiff > Conductor.safeZoneOffset * 0.575 || noteDiff < Conductor.safeZoneOffset * -0.575)
 			{
 				daRating = 'bad';
 				score = 100;
 				bads++;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.325)
+			else if (noteDiff > Conductor.safeZoneOffset * 0.325 || noteDiff < Conductor.safeZoneOffset * -0.325)
 			{
 				daRating = 'good';
 				score = 200;
