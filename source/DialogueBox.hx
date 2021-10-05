@@ -9,6 +9,7 @@ import flixel.input.FlxKeyManager;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.input.gamepad.FlxGamepad;
 
 using StringTools;
 
@@ -34,6 +35,8 @@ class DialogueBox extends FlxSpriteGroup
 	var handSelect:FlxSprite;
 	var bgFade:FlxSprite;
 
+	var skipText:FlxText;
+
 	public function new(talkingRight:Bool = true, ?dialogueList:Array<String>)
 	{
 		super();
@@ -41,7 +44,7 @@ class DialogueBox extends FlxSpriteGroup
 		var bside:String = '';
 		if (OG.BSIDE)
 			bside = 'b-side/';
-		if (PlayState.isStoryMode && !OG.currentCutsceneEnded)
+		if (((!PlayState.isStoryMode && FlxG.save.data.freeplaydialog) || (PlayState.isStoryMode && FlxG.save.data.storymodedialog) || OG.forceCutscene) && !OG.currentCutsceneEnded) //how did my tiny brain compose this
 		{
 			switch (PlayState.SONG.song.toLowerCase())
 			{
@@ -225,6 +228,10 @@ class DialogueBox extends FlxSpriteGroup
 
 		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('pixelUI/hand_textbox'));
 		add(handSelect);
+		skipText = new FlxText(0, handSelect.y + 25, 0, "Press SPACE to Skip Dialog", 16);
+		skipText.x = FlxG.width - (skipText.width + 10);
+		skipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
+		add(skipText);
 
 
 		if (!talkingRight)
@@ -279,14 +286,19 @@ class DialogueBox extends FlxSpriteGroup
 			startDialogue();
 			dialogueStarted = true;
 		}
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+		if (gamepad != null && gamepad.justPressed.ANY)
+			skipText.text = "Press B to Skip Dialog";
+		else if (FlxG.keys.justPressed.ANY)
+			skipText.text = "Press SPACE to Skip Dialog";
 
-		if (FlxG.keys.justPressed.ANY  && dialogueStarted == true)
+		if ( (FlxG.keys.justPressed.ANY || (gamepad != null && gamepad.justPressed.ANY))  && dialogueStarted == true)
 		{
 			remove(dialogue);
 				
 			FlxG.sound.play(Paths.sound('clickText'), 0.8);	
 
-			if ((dialogueList[1] == null && dialogueList[0] != null) || FlxG.keys.justPressed.SPACE)
+			if ((dialogueList[1] == null && dialogueList[0] != null) || FlxG.keys.justPressed.SPACE || (gamepad != null && gamepad.justPressed.BACK))
 			{
 				if (!isEnding)
 				{

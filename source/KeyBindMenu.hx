@@ -47,7 +47,7 @@ class KeyBindMenu extends FlxSubState
                               FlxG.save.data.gprightBind,
                               FlxG.save.data.gpkillBind];
     var tempKey:String = "";
-    var blacklist:Array<String> = ["ESCAPE", "ENTER", "BACKSPACE", "SPACE", "TAB"];
+    var blacklist:Array<String> = ["ESCAPE", "ENTER", "BACKSPACE", "SPACE", "TAB", "NINE", "SIX", "FIVE", "SEVEN", "TWO"];
 
     var blackBox:FlxSprite;
     var modeText:FlxText;
@@ -387,7 +387,7 @@ class KeyBindMenu extends FlxSubState
 
         var shouldReturn:Bool = true;
 
-        var notAllowed:Array<String> = ["START"];
+        var notAllowed:Array<String> = ["START", "BACK"];
         var swapKey:Int = -1;
 
         if (r != "") {

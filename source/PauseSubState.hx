@@ -17,6 +17,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.util.FlxTimer;
 
 using StringTools;
 
@@ -46,8 +47,11 @@ class PauseSubState extends MusicBeatSubstate
 	var rate:Float = PlayState.songMultiplier;
 	var originalrate:Float = PlayState.songMultiplier;
 
+	var loadedShit:Bool = false;
+
 	public function new(x:Float, y:Float)
 	{
+		loadedShit = false;
 		if (!PlayState.isStoryMode)
 		{
 			menuItems.remove("Skip Song");
@@ -238,6 +242,11 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+		new FlxTimer().start(0.25, function(tmr:FlxTimer)
+		{
+			loadedShit = true;
+		});
 	}
 
 	public function regenMenu()
@@ -358,7 +367,7 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		#end
 
-		if (accepted)
+		if (accepted && loadedShit)
 		{
 			var daSelected:String = menuItems[curSelected];
 			var lastOpponent:String = PlayState.SONG.player2;
@@ -443,6 +452,7 @@ class PauseSubState extends MusicBeatSubstate
 					FlxG.resetState();
 				case "Restart Song with Dialog" | "Restart Cutscene":
 					OG.currentCutsceneEnded = false;
+					OG.forceCutscene = true;
 					FlxTween.tween(FlxG.camera, { zoom: 0.5, y: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					FlxG.resetState();
 				case "Exit to menu":

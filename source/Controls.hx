@@ -506,8 +506,8 @@ class Controls extends FlxActionSet
 		buttons.set(Control.LEFT,[FlxGamepadInputID.fromString(FlxG.save.data.gpleftBind)]);
 		buttons.set(Control.DOWN,[FlxGamepadInputID.fromString(FlxG.save.data.gpdownBind)]);
 		buttons.set(Control.RIGHT,[FlxGamepadInputID.fromString(FlxG.save.data.gprightBind)]);
-		buttons.set(Control.ACCEPT,[FlxGamepadInputID.A]);
-		buttons.set(Control.BACK,[FlxGamepadInputID.B]);
+		buttons.set(Control.ACCEPT,[FlxGamepadInputID.START]);
+		buttons.set(Control.BACK,[FlxGamepadInputID.BACK]);
 		buttons.set(Control.PAUSE,[FlxGamepadInputID.START]);
 		buttons.set(Control.RESET,[FlxGamepadInputID.fromString(FlxG.save.data.gpkillBind)]);
 

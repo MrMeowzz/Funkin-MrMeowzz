@@ -99,6 +99,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			}
 			else
 			{
+				OG.currentCutsceneEnded = false;
 				FlxG.switchState(new FreeplayState());
 			}
 		}

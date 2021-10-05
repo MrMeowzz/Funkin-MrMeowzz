@@ -410,7 +410,7 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B) && !movedBack && !selectedWeek)
+		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.BACK) && !movedBack && !selectedWeek)
 		{
 			if (OG.StoryMenuType != 'section') {
 				curWeek = 0;
@@ -434,7 +434,7 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.keys.justPressed.ESCAPE || (gamepad != null && gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B) && !movedBack && !selectedWeek)
+		if (FlxG.keys.justPressed.ESCAPE || (gamepad != null && gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.BACK) && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
@@ -450,7 +450,7 @@ class StoryMenuState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 		}
 
-		if (FlxG.keys.justPressed.R)
+		if (FlxG.keys.justPressed.R && FlxG.save.data.leftBind != "R" && FlxG.save.data.downBind != "R" && FlxG.save.data.upBind != "R" && FlxG.save.data.rightBind != "R")
 		{
 			var totalweeks:Int = 0;
 

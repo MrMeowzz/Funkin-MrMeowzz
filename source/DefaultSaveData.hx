@@ -86,6 +86,10 @@ class DefaultSaveData
 		{
 			FlxG.save.data.storymodedialog = OptionsState.DefaultValues[21];
 		}
+		if (FlxG.save.data.freeplaydialog == null)
+		{
+			FlxG.save.data.freeplaydialog = OptionsState.DefaultValues[22];
+		}
 		PlayerSettings.player1.controls.loadKeyBinds();
 		KeyBinds.keyCheck();
     }

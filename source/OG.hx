@@ -9,6 +9,7 @@ class OG
 	public static var DifficultyFreeplay:Int = 1;
 	public static var DifficultyStoryMode:Int = 1;
 	public static var currentCutsceneEnded:Bool = false;
+	public static var forceCutscene:Bool = false;
 	public static var FreeplayMenuType:String = 'section';
 	public static var StoryMenuType:String = 'section';
 	public static var BSIDE:Bool = false;

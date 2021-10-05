@@ -461,11 +461,10 @@ class FreeplayState extends MusicBeatState
 		}
 		#end
 
-		if (FlxG.keys.justPressed.ESCAPE || (gamepad != null && gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B))
+		if (FlxG.keys.justPressed.ESCAPE || (gamepad != null && gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.BACK))
 		{
 			OG.SelectedFreeplay = curSelected;
 			OG.DifficultyFreeplay = curDifficulty;
-			OG.currentCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
 			#if desktop
 			if (FlxG.save.data.freeplaypreviews)
@@ -474,7 +473,7 @@ class FreeplayState extends MusicBeatState
 			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
 			MainMenuState.transition = 'zoom';
 		}
-		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.B))
+		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.BACK))
 		{
 			if (OG.FreeplayMenuType != 'section') {
 				regenSections();
@@ -483,7 +482,6 @@ class FreeplayState extends MusicBeatState
 			{
 				OG.SelectedFreeplay = curSelected;
 				OG.DifficultyFreeplay = curDifficulty;
-				OG.currentCutsceneEnded = false;
 				FlxG.switchState(new MainMenuState());
 				#if desktop
 				if (FlxG.save.data.freeplaypreviews)
@@ -558,7 +556,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.keys.justPressed.R)
+		if (FlxG.keys.justPressed.R && FlxG.save.data.leftBind != "R" && FlxG.save.data.downBind != "R" && FlxG.save.data.upBind != "R" && FlxG.save.data.rightBind != "R")
 		{
 			var totalsongs:Int = 0;
 

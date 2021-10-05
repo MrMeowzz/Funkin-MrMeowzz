@@ -101,6 +101,7 @@ class AltGameOverScreen extends MusicBeatState
 				}
 				else
 				{
+					OG.currentCutsceneEnded = false;
 					FlxG.switchState(new FreeplayState());
 				}
 			}
@@ -118,7 +119,7 @@ class AltGameOverScreen extends MusicBeatState
 			}
 			else
 			{
-
+				OG.currentCutsceneEnded = false;
 				FlxG.switchState(new FreeplayState());
 			}
 		}

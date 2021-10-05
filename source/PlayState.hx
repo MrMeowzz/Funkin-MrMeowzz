@@ -1333,9 +1333,10 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
-		if (isStoryMode && FlxG.save.data.storymodedialog && !OG.currentCutsceneEnded)
+		if (((!isStoryMode && FlxG.save.data.freeplaydialog) || (isStoryMode && FlxG.save.data.storymodedialog) || OG.forceCutscene) && !OG.currentCutsceneEnded) //how did my tiny brain compose this
 		{
 			OG.currentCutsceneEnded = true;
+			OG.forceCutscene = false;
 			switch (curSong.toLowerCase())
 			{
 				case "winter-horrorland":
@@ -1450,6 +1451,8 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
+			if ((!isStoryMode && !FlxG.save.data.freeplaydialog) || (isStoryMode && !FlxG.save.data.storymodedialog))
+				OG.currentCutsceneEnded = true;
 			switch (curSong.toLowerCase())
 			{
 				default:
@@ -2468,7 +2471,7 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new GitarooPause());
 		}
 
-		if (FlxG.keys.justPressed.U)
+		if (FlxG.keys.justPressed.U && FlxG.save.data.leftBind != "U" && FlxG.save.data.downBind != "U" && FlxG.save.data.upBind != "U" && FlxG.save.data.rightBind != "U")
 		{
 			if (SONG.player1 == 'tankman' || SONG.player1 == 'tankmannoamongus')
 			{
