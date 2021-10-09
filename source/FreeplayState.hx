@@ -245,9 +245,12 @@ class FreeplayState extends MusicBeatState
 			trace(md);
 		 */
 
-		FlxG.camera.angle = -45;
-		FlxG.camera.zoom = 1.5;
-		FlxTween.tween(FlxG.camera, { zoom: 1, angle: 0}, 0.75, {ease: FlxEase.quadIn });
+		if (FlxG.save.data.menutransitions)
+		{
+			FlxG.camera.angle = -45;
+			FlxG.camera.zoom = 1.5;
+			FlxTween.tween(FlxG.camera, { zoom: 1, angle: 0}, 0.75, {ease: FlxEase.quadIn });
+		}
 
 		super.create();
 	}
@@ -470,8 +473,11 @@ class FreeplayState extends MusicBeatState
 			if (FlxG.save.data.freeplaypreviews)
 				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			#end
-			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
-			MainMenuState.transition = 'zoom';
+			if (FlxG.save.data.menutransitions) 
+			{
+				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+				MainMenuState.transition = 'zoom';
+			}
 		}
 		if (FlxG.keys.justPressed.BACKSPACE || (gamepad != null && !gamepad.pressed.RIGHT_SHOULDER && gamepad.justPressed.BACK))
 		{
@@ -487,8 +493,11 @@ class FreeplayState extends MusicBeatState
 				if (FlxG.save.data.freeplaypreviews)
 					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 				#end
-				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
-				MainMenuState.transition = 'zoom';
+				if (FlxG.save.data.menutransitions)
+				{
+					FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+					MainMenuState.transition = 'zoom';
+				}
 			}
 		}
 
@@ -525,7 +534,8 @@ class FreeplayState extends MusicBeatState
 				trace('CUR WEEK' + PlayState.storyWeek);
 				OG.SelectedFreeplay = curSelected;
 				OG.DifficultyFreeplay = curDifficulty;
-				FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
+				if (FlxG.save.data.menutransitions)
+					FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 				if (FlxG.keys.justPressed.SEVEN) {
 					LoadingState.loadAndSwitchState(new ChartingState());
 				}
@@ -547,7 +557,8 @@ class FreeplayState extends MusicBeatState
 			trace('CUR WEEK' + PlayState.storyWeek);
 			OG.SelectedFreeplay = curSelected;
 			OG.DifficultyFreeplay = curDifficulty;
-			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
+			if (FlxG.save.data.menutransitions)
+				FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 			if (FlxG.keys.justPressed.SEVEN) {
 				LoadingState.loadAndSwitchState(new ChartingState());
 			}

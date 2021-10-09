@@ -16,7 +16,8 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var Options:Array<String> = ['Clean Mode', 
+	var Options:Array<String> = ['Reset to Default',
+	'Clean Mode', 
 	'Preload Freeplay Previews', 
 	'Freeplay Previews', 
 	'Color Ratings', 
@@ -27,7 +28,8 @@ class OptionsState extends MusicBeatState
 	'Miss Stun', 
 	'Miss Sounds', 
 	'Timer Type', 
-	'Hit Sounds', 
+	'Hit Sounds',
+	'Enemy Hit Sounds', 
 	'Instant Restart', 
 	'Note Splashes', 
 	'New Hit Timings', 
@@ -38,13 +40,14 @@ class OptionsState extends MusicBeatState
 	'Key Bindings',
 	'Skip Countdown',
 	'Story Mode Dialog',
-	'Freeplay Dialog'];
+	'Freeplay Dialog',
+	'Menu Transitions',
+	'Enemy Extra Effects'];
 
-	var descriptions:Array<String> = ['Changes some assets to make it more appropriate.'];
+	var descriptions:Array<String> = ['Resets ALL options to default.'];
 
-	public static var DefaultValues:Array<Bool> = [false,true,true,true,false,true,false,false,true,true,true,false,false,true,true,false,false,false,true,false,false,true,false];
-
-	var OptionsON:Array<String> = ['Clean Mode ON', 
+	var OptionsON:Array<String> = ['Reset to Default',
+	'Clean Mode ON', 
 	'Preload Freeplay PRVWs ON', 
 	'Freeplay Previews ON', 
 	'Color Ratings ON', 
@@ -55,7 +58,8 @@ class OptionsState extends MusicBeatState
 	'Miss Stun OFF', 
 	'Miss Sounds ON', 
 	'Countdown', 
-	'Hit Sounds ON', 
+	'Hit Sounds ON',
+	'Enemy Hit Sounds ON', 
 	'Instant Restart ON', 
 	'Note Splashes ON', 
 	'New Hit Timings ON', 
@@ -66,9 +70,12 @@ class OptionsState extends MusicBeatState
 	'Key Bindings',
 	'Skip Countdown',
 	'Story Mode Dialog ON',
-	'Freeplay Dialog ON'];
+	'Freeplay Dialog ON',
+	'Menu Transitions ON',
+	'Extra Enemy Effects'];
 
-	var OptionsOFF:Array<String> = ['Clean Mode OFF', 
+	var OptionsOFF:Array<String> = ['Reset to Default',
+	'Clean Mode OFF', 
 	'Preload Freeplay PRVWs OFF', 
 	'Freeplay Previews OFF', 
 	'Color Ratings OFF', 
@@ -79,7 +86,8 @@ class OptionsState extends MusicBeatState
 	'Miss Stun ON', 
 	'Miss Sounds OFF', 
 	'Bar', 
-	'Hit Sounds OFF', 
+	'Hit Sounds OFF',
+	'Enemy Hit Sounds OFF', 
 	'Instant Restart OFF', 
 	'Note Splashes OFF', 
 	'New Hit Timings OFF', 
@@ -90,10 +98,12 @@ class OptionsState extends MusicBeatState
 	'Key Bindings',
 	'Do not Skip Countdown',
 	'Story Mode OFF',
-	'Freeplay Dialog OFF'];
-	
+	'Freeplay Dialog OFF',
+	'Menu Transitions OFF',
+	'No Extra Enemy Effects'];
+
 	#if html5
-	var DisabledOptions:Array<Bool> = [false,true,true,false,true];
+	var DisabledOptions:Array<Bool> = [false,false,true,true,false,true];
 	#else
 	var DisabledOptions:Array<Bool> = [];
 	#end
@@ -116,8 +126,15 @@ class OptionsState extends MusicBeatState
 
 	var noteStyles:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteStyles'));
 
+	public static var pauseMenu:Bool = false;
+
 	override function create()
 	{
+		if (!FlxG.sound.music.playing)
+		{
+			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+		}
+
 		noteStyles.insert(0, 'default');
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -167,9 +184,12 @@ class OptionsState extends MusicBeatState
 
 		changeSelection();
 
-		FlxG.camera.zoom = 1.5;
-		FlxG.camera.y = FlxG.height;
-		FlxTween.tween(FlxG.camera, { zoom: 1, y: 0}, 1, { ease: FlxEase.quadIn });
+		if (FlxG.save.data.menutransitions) 
+		{
+			FlxG.camera.zoom = 1.5;
+			FlxG.camera.y = FlxG.height;
+			FlxTween.tween(FlxG.camera, { zoom: 1, y: 0}, 1, { ease: FlxEase.quadIn });
+		}
 
 		super.create();
 	}
@@ -181,7 +201,8 @@ class OptionsState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		descriptions = ['Changes some assets to make it more appropriate.', 
+		descriptions = ['Resets ALL options to default.',
+	'Changes some assets to make it more appropriate.', 
 	'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 
 	'Disables the freeplay song previews.', 
 	'Adds color to the ratings.', 
@@ -192,7 +213,8 @@ class OptionsState extends MusicBeatState
 	'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 
 	'Whether to play miss sounds or not.', 
 	'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 
-	'Plays a sound when a note is hit. Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.', 
+	'Plays a sound when a note is hit. Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.',
+	'Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current enemy hit sound. Replace enemyhitsound.ogg in assets/sounds for a different sound.', 
 	'Skips the short animation before restarting when enabled.', 
 	'Enables note splashes that occur when you get sick rating.', 
 	'Changes the hit timings of ratings and notes to be more accurate.', 
@@ -203,7 +225,9 @@ class OptionsState extends MusicBeatState
 	'Change keybinds for gameplay.',
 	'Skips the countdown before the song starts.',
 	'Toggles the cutscenes and dialog in story mode.',
-	'Toggles the cutscenes and dialog in freeplay.'];
+	'Toggles the cutscenes and dialog in freeplay.',
+	'Toggles the menu transitions between states.',
+	'Shows ratings and the combo of the enemy like it is actually pressing the notes.'];
 
 		if (controls.UP_P)
 		{
@@ -286,9 +310,9 @@ class OptionsState extends MusicBeatState
 		if (FlxG.keys.justPressed.P || (gamepad != null && gamepad.justPressed.Y))
 		{
 			if (Options[curSelected] == "Hit Sounds")
-			{
 				FlxG.sound.play(Paths.sound('hitsound'));
-			}
+			else if (Options[curSelected] == "Enemy Hit Sounds")
+				FlxG.sound.play(Paths.sound('enemyhitsound'));
 		}
 
 		if (songspeed < 0.1)
@@ -307,9 +331,15 @@ class OptionsState extends MusicBeatState
 				FlxG.save.data.scrollspeed = songspeed;
 				FlxG.save.flush();
 			}
-			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
-			MainMenuState.transition = 'zoom';
-			FlxG.switchState(new MainMenuState());
+			if (FlxG.save.data.menutransitions)
+			{
+				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+				MainMenuState.transition = 'zoom';
+			}
+			if (pauseMenu)
+				FlxG.switchState(new PlayState());
+			else
+				FlxG.switchState(new MainMenuState());
 		}
 
 		if (controls.ACCEPT)
@@ -320,15 +350,13 @@ class OptionsState extends MusicBeatState
 					FlxG.save.data.cleanmode = !FlxG.save.data.cleanmode;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Freeplay Previews":
 				#if desktop
 					FlxG.save.data.freeplaypreviews = !FlxG.save.data.freeplaypreviews;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				#else
 					if (descriptiontxt.text == descriptions[curSelected])
 					{
@@ -346,8 +374,7 @@ class OptionsState extends MusicBeatState
 					FlxG.save.data.preloadfreeplaypreviews = !FlxG.save.data.preloadfreeplaypreviews;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				#else
 					if (descriptiontxt.text == descriptions[curSelected])
 					{
@@ -364,16 +391,14 @@ class OptionsState extends MusicBeatState
 					FlxG.save.data.colorratings = !FlxG.save.data.colorratings;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Fullscreen":
 				#if desktop
 					FlxG.save.data.fullscreen = !FlxG.fullscreen;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
         			FlxG.fullscreen = !FlxG.fullscreen;
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				#else
 					if (descriptiontxt.text == descriptions[curSelected])
 					{
@@ -391,289 +416,251 @@ class OptionsState extends MusicBeatState
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					(cast (Lib.current.getChildAt(0), Main)).toggleFPSCounter(FlxG.save.data.fpscounter);
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Downscroll":
 					FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Override Song Scroll Speed":
 					FlxG.save.data.overridespeed = !FlxG.save.data.overridespeed;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Miss Stun":
 					FlxG.save.data.disabledmissstun = !FlxG.save.data.disabledmissstun;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Miss Sounds":
 					FlxG.save.data.misssounds = !FlxG.save.data.misssounds;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Timer Type":
 					FlxG.save.data.countdown = !FlxG.save.data.countdown;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Hit Sounds":
 					FlxG.save.data.hitsounds = !FlxG.save.data.hitsounds;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
+				case "Enemy Hit Sounds":
+					FlxG.save.data.enemyhitsounds = !FlxG.save.data.enemyhitsounds;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenStuff();
 				case "Instant Restart":
 					FlxG.save.data.instantrestart = !FlxG.save.data.instantrestart;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Note Splashes":
 					FlxG.save.data.notesplashes = !FlxG.save.data.notesplashes;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "New Hit Timings":
 					FlxG.save.data.newhittimings = !FlxG.save.data.newhittimings;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Rating Location":
 					FlxG.save.data.ratingsfollowcamera = !FlxG.save.data.ratingsfollowcamera;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Tabi Notes Shake":
 					FlxG.save.data.tabinotesshake = !FlxG.save.data.tabinotesshake;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Note Timing":
 					FlxG.save.data.milliseconds = !FlxG.save.data.milliseconds;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Key Bindings":
 					openSubState(new KeyBindMenu());
 				case "Skip Countdown":
 					FlxG.save.data.skipcountdown = !FlxG.save.data.skipcountdown;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Story Mode Dialog":
 					FlxG.save.data.storymodedialog = !FlxG.save.data.storymodedialog;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
 				case "Freeplay Dialog":
 					FlxG.save.data.freeplaydialog = !FlxG.save.data.freeplaydialog;
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenVisibleOptions();
-					regenOptions();
+					regenStuff();
+				case "Menu Transitions":
+					FlxG.save.data.menutransitions = !FlxG.save.data.menutransitions;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenStuff();
+				case "Enemy Extra Effects":
+					FlxG.save.data.enemyextraeffects = !FlxG.save.data.enemyextraeffects;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenStuff();
+				case "Reset to Default":
+					openSubState(new ResetOptionsState());
 			}
 		}
 
 		#if desktop
 		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
         {
-			regenVisibleOptions();
-			regenOptions();
+			regenStuff();
         }
 		#end
+	}
+
+	public function regenStuff()
+	{
+		regenVisibleOptions();
+		regenOptions();
+	}
+
+	override function closeSubState()
+	{
+		if (ResetOptionsState.ResetOptions)
+			regenStuff();
+
+		super.closeSubState();
 	}
 
 	public function regenVisibleOptions()
 	{
 		VisibleOptions = [];
 		var i = 0;
+
+		VisibleOptions.push(OptionsON[i]);
+
+		i++;
+
 		if (FlxG.save.data.cleanmode)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.preloadfreeplaypreviews)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.freeplaypreviews)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.colorratings)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.fullscreen)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.fpscounter)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.downscroll)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.overridespeed)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.disabledmissstun)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.misssounds)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.countdown)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.hitsounds)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
+
+		i++;
+
+		if (FlxG.save.data.enemyhitsounds)
+			VisibleOptions.push(OptionsON[i]);
+		else
+			VisibleOptions.push(OptionsOFF[i]);
 
 		i++;
 
 		if (FlxG.save.data.instantrestart)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.notesplashes)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.newhittimings)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.ratingsfollowcamera)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
@@ -682,24 +669,16 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.tabinotesshake)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.milliseconds)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
@@ -708,35 +687,37 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.skipcountdown)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.storymodedialog)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
 
 		i++;
 
 		if (FlxG.save.data.freeplaydialog)
-		{
 			VisibleOptions.push(OptionsON[i]);
-		}
 		else
-		{
 			VisibleOptions.push(OptionsOFF[i]);
-		}
+
+		i++;
+
+		if (FlxG.save.data.menutransitions)
+			VisibleOptions.push(OptionsON[i]);
+		else
+			VisibleOptions.push(OptionsOFF[i]);
+
+		i++;
+
+		if (FlxG.save.data.enemyextraeffects)
+			VisibleOptions.push(OptionsON[i]);
+		else
+			VisibleOptions.push(OptionsOFF[i]);
 	}
 
 	public function regenOptions()

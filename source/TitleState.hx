@@ -84,7 +84,7 @@ class TitleState extends MusicBeatState
 				StoryMenuState.weekUnlocked[0] = true;
 		}
 
-		DefaultSaveData.SetSaveData();
+		OptionSaveData.SetDefaultOptions();
 
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
@@ -97,7 +97,7 @@ class TitleState extends MusicBeatState
 			if (FlxG.save.data.fpscounter != null)
 				(cast (Lib.current.getChildAt(0), Main)).toggleFPSCounter(FlxG.save.data.fpscounter);
 			else
-				FlxG.save.data.fpscounter = OptionsState.DefaultValues[5];
+				FlxG.save.data.fpscounter = true;
 		});
 		#end
 
@@ -333,12 +333,16 @@ class TitleState extends MusicBeatState
 				}
 				else
 				{
+					if (FlxG.save.data.menutransitions) {
 					FlxTween.tween(FlxG.camera, { zoom: 1.25, angle: 45 }, 1, {ease: FlxEase.quadIn, onComplete: function(tmr:FlxTween)
-					{						
+					{			
 						FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
 						MainMenuState.transition = 'zoomtilt';
 						FlxG.switchState(new MainMenuState());
 					} });
+					}
+					else
+						FlxG.switchState(new MainMenuState());
 				}
 			} 
 			}
@@ -418,6 +422,8 @@ class TitleState extends MusicBeatState
 				addMoreText('dababy');
 				ngSpr.visible = true;
 			// credTextShit.text += '\nNewgrounds';
+			case 8:
+				addMoreText('jk lol haha funny');
 			case 9:
 				deleteCoolText();
 				ngSpr.visible = false;

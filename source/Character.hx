@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -237,12 +238,27 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHT', 'Dad Sing Note RIGHT', 24);
 				animation.addByPrefix('singDOWN', 'Dad Sing Note DOWN', 24);
 				animation.addByPrefix('singLEFT', 'Dad Sing Note LEFT', 24);
+				animation.addByPrefix('singUPmiss', 'Dad SingNote UP MISS', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'Dad SingNote DOWN MISS', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'Dad SingNote LEFT MISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'Dad SingNote LEFT MISS', 24, false);
 
 				addOffset('idle');
 				addOffset("singUP", -6, 50);
 				addOffset("singRIGHT", 0, 27);
 				addOffset("singLEFT", -10, 10);
 				addOffset("singDOWN", 0, -30);
+				if (isPlayer)
+				{
+					//not yet future update
+				}
+				else
+				{
+					addOffset("singUPmiss", -10, 40);
+					addOffset("singLEFTmiss", 0, 10);
+					addOffset("singDOWNmiss", 11, -36);
+					addOffset("singRIGHTmiss", -10, 10);
+				}
 
 				playAnim('idle');
 			case 'amogusguy':
@@ -270,6 +286,10 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHT', 'spooky sing right', 24, false);
 				animation.addByIndices('danceLeft', 'spooky dance idle', [0, 2, 6], "", 12, false);
 				animation.addByIndices('danceRight', 'spooky dance idle', [8, 10, 12, 14], "", 12, false);
+				animation.addByPrefix('singUPmiss', 'spooky UPNOTE MISS', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'spooky DOWNnote MISS', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'note singleft MISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'spooky singright MISS', 24, false);
 
 				addOffset('danceLeft');
 				addOffset('danceRight');
@@ -278,6 +298,17 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -130, -14);
 				addOffset("singLEFT", 130, -10);
 				addOffset("singDOWN", -50, -130);
+				if (isPlayer)
+				{
+					//not yet future update
+				}
+				else
+				{
+					addOffset("singUPmiss", 0, 30);
+					addOffset("singLEFTmiss", 70, -20);
+					addOffset("singDOWNmiss", 0, -150);
+					addOffset("singRIGHTmiss", -80, -10);
+				}
 
 				playAnim('danceRight');
 			case 'mom':
@@ -376,16 +407,16 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'Monster Rightnote MISS', 24, false);
 
 				addOffset('idle');
-				addOffset("singUPmiss", -40, 80);
-				addOffset("singRIGHTmiss", 23);
-				addOffset("singLEFTmiss", -41, 10);
-				addOffset("singDOWNmiss", 16, -85);
 				if (isPlayer)
 				{
 					addOffset("singUP", -40, 80);
 					addOffset("singRIGHT", 23);
 					addOffset("singLEFT", -41, 10);
 					addOffset("singDOWN", 16, -85);
+					addOffset("singUPmiss", -40, 80);
+					addOffset("singRIGHTmiss", 23);
+					addOffset("singLEFTmiss", -41, 10);
+					addOffset("singDOWNmiss", 16, -85);
 				}
 				else
 				{
@@ -393,6 +424,10 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", -51, 30);
 					addOffset("singLEFT", -30, 20);
 					addOffset("singDOWN", -50, -80);
+					addOffset("singUPmiss", -20, 100);
+					addOffset("singRIGHTmiss", -43, 40);
+					addOffset("singLEFTmiss", -41, 20);
+					addOffset("singDOWNmiss", -59, -96);
 				}
 				
 				playAnim('idle');
@@ -411,16 +446,16 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'Monster Rightnote MISS', 24, false);
 
 				addOffset('idle');
-				addOffset("singUPmiss", -44, 53);
-				addOffset("singRIGHTmiss", 20, 5);
-				addOffset("singLEFTmiss", -51, 10);
-				addOffset("singDOWNmiss", 10, -94);
 				if (isPlayer)
 				{
 					addOffset("singUP", -44, 53);
 					addOffset("singRIGHT", 20, 5);
 					addOffset("singLEFT", -51, 10);
 					addOffset("singDOWN", 10, -94);
+					addOffset("singUPmiss", -20, 100);
+					addOffset("singRIGHTmiss", -40, 5);
+					addOffset("singLEFTmiss", 30, -10);
+					addOffset("singDOWNmiss", 0, -104);
 				}
 				else
 				{
@@ -428,6 +463,10 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", -51);
 					addOffset("singLEFT", -30);
 					addOffset("singDOWN", -40, -94);
+					addOffset("singUPmiss", -34, 43);
+					addOffset("singRIGHTmiss", -20, 5);
+					addOffset("singLEFTmiss", -51, -10);
+					addOffset("singDOWNmiss", -40, -94);
 				}
 
 				playAnim('idle');
@@ -525,16 +564,16 @@ class Character extends FlxSprite
 				animation.addByPrefix('singDOWNmiss', 'Pico Down Note MISS', 24, false);
 
 				addOffset('idle');
-				addOffset("singUPmiss", 21, 67);
-				addOffset("singRIGHTmiss", 80, 30);
-				addOffset("singLEFTmiss", -40, 50);
-				addOffset("singDOWNmiss", 97, -30);
 				if (isPlayer)
 				{
 					addOffset("singUP", 16, 27);
 					addOffset("singDOWN", 100, -70);
 					addOffset("singRIGHT", 82, -4);
 					addOffset("singLEFT", -52, 9);
+					addOffset("singUPmiss", 21, 67);
+					addOffset("singRIGHTmiss", 80, 30);
+					addOffset("singLEFTmiss", -40, 50);
+					addOffset("singDOWNmiss", 97, -30);
 				}
 				else
 				{
@@ -542,6 +581,10 @@ class Character extends FlxSprite
 					addOffset("singDOWN", 200, -70);
 					addOffset("singRIGHT", -68, -7);
 					addOffset("singLEFT", 65, 9);
+					addOffset("singUPmiss", -9, 67);
+					addOffset("singRIGHTmiss", -60, 30);
+					addOffset("singLEFTmiss", 60, 50);
+					addOffset("singDOWNmiss", 197, -35);
 				}
 
 				playAnim('idle');
@@ -572,10 +615,6 @@ class Character extends FlxSprite
 
 				addOffset('idle', -5);
 				
-				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
-				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
 				addOffset('firstDeath', 37, 11);
 				addOffset('deathLoop', 37, 5);
@@ -589,9 +628,17 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", 42, -7);
 					addOffset("singLEFT", -18, -6);
 					addOffset("singDOWN", -10, -50);
+					addOffset("singUPmiss", 11, 27);
+					addOffset("singRIGHTmiss", 50, 21);
+					addOffset("singLEFTmiss", -58, 24);
+					addOffset("singDOWNmiss", -11, -19);
 				}
 				else
 				{
+					addOffset("singUPmiss", -29, 27);
+					addOffset("singRIGHTmiss", -30, 21);
+					addOffset("singLEFTmiss", 12, 24);
+					addOffset("singDOWNmiss", -11, -19);
 					addOffset("singUP", -29, 27);
 					addOffset("singRIGHT", -38, -7);
 					addOffset("singLEFT", 12, -6);
@@ -626,10 +673,6 @@ class Character extends FlxSprite
 
 				addOffset('idle', -5);
 				
-				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
-				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
 				addOffset('firstDeath', 37, 11);
 				addOffset('deathLoop', 37, 5);
@@ -642,9 +685,17 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", 42, -7);
 					addOffset("singLEFT", -18, -6);
 					addOffset("singDOWN", -10, -50);
+					addOffset("singUPmiss", 11, 27);
+					addOffset("singRIGHTmiss", 50, 21);
+					addOffset("singLEFTmiss", -58, 24);
+					addOffset("singDOWNmiss", -11, -19);
 				}
 				else
 				{
+					addOffset("singUPmiss", -29, 27);
+					addOffset("singRIGHTmiss", -30, 21);
+					addOffset("singLEFTmiss", 12, 24);
+					addOffset("singDOWNmiss", -11, -19);
 					addOffset("singUP", -29, 27);
 					addOffset("singRIGHT", -38, -7);
 					addOffset("singLEFT", 12, -6);
@@ -710,17 +761,19 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 
+				animation.addByPrefix('deathLoop', "BF idle dance w gf", 24, true);
+
 				addOffset('idle');
-				addOffset("singUPmiss", -29, 10);
-				addOffset("singRIGHTmiss", -41, 23);
-				addOffset("singLEFTmiss", 12, 7);
-				addOffset("singDOWNmiss", -10, -10);
 				if (!isPlayer)
 				{
 					addOffset("singUP", 31, 10);
 					addOffset("singRIGHT", 9, 23);
 					addOffset("singLEFT", -28, 7);
 					addOffset("singDOWN", 10, -10);
+					addOffset("singUPmiss", 51, 10);
+					addOffset("singRIGHTmiss", 29, 23);
+					addOffset("singLEFTmiss", -28, 7);
+					addOffset("singDOWNmiss", -30, -10);
 				}
 				else
 				{
@@ -728,6 +781,10 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", -41, 23);
 					addOffset("singLEFT", 12, 7);
 					addOffset("singDOWN", -10, -10);
+					addOffset("singUPmiss", -29, 10);
+					addOffset("singRIGHTmiss", -41, 23);
+					addOffset("singLEFTmiss", 12, 7);
+					addOffset("singDOWNmiss", -10, -10);
 				}
 
 				playAnim('idle');
@@ -766,19 +823,20 @@ class Character extends FlxSprite
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
 
+				animation.addByPrefix('deathLoop', "BF idle dance", 24, true);
+
 				addOffset('idle', -5);
 				addOffset("hey", -3, 4);
-				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
-				addOffset("singDOWNmiss", -11, -19);
 				if (isPlayer)
 				{
 					addOffset("singUP", -29, 27);
 					addOffset("singRIGHT", -38, -7);
 					addOffset("singLEFT", 12, -6);
 					addOffset("singDOWN", -10, -50);
-					
+					addOffset("singUPmiss", -29, 27);
+					addOffset("singRIGHTmiss", -30, 21);
+					addOffset("singLEFTmiss", 12, 24);
+					addOffset("singDOWNmiss", -11, -19);
 				}
 				else
 				{
@@ -786,6 +844,10 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", 32, -7);
 					addOffset("singLEFT", -38, -6);
 					addOffset("singDOWN", -20, -50);
+					addOffset("singUPmiss", 11, 27);
+					addOffset("singRIGHTmiss", 50, 21);
+					addOffset("singLEFTmiss", -58, 24);
+					addOffset("singDOWNmiss", -11, -19);
 				}
 
 				playAnim('idle');
@@ -805,17 +867,19 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 
+				animation.addByPrefix('deathLoop', "BF idle dance", 24, true);
+
 				addOffset('idle', -5);
-				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
-				addOffset("singDOWNmiss", -11, -19);
 				if (isPlayer)
 				{
 					addOffset("singUP", -29, 27);
 					addOffset("singRIGHT", -38, -7);
 					addOffset("singLEFT", 12, -6);
 					addOffset("singDOWN", -10, -50);
+					addOffset("singUPmiss", -29, 27);
+					addOffset("singRIGHTmiss", -30, 21);
+					addOffset("singLEFTmiss", 12, 24);
+					addOffset("singDOWNmiss", -11, -19);
 				}
 				else
 				{
@@ -823,6 +887,10 @@ class Character extends FlxSprite
 					addOffset("singRIGHT", 42, -7);
 					addOffset("singLEFT", -18, -6);
 					addOffset("singDOWN", -10, -50);
+					addOffset("singUPmiss", 11, 27);
+					addOffset("singRIGHTmiss", 50, 21);
+					addOffset("singLEFTmiss", -58, 24);
+					addOffset("singDOWNmiss", -11, -19);
 				}
 				playAnim('idle');
 
@@ -839,6 +907,8 @@ class Character extends FlxSprite
 				animation.addByPrefix('singLEFTmiss', 'BF LEFT MISS', 24, false);
 				animation.addByPrefix('singRIGHTmiss', 'BF RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF DOWN MISS', 24, false);
+
+				animation.addByPrefix('deathLoop', "BF IDLE", 24, true);
 
 				addOffset('idle');
 				addOffset("singUP");
@@ -874,6 +944,8 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'BF RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF DOWN MISS', 24, false);
 
+				animation.addByPrefix('deathLoop', "BF IDLE", 24, true);
+
 				addOffset('idle');
 				addOffset("singUP");
 				addOffset("singRIGHT");
@@ -907,6 +979,8 @@ class Character extends FlxSprite
 				animation.addByPrefix('singLEFTmiss', 'BF LEFT MISS', 24, false);
 				animation.addByPrefix('singRIGHTmiss', 'BF RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF DOWN MISS', 24, false);
+
+				animation.addByPrefix('deathLoop', "BF IDLE", 24, true);
 
 				addOffset('idle');
 				addOffset("singUP");
@@ -1125,15 +1199,40 @@ class Character extends FlxSprite
 				animation.addByPrefix('singLEFT-alt', 'Parent Left Note Mom', 24, false);
 				animation.addByPrefix('singRIGHT-alt', 'Parent Right Note Mom', 24, false);
 
+				animation.addByPrefix('singUPmiss', 'Parent Up Note MISS', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'Parent Down Note MISS', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'Parent Left Note MISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'Parent Right Note MISS', 24, false);
+				animation.addByPrefix('singUPmiss-alt', 'Parent Up Note MISS', 24, false);
+				animation.addByPrefix('singDOWNmiss-alt', 'Parent Down Note MISS', 24, false);
+				animation.addByPrefix('singLEFTmiss-alt', 'Parent Left Note MISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss-alt', 'Parent Right Note MISS', 24, false);
+
 				addOffset('idle');
-				addOffset("singUP", -47, 24);
-				addOffset("singRIGHT", -1, -23);
-				addOffset("singLEFT", -30, 16);
-				addOffset("singDOWN", -31, -29);
-				addOffset("singUP-alt", -47, 24);
-				addOffset("singRIGHT-alt", -1, -24);
-				addOffset("singLEFT-alt", -30, 15);
-				addOffset("singDOWN-alt", -30, -27);
+				//warning offset overload
+				if (isPlayer)
+				{
+					//not yet future update
+				}
+				else
+				{
+					addOffset("singUP", -47, 24);
+					addOffset("singRIGHT", -1, -23);
+					addOffset("singLEFT", -30, 16);
+					addOffset("singDOWN", -31, -29);
+					addOffset("singUP-alt", -47, 24);
+					addOffset("singRIGHT-alt", -1, -24);
+					addOffset("singLEFT-alt", -30, 15);
+					addOffset("singDOWN-alt", -30, -27);
+					addOffset("singUPmiss", -64, 26);
+					addOffset("singLEFTmiss", -40, 16);
+					addOffset("singDOWNmiss", -40, -40);
+					addOffset("singRIGHTmiss", -4, -32);
+					addOffset("singUPmiss-alt", -64, 26);
+					addOffset("singLEFTmiss-alt", -40, 16);
+					addOffset("singDOWNmiss-alt", -40, -40);
+					addOffset("singRIGHTmiss-alt", -4, -32);
+				}
 
 				playAnim('idle');
 		}
@@ -1187,13 +1286,35 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!isPlayer)
+		if (!isPlayer && PlayState.swappedsides)
 		{
 			if (animation.curAnim.name.startsWith('sing'))
-			{
 				holdTimer += elapsed;
+			else
+				holdTimer = 0;
+
+			if (PlayState.curPlayer.color != FlxColor.WHITE && animation.curAnim.finished && !debugMode)
+			{
+				PlayState.curPlayer.color = FlxColor.WHITE;
+				playAnim('idle', true, false, 10);
+				if (PlayState.curPlayer.curCharacter.startsWith('gf') || PlayState.curPlayer.curCharacter.startsWith('spooky'))
+					PlayState.curPlayer.dance();
 			}
 
+			if (animation.curAnim.name.endsWith('alt') && animation.curAnim.finished && !debugMode)
+			{
+				playAnim('idle', true, false, 10);
+			}
+
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+			{
+				playAnim('idle', true, false, 10);
+				if (PlayState.curPlayer.curCharacter.startsWith('gf') || PlayState.curPlayer.curCharacter.startsWith('spooky'))
+					PlayState.curPlayer.dance();
+			}
+		}
+		if ((!isPlayer && !PlayState.swappedsides) || (isPlayer && PlayState.swappedsides))
+		{
 			var dadVar:Float = 4;
 
 			if (curCharacter == 'dad')

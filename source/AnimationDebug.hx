@@ -126,6 +126,47 @@ class AnimationDebug extends FlxState
 		if (FlxG.keys.justPressed.X && !isDad)
 			bf.flipX = !bf.flipX;
 
+		if (FlxG.keys.justPressed.O)
+		{
+			if (isDad)
+				dad.remove();
+			else
+				bf.remove();
+
+			isDad = !isDad;
+
+			if (isDad)
+			{
+				dad = new Character(0, 0, daAnim);
+				dad.screenCenter();
+				dad.debugMode = true;
+				add(dad);
+
+				char = dad;
+				dad.flipX = false;
+				if (PlayState.SONG.player2 == 'tankman' || PlayState.SONG.player2 == 'pico')
+					dad.flipX = true;
+			}
+			else
+			{
+				bf = new Boyfriend(0, 0);
+				bf.screenCenter();
+				bf.debugMode = true;
+				add(bf);
+
+				char = bf;
+				bf.flipX = false;
+			}
+
+			genBoyOffsets(false);
+		}
+
+		if (FlxG.keys.justPressed.P)
+		{
+			char.isPlayer = !char.isPlayer;
+			genBoyOffsets(false);
+		}
+
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{
 			if (FlxG.keys.pressed.I)

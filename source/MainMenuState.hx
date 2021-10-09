@@ -112,6 +112,7 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
+		if (FlxG.save.data.menutransitions) {
 		switch (transition)
 		{
 			case 'zoomtilt':
@@ -123,6 +124,7 @@ class MainMenuState extends MusicBeatState
 				FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
 		}
 		transition = '';
+		}
 
 		super.create();
 	}
@@ -158,10 +160,13 @@ class MainMenuState extends MusicBeatState
 			{
 				canAccept = false;
 				OG.SelectedMainMenu = curSelected;
-				FlxTween.tween(FlxG.camera, { x: FlxG.width, zoom: 0.5 }, 1, { ease: FlxEase.quadIn, onComplete: function(twn:FlxTween)
+				if (FlxG.save.data.menutransitions)
 				{
-					FlxG.switchState(new TitleState());
-				} });
+					FlxTween.tween(FlxG.camera, { x: FlxG.width, zoom: 0.5 }, 1, { ease: FlxEase.quadIn, onComplete: function(twn:FlxTween)
+					{
+						FlxG.switchState(new TitleState());
+					} });
+				}
 			}
 
 			if (controls.ACCEPT && canAccept)
@@ -194,7 +199,7 @@ class MainMenuState extends MusicBeatState
 								}
 							});
 						}
-						else
+						else if (FlxG.save.data.menutransitions)
 						{
 							FlxFlicker.flicker(spr, 1, 0.06, false, false);
 							var daChoice:String = optionShit[curSelected];
@@ -234,10 +239,35 @@ class MainMenuState extends MusicBeatState
 									case 'options':
 										// FlxTransitionableState.skipNextTransIn = true;
 										// FlxTransitionableState.skipNextTransOut = true;
+										OptionsState.pauseMenu = false;
 										FlxG.switchState(new OptionsState());
 								}
 								FlxTween.tween(FlxG.camera, { zoom: 1 }, 1.5, { ease: FlxEase.quadIn });
 							} });
+						}
+						else
+						{
+							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
+							{
+								var daChoice:String = optionShit[curSelected];
+
+								switch (daChoice)
+								{
+									case 'story mode':
+										FlxG.switchState(new StoryMenuState());
+										trace("Story Menu Selected");
+									case 'freeplay':
+										FlxG.switchState(new FreeplayState());
+
+										trace("Freeplay Menu Selected");
+
+									case 'options':
+										// FlxTransitionableState.skipNextTransIn = true;
+										// FlxTransitionableState.skipNextTransOut = true;
+										OptionsState.pauseMenu = false;
+										FlxG.switchState(new OptionsState());
+									}
+							});
 						}
 					});
 				}
@@ -247,7 +277,8 @@ class MainMenuState extends MusicBeatState
 		if (FlxG.keys.justPressed.SEVEN && PlayState.SONG != null)
 		{
 			OG.SelectedMainMenu = curSelected;
-			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
+			if (FlxG.save.data.menutransitions)
+				FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 			FlxG.switchState(new ChartingState());
 
 			#if desktop

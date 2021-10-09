@@ -154,7 +154,7 @@ class ChartingState extends MusicBeatState
 		FlxG.mouse.visible = true;
 		FlxG.save.bind('funkin', 'Mr Meowzz');
 
-		tempBpm = _song.bpm;
+		tempBpm = Std.int(_song.bpm / PlayState.songMultiplier);
 
 		addSection();
 
@@ -202,7 +202,8 @@ class ChartingState extends MusicBeatState
 		FlxG.camera.zoom = 1.5;
 		FlxG.camera.x = FlxG.width * -1;
 
-		FlxTween.tween(FlxG.camera, { zoom: 1, x: 0}, 1, {ease: FlxEase.quadIn });
+		if (FlxG.save.data.menutransitions)
+			FlxTween.tween(FlxG.camera, { zoom: 1, x: 0}, 1, {ease: FlxEase.quadIn });
 
 		super.create();
 	}
@@ -847,7 +848,8 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.stop();
 			vocals.stop();
 
-			FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width}, 1, {ease: FlxEase.quadIn });
+			if (FlxG.save.data.menutransitions)
+				FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width}, 1, {ease: FlxEase.quadIn });
 			PlayState.songMultiplier = stepperRate.value;
 			FlxG.switchState(new PlayState());
 		}
@@ -859,8 +861,11 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.stop();
 			vocals.stop();
 			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
-			FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
-			MainMenuState.transition = 'zoom';
+			if (FlxG.save.data.menutransitions)
+			{
+				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
+				MainMenuState.transition = 'zoom';
+			}
 			PlayState.songMultiplier = stepperRate.value;
 		}
 
