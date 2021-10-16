@@ -16,7 +16,8 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var Options:Array<String> = ['Reset to Default',
+	var Options:Array<String> = ['Reset Options to Default',
+	'Remove Song Scores',
 	'Clean Mode', 
 	'Preload Freeplay Previews', 
 	'Freeplay Previews', 
@@ -24,6 +25,7 @@ class OptionsState extends MusicBeatState
 	'Fullscreen', 
 	'FPS Counter', 
 	'Downscroll', 
+	'Middlescroll', 
 	'Override Song Scroll Speed', 
 	'Miss Stun', 
 	'Miss Sounds', 
@@ -42,11 +44,13 @@ class OptionsState extends MusicBeatState
 	'Story Mode Dialog',
 	'Freeplay Dialog',
 	'Menu Transitions',
-	'Enemy Extra Effects'];
+	'Enemy Extra Effects',
+	'Enemy Strums'];
 
 	var descriptions:Array<String> = ['Resets ALL options to default.'];
 
-	var OptionsON:Array<String> = ['Reset to Default',
+	var OptionsON:Array<String> = ['Reset Options to Default',
+	'Remove Song Scores',
 	'Clean Mode ON', 
 	'Preload Freeplay PRVWs ON', 
 	'Freeplay Previews ON', 
@@ -54,6 +58,7 @@ class OptionsState extends MusicBeatState
 	'Fullscreen ON', 
 	'FPS Counter ON', 
 	'Downscroll', 
+	'Using Middlescroll', 
 	'Override Song Speed ON', 
 	'Miss Stun OFF', 
 	'Miss Sounds ON', 
@@ -72,9 +77,11 @@ class OptionsState extends MusicBeatState
 	'Story Mode Dialog ON',
 	'Freeplay Dialog ON',
 	'Menu Transitions ON',
-	'Extra Enemy Effects'];
+	'Extra Enemy Effects',
+	'Showing Enemy Strums'];
 
-	var OptionsOFF:Array<String> = ['Reset to Default',
+	var OptionsOFF:Array<String> = ['Reset Options to Default',
+	'Remove Song Scores',
 	'Clean Mode OFF', 
 	'Preload Freeplay PRVWs OFF', 
 	'Freeplay Previews OFF', 
@@ -82,6 +89,7 @@ class OptionsState extends MusicBeatState
 	'Fullscreen OFF', 
 	'FPS Counter OFF', 
 	'Upscroll', 
+	'Not Using Middlescroll', 
 	'Override Song Speed OFF', 
 	'Miss Stun ON', 
 	'Miss Sounds OFF', 
@@ -100,7 +108,8 @@ class OptionsState extends MusicBeatState
 	'Story Mode OFF',
 	'Freeplay Dialog OFF',
 	'Menu Transitions OFF',
-	'No Extra Enemy Effects'];
+	'No Extra Enemy Effects',
+	'No Enemy Strums'];
 
 	#if html5
 	var DisabledOptions:Array<Bool> = [false,false,true,true,false,true];
@@ -202,13 +211,15 @@ class OptionsState extends MusicBeatState
 		super.update(elapsed);
 
 		descriptions = ['Resets ALL options to default.',
+	'Removes ALL song scores (including weeks).', 
 	'Changes some assets to make it more appropriate.', 
-	'Preloads the freeplay song previews so it does not lag while switching songs. Freeplay will take longer to load.', 
+	'Preloads the freeplay song previews so it does not lag while switching songs. May cause higher memory usage in low-end devices.', 
 	'Disables the freeplay song previews.', 
 	'Adds color to the ratings.', 
 	'Makes the game fullscreen or windowed.', 
 	'Toggles the visibility of the FPS Counter in the top left.', 
 	'Whether to use downscroll or upscroll.', 
+	'Puts the main players strums in the middle.',
 	'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold ${KeyBinds.gamepad ? 'LEFT Shoulder to change faster' : 'shift to increase or decrease faster'}.', 
 	'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 
 	'Whether to play miss sounds or not.', 
@@ -227,7 +238,8 @@ class OptionsState extends MusicBeatState
 	'Toggles the cutscenes and dialog in story mode.',
 	'Toggles the cutscenes and dialog in freeplay.',
 	'Toggles the menu transitions between states.',
-	'Shows ratings and the combo of the enemy like it is actually pressing the notes.'];
+	'Shows ratings and the combo of the enemy like it is actually pressing the notes.',
+	'Shows the strums and notes of the enemy.'];
 
 		if (controls.UP_P)
 		{
@@ -422,6 +434,11 @@ class OptionsState extends MusicBeatState
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenStuff();
+				case "Middlescroll":
+					FlxG.save.data.middlescroll = !FlxG.save.data.middlescroll;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenStuff();
 				case "Override Song Scroll Speed":
 					FlxG.save.data.overridespeed = !FlxG.save.data.overridespeed;
 					FlxG.save.flush();
@@ -509,13 +526,22 @@ class OptionsState extends MusicBeatState
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenStuff();
-				case "Reset to Default":
+				case "Reset Options to Default":
+					ResetOptionsState.ResetType = 'options';
 					openSubState(new ResetOptionsState());
+				case "Remove Song Scores":
+					ResetOptionsState.ResetType = 'scores';
+					openSubState(new ResetOptionsState());
+				case "Enemy Strums":
+					FlxG.save.data.enemystrums = !FlxG.save.data.enemystrums;
+					FlxG.save.flush();
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					regenStuff();
 			}
 		}
 
 		#if desktop
-		if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+		if (FlxG.keys.justPressed.F11 || (FlxG.keys.justPressed.F && FlxG.save.data.leftBind != "F" && FlxG.save.data.downBind != "F" && FlxG.save.data.upBind != "F" && FlxG.save.data.rightBind != "F"))
         {
 			regenStuff();
         }
@@ -540,6 +566,10 @@ class OptionsState extends MusicBeatState
 	{
 		VisibleOptions = [];
 		var i = 0;
+
+		VisibleOptions.push(OptionsON[i]);
+
+		i++;
 
 		VisibleOptions.push(OptionsON[i]);
 
@@ -588,6 +618,13 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.downscroll)
+			VisibleOptions.push(OptionsON[i]);
+		else
+			VisibleOptions.push(OptionsOFF[i]);
+
+		i++;
+
+		if (FlxG.save.data.middlescroll)
 			VisibleOptions.push(OptionsON[i]);
 		else
 			VisibleOptions.push(OptionsOFF[i]);
@@ -715,6 +752,13 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.enemyextraeffects)
+			VisibleOptions.push(OptionsON[i]);
+		else
+			VisibleOptions.push(OptionsOFF[i]);
+
+		i++;
+
+		if (FlxG.save.data.enemystrums)
 			VisibleOptions.push(OptionsON[i]);
 		else
 			VisibleOptions.push(OptionsOFF[i]);

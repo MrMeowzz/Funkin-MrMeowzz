@@ -11,7 +11,7 @@ class OptionSaveData
 			FlxG.save.data.fullscreen = false;
 
 		if (FlxG.save.data.cleanmode == null)		
-			FlxG.save.data.cleanmode = true;
+			FlxG.save.data.cleanmode = false;
 		
 		if (FlxG.save.data.preloadfreeplaypreviews == null)		
 			FlxG.save.data.preloadfreeplaypreviews = true;
@@ -24,6 +24,9 @@ class OptionSaveData
 		
 		if (FlxG.save.data.downscroll == null)		
 			FlxG.save.data.downscroll = false;
+
+		if (FlxG.save.data.middlescroll == null)
+			FlxG.save.data.middlescroll = false;
 		
 		if (FlxG.save.data.overridespeed == null)		
 			FlxG.save.data.overridespeed = false;
@@ -53,7 +56,7 @@ class OptionSaveData
 			FlxG.save.data.newhittimings = true;
 		
 		if (FlxG.save.data.ratingsfollowcamera == null)		
-			FlxG.save.data.ratingsfollowcamera = false;
+			FlxG.save.data.ratingsfollowcamera = true;
 		
 		if (FlxG.save.data.notestyle == null)		
 			FlxG.save.data.notestyle = 'default';
@@ -78,6 +81,9 @@ class OptionSaveData
 
 		if (FlxG.save.data.enemyextraeffects == null)
 			FlxG.save.data.enemyextraeffects = false;
+
+		if (FlxG.save.data.enemystrums == null)
+			FlxG.save.data.enemystrums = true;
 		PlayerSettings.player1.controls.loadKeyBinds();
 		KeyBinds.keyCheck();
     }
@@ -86,7 +92,7 @@ class OptionSaveData
     {
 		FlxG.save.data.fullscreen = false;
 
-		FlxG.save.data.cleanmode = true;
+		FlxG.save.data.cleanmode = false;
 			
 		FlxG.save.data.preloadfreeplaypreviews = true;
 		
@@ -95,6 +101,8 @@ class OptionSaveData
 		FlxG.save.data.colorratings = true;
 			
 		FlxG.save.data.downscroll = false;
+
+		FlxG.save.data.middlescroll = false;
 	
 		FlxG.save.data.overridespeed = false;
 			
@@ -114,7 +122,7 @@ class OptionSaveData
 		
 		FlxG.save.data.newhittimings = true;
 			
-		FlxG.save.data.ratingsfollowcamera = false;
+		FlxG.save.data.ratingsfollowcamera = true;
 			
 		FlxG.save.data.notestyle = 'default';
 				
@@ -131,5 +139,7 @@ class OptionSaveData
 		FlxG.save.data.menutransitions = true;	
 
 		FlxG.save.data.enemyextraeffects = false;
+
+		FlxG.save.data.enemystrums = true;
     }
 }

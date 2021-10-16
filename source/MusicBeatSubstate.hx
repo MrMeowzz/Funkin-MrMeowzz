@@ -33,7 +33,7 @@ class MusicBeatSubstate extends FlxSubState
 			stepHit();
 
 		#if desktop
-	    if (FlxG.keys.justPressed.F11 || FlxG.keys.justPressed.F)
+	    if (FlxG.keys.justPressed.F11 || (FlxG.keys.justPressed.F && FlxG.save.data.leftBind != "F" && FlxG.save.data.downBind != "F" && FlxG.save.data.upBind != "F" && FlxG.save.data.rightBind != "F"))
         {
 		    FlxG.save.data.fullscreen = !FlxG.fullscreen;
 		    FlxG.save.flush();	

@@ -144,6 +144,7 @@ class ChartingState extends MusicBeatState
 				player1: 'bf',
 				player2: 'dad',
 				gf: 'gf',
+				player2badnotes: false,
 				speed: 1,
 				notestyle: 'normal',
 				notestyleOverride: false,
@@ -154,7 +155,7 @@ class ChartingState extends MusicBeatState
 		FlxG.mouse.visible = true;
 		FlxG.save.bind('funkin', 'Mr Meowzz');
 
-		tempBpm = Std.int(_song.bpm / PlayState.songMultiplier);
+		tempBpm = Std.int(_song.bpm);
 
 		addSection();
 
@@ -291,7 +292,7 @@ class ChartingState extends MusicBeatState
 		stepperSpeed.name = 'song_speed';
 
 		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 65, 1, 1, 1, 339, 0);
-		stepperBPM.value = Conductor.bpm;
+		stepperBPM.value = Conductor.bpm / PlayState.songMultiplier;
 		stepperBPM.name = 'song_bpm';
 
 		var stepperSpeedTxt:FlxText = new FlxText(stepperSpeed.x + 75, stepperSpeed.y, 0, "Song Speed");
@@ -328,6 +329,13 @@ class ChartingState extends MusicBeatState
 
 		var gfTxt:FlxText = new FlxText(gfDropDown.x, gfDropDown.y - 25, 0, "Gf");
 
+		var check_player2hitsbadnotes = new FlxUICheckBox(Player2Txt.x + 50, Player2Txt.y, null, null, "Hit Bad Notes", 100);
+		check_player2hitsbadnotes.checked = _song.player2badnotes;
+		check_player2hitsbadnotes.callback = function()
+		{
+			_song.player2badnotes = check_player2hitsbadnotes.checked;
+		};
+
 		var switchingDifficultytxt:String = '';
 
 		var difficultyarray:Array<String> = CoolUtil.difficultyArray.copy();
@@ -353,7 +361,7 @@ class ChartingState extends MusicBeatState
 
 		difficultyDropDown.selectedLabel = CoolUtil.difficultyString();
 
-		var difficultyTxt:FlxText = new FlxText(difficultyDropDown.x, difficultyDropDown.y - 25, 0, "Difficulty");
+		var difficultyTxt:FlxText = new FlxText(difficultyDropDown.x + 10, difficultyDropDown.y - 25, 0, "Difficulty");
 
 		var noteStyles:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteStyles'));
 
@@ -399,6 +407,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(hitsoundsPlayerDropDown);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
+		tab_group_song.add(check_player2hitsbadnotes);
 		tab_group_song.add(difficultyDropDown);
 		tab_group_song.add(difficultyTxt);
 		tab_group_song.add(Player2Txt);
@@ -738,13 +747,17 @@ class ChartingState extends MusicBeatState
 				{
 					if (strumLine.overlaps(note))
 					{
-						if (!hitsounds.contains(note))
+						if (!hitsounds.contains(note) && note.noteType != "fire" && note.noteType != "halo" && note.noteType != "poison")
 						{
-							//sorry for if statement lol
-							if ((note.noteInfo < 4 && HitsoundsPlayer == 1 && _song.notes[curSection].mustHitSection) || (note.noteInfo > 3 && HitsoundsPlayer == 2 && _song.notes[curSection].mustHitSection) || (note.noteInfo > 3 && HitsoundsPlayer == 1 && !_song.notes[curSection].mustHitSection) || (note.noteInfo < 4 && HitsoundsPlayer == 2 && !_song.notes[curSection].mustHitSection) || HitsoundsPlayer == 0)
+							if ((note.noteInfo < 4 && (HitsoundsPlayer == 1 || HitsoundsPlayer == 0) && _song.notes[curSection].mustHitSection) || (note.noteInfo > 3 && (HitsoundsPlayer == 1 || HitsoundsPlayer == 0) && !_song.notes[curSection].mustHitSection))
 							{
 								hitsounds.push(note);
 								FlxG.sound.play(Paths.sound('hitsound'));
+							}
+							if ((note.noteInfo > 3 && (HitsoundsPlayer == 2 || HitsoundsPlayer == 0) && _song.notes[curSection].mustHitSection) || (note.noteInfo < 4 && (HitsoundsPlayer == 2 || HitsoundsPlayer == 0) && !_song.notes[curSection].mustHitSection))
+							{
+								hitsounds.push(note);
+								FlxG.sound.play(Paths.sound('enemyhitsound'));
 							}
 						}
 					}
@@ -854,7 +867,7 @@ class ChartingState extends MusicBeatState
 			FlxG.switchState(new PlayState());
 		}
 
-		if (controls.BACK)
+		if (controls.BACK && !typingShit.hasFocus)
 		{
 			OG.currentCutsceneEnded = false;
 			FlxG.switchState(new MainMenuState());
@@ -1218,7 +1231,7 @@ class ChartingState extends MusicBeatState
 			var daSus = i[2];
 			var daAltnote = i[3];
 			var daNotetype = i[4];
-			var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, daNotetype);
+			var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, daNotetype, true);
 			note.sustainLength = daSus;
 			note.altNote = daAltnote;
 			note.noteType = daNotetype;

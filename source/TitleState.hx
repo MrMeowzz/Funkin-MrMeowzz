@@ -28,6 +28,10 @@ import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
 import openfl.Lib;
+#if desktop
+import sys.FileSystem;
+import sys.io.File;
+#end
 
 using StringTools;
 
@@ -44,6 +48,8 @@ class TitleState extends MusicBeatState
 	var curWacky:Array<String> = [];
 
 	var wackyImage:FlxSprite;
+
+	var music = [];
 
 	override public function create():Void
 	{
@@ -93,6 +99,24 @@ class TitleState extends MusicBeatState
 		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
+			#if desktop
+			if (FlxG.save.data.preloadfreeplaypreviews) {
+			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/songs")))
+				music.push(i);
+			sys.thread.Thread.create(() -> {
+			for (i in music)
+			{
+				FlxG.sound.cache(Paths.inst(i));
+				FreeplayState.loadedSongs.push(Std.string(i));
+			}
+			for (i in music)
+			{
+				FlxG.sound.cache(Paths.bsideinst(i));
+				FreeplayState.loadedSongs.push(Std.string(i + "-bside"));
+			}
+			});
+			}
+			#end
 			startIntro();
 			if (FlxG.save.data.fpscounter != null)
 				(cast (Lib.current.getChildAt(0), Main)).toggleFPSCounter(FlxG.save.data.fpscounter);
@@ -370,6 +394,8 @@ class TitleState extends MusicBeatState
 			var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
 			money.screenCenter(X);
 			money.y += (i * 60) + 200;
+			if (textArray[i] == 'Mr Meowzz')
+				money.color = FlxColor.YELLOW;
 			credGroup.add(money);
 			textGroup.add(money);
 		}

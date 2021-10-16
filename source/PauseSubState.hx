@@ -25,7 +25,7 @@ class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Skip Song', 'Change Difficulty', 'Toggle One Shot Mode', 'Toggle Practice Mode', 'Change Character', 'Swap Sides', 'Options', 'Exit to menu'];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Skip Song', 'Change Difficulty', 'Toggle One Shot Mode', 'Toggle Practice Mode', 'Toggle Botplay', 'Change Character', 'Swap Sides', 'Options', 'Exit to menu'];
 	var originalmenuItems:Array<String> = [];
 	
 	var curSelected:Int = 0;
@@ -47,6 +47,10 @@ class PauseSubState extends MusicBeatSubstate
 	var rate:Float = PlayState.songMultiplier;
 	var originalrate:Float = PlayState.songMultiplier;
 
+	var originalpratice:Bool = PlayState.praticemode;
+	var originaloneshot:Bool = PlayState.oneshot;
+	var originalbotplay:Bool = PlayState.botplay;
+
 	var loadedShit:Bool = false;
 
 	public function new(x:Float, y:Float)
@@ -55,7 +59,12 @@ class PauseSubState extends MusicBeatSubstate
 		if (!PlayState.isStoryMode)
 			menuItems.remove("Skip Song");
 		else
+		{
 			menuItems.remove("Swap Sides");
+			menuItems.remove("Toggle One Shot Mode");
+			menuItems.remove("Toggle Practice Mode");
+			menuItems.remove("Toggle Botplay");
+		}
 
 		if (PlayState.swappedsides)
 			menuItems.remove("Change Character");
@@ -87,6 +96,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		rate = PlayState.songMultiplier;
 		originalrate = rate;
+		originalpratice = PlayState.praticemode;
+		originaloneshot = PlayState.oneshot;
+		originalbotplay = PlayState.botplay;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -165,6 +177,11 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			modeText.visible = true;
 			modeText.text = "ONE SHOT MODE";
+		}
+		else if (PlayState.botplay)
+		{
+			modeText.visible = true;
+			modeText.text = "BOTPLAY ON";
 		}
 		else
 		{
@@ -284,6 +301,37 @@ class PauseSubState extends MusicBeatSubstate
 		}
 	}
 
+	public function toggleResume(canResume:Bool)
+	{
+		if (!originalmenuItems.contains('Resume') && canResume)
+		{
+			var Selected = curSelected;					
+			originalmenuItems.insert(0, 'Resume');
+			lastSelected += 1;
+			if (menuItems.contains('Exit to menu'))
+			{
+				Selected += 1;
+				regenMenu();
+				curSelected = Selected;
+				changeSelection();
+			}
+		}
+		else if (originalmenuItems.contains('Resume') && !canResume)
+		{
+			var Selected = curSelected;
+			originalmenuItems.remove('Resume');
+			lastSelected -= 1;
+			if (menuItems.contains('Exit to menu'))
+			{
+				if (Selected > 0)
+					Selected -= 1;
+				regenMenu();
+				curSelected = Selected;
+				changeSelection();
+			}
+		}
+	}
+
 	override function update(elapsed:Float)
 	{
 		if (pauseMusic.volume < 0.5)
@@ -352,34 +400,10 @@ class PauseSubState extends MusicBeatSubstate
 				rate = 0.5;
 			}
 			PlayState.songMultiplier = rate;
-			if ((controls.LEFT_P || controls.RIGHT_P) && originalmenuItems.contains('Resume'))
-			{
-				var Selected = curSelected;
-				originalmenuItems.remove('Resume');
-				lastSelected -= 1;
-				if (menuItems.contains('Exit to menu'))
-				{
-					if (Selected > 0)
-						Selected -= 1;
-					regenMenu();
-					curSelected = Selected;
-					changeSelection();
-				}				
-			}
-			else if ((controls.LEFT_P || controls.RIGHT_P) && !originalmenuItems.contains('Resume') && rate == originalrate)
-			{
-				var Selected = curSelected;					
-				originalmenuItems.insert(0, 'Resume');
-				lastSelected += 1;
-				if (menuItems.contains('Exit to menu'))
-				{
-					Selected += 1;
-					regenMenu();
-					curSelected = Selected;
-					changeSelection();
-				}
-				
-			}
+			if ((controls.LEFT_P || controls.RIGHT_P))
+				toggleResume(false);
+			else if ((controls.LEFT_P || controls.RIGHT_P) && rate == originalrate)
+				toggleResume(true);
 
 			var scrollspeed = PlayState.SONG.speed;
 			if (FlxG.save.data.overridespeed)
@@ -493,12 +517,39 @@ class PauseSubState extends MusicBeatSubstate
 					modeText.text = "PRACTICE MODE";
 					modeText.x = FlxG.width - (modeText.width + 20);
 					PlayState.oneshot = false;
+					PlayState.botplay = false;
+					if (PlayState.misses > 0 || PlayState.goodnotes > 0) {
+					if (PlayState.praticemode == originalpratice)
+						toggleResume(true);
+					else
+						toggleResume(false);
+					}
 				case "Toggle One Shot Mode":
 					PlayState.oneshot = !PlayState.oneshot;
 					modeText.visible = PlayState.oneshot;
 					modeText.text = "ONE SHOT MODE";
 					modeText.x = FlxG.width - (modeText.width + 20);
 					PlayState.praticemode = false;
+					PlayState.botplay = false;
+					if (PlayState.misses > 0 || PlayState.goodnotes > 0) {
+					if (PlayState.oneshot == originaloneshot)
+						toggleResume(true);
+					else
+						toggleResume(false);
+					}
+				case "Toggle Botplay":
+					PlayState.botplay = !PlayState.botplay;
+					modeText.visible = PlayState.botplay;
+					modeText.text = "BOTPLAY ON";
+					modeText.x = FlxG.width - (modeText.width + 20);
+					PlayState.praticemode = false;
+					PlayState.oneshot = false;
+					if (PlayState.misses > 0 || PlayState.goodnotes > 0) {
+					if (PlayState.botplay == originalbotplay)
+						toggleResume(true);
+					else
+						toggleResume(false);
+					}
 				case "Change Difficulty":
 					lastSelected = curSelected;
 					SelectionScreen = true;				

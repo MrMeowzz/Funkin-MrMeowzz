@@ -37,7 +37,7 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?noteCreationType:String = 'normal')
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?noteCreationType:String = 'normal', ?inChartEditor:Bool = false)
 	{
 		super();
 
@@ -56,9 +56,13 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
+		var notestyle:String = PlayState.SONG.notestyle;
+		if (FlxG.save.data.notestyle != 'default' && PlayState.SONG.notestyleOverride != true && !inChartEditor)
+			notestyle = FlxG.save.data.notestyle;
+
 		var daStage:String = PlayState.curStage;
 
-			if (PlayState.SONG.notestyle == 'pixel')
+			if (notestyle == 'pixel')
 			{
 				loadGraphic(Paths.image('noteStyles/arrows-pixels'), true, 17, 17);
 
@@ -108,7 +112,7 @@ class Note extends FlxSprite
 			}
 			else
 			{
-				switch (PlayState.SONG.notestyle)
+				switch (notestyle)
 				{
 					case 'tabi':
 						frames = Paths.getSparrowAtlas('noteStyles/Tabi');
@@ -263,7 +267,7 @@ class Note extends FlxSprite
 
 			x -= width / 2;
 
-			if (PlayState.SONG.notestyle == 'pixel')
+			if (notestyle == 'pixel')
 				x += 30;
 
 			if (prevNote.isSustainNote)
@@ -295,7 +299,7 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (mustPress)
+		if (mustPress && !PlayState.botplay)
 		{
 			if (noteType == 'halo')
 			{

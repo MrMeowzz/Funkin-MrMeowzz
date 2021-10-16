@@ -49,6 +49,8 @@ class FreeplayState extends MusicBeatState
 
 	var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 
+	public static var loadedSongs:Array<String> = [];
+
 	override function create()
 	{
 		#if html5
@@ -99,7 +101,7 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Bopeebo', 'Old Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
-			addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster']);
+			addWeek(['Spookeez', 'South', 'Shiver', 'Monster'], 2, ['spooky', 'spooky', 'spooky', 'monster']);
 
 		if (StoryMenuState.weekUnlocked[3] || isDebug)
 			addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
@@ -154,12 +156,13 @@ class FreeplayState extends MusicBeatState
 		else
 			regenSongs();
 
-		// prevent freeplay lag when playing songs
+		// prevent freeplay lag when playing songs (not anymore)
+		/*
 		for (i in 0...bsidesongs.length)
 		{
 			#if PRELOAD_ALL
 			if (FlxG.save.data.preloadfreeplaypreviews && FlxG.save.data.freeplaypreviews)
-				FlxG.sound.load(Paths.bsideinst(bsidesongs[i].songName), 0);
+				FlxG.sound.cache(Paths.bsideinst(bsidesongs[i].songName));
 			#end
 		}
 		for (i in 0...songs.length)
@@ -167,11 +170,12 @@ class FreeplayState extends MusicBeatState
 			#if PRELOAD_ALL
 			if (FlxG.save.data.preloadfreeplaypreviews && FlxG.save.data.freeplaypreviews)
 				if (FlxG.save.data.cleanmode && (songs[i].songName.toLowerCase() == 'no among us' || songs[i].songName.toLowerCase() == 'h.e. no among us'))
-					FlxG.sound.load(Paths.cleaninst(songs[i].songName), 0);
+					FlxG.sound.cache(Paths.cleaninst(songs[i].songName));
 				else
-					FlxG.sound.load(Paths.inst(songs[i].songName), 0);
+					FlxG.sound.cache(Paths.inst(songs[i].songName));
 			#end
 		}
+		*/
 
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
 		// scoreText.autoSize = false;
@@ -781,16 +785,18 @@ class FreeplayState extends MusicBeatState
 				switch (curSelected)
 				{
 					case 0:
-						FlxG.sound.playMusic(Paths.inst(songs[3].songName), 0);
+						if (loadedSongs.contains(songs[3].songName.toLowerCase()) || !FlxG.save.data.preloadfreeplaypreviews)
+							FlxG.sound.playMusic(Paths.inst(songs[3].songName), 0);
 					case 1:
-						FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[1].songName), 0);
+						if (loadedSongs.contains(bsidesongs[1].songName.toLowerCase() + '-bside') || !FlxG.save.data.preloadfreeplaypreviews)
+							FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[1].songName), 0);
 				}
 			}
-			else if (OG.FreeplayMenuType == 'bside')
+			else if (OG.FreeplayMenuType == 'bside' && (loadedSongs.contains(bsidesongs[curSelected].songName.toLowerCase() + '-bside') || !FlxG.save.data.preloadfreeplaypreviews))
 			{
 				FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[curSelected].songName), 0);
 			}
-			else
+			else if (OG.FreeplayMenuType == 'normal' && (loadedSongs.contains(songs[curSelected].songName.toLowerCase()) || !FlxG.save.data.preloadfreeplaypreviews))
 			{
 				if (FlxG.save.data.cleanmode && (songs[curSelected].songName.toLowerCase() == 'no among us' || songs[curSelected].songName.toLowerCase() == 'h.e no among us') && OG.FreeplayMenuType != 'section')
 					FlxG.sound.playMusic(Paths.cleaninst(songs[curSelected].songName), 0);

@@ -19,9 +19,9 @@ class PixelNoteSplash extends FlxSprite {
 		animation.add("note2-1", [20, 21, 22, 23], 24, false);
 		animation.add("note0-1", [4, 5, 6, 7], 24, false);
 		animation.add("note3-1", [28, 29, 30, 31], 24, false);
-        setupNoteSplash(xPos,xPos,data,true);
+        setupNoteSplash(xPos,xPos,data);
     }
-    public function setupNoteSplash(xPos:Float, yPos:Float, ?data:Int = 0,Creation:Bool = false) {
+    public function setupNoteSplash(xPos:Float, yPos:Float, ?data:Int = 0, Creation:Bool = false, ?middlescroll = false) {
         if (data == null) data = 0;
         setPosition(xPos, yPos);
         alpha = 0.6;
@@ -29,6 +29,20 @@ class PixelNoteSplash extends FlxSprite {
         {
             setGraphicSize(Std.int(width * 5));
 		    updateHitbox();
+            offset.x += 75;
+		    offset.y += 67;
+        }
+        if (Std.int(width) != 250)
+        {
+            setGraphicSize(250);
+            updateHitbox();
+            offset.x += 75;
+		    offset.y += 67;
+        }
+        if (middlescroll)
+        {
+            setGraphicSize(Std.int(width * 0.8));
+            updateHitbox();
             offset.x += 75;
 		    offset.y += 67;
         }

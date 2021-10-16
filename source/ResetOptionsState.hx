@@ -21,11 +21,12 @@ class ResetOptionsState extends FlxSubState
     var blackBox:FlxSprite;
 
     public static var ResetOptions:Bool = false;
+    public static var ResetType:String;
 
 	override function create()
 	{	
         ResetOptions = false;
-        mainText = new FlxText(0, 0, 1280, "Are you sure? This will reset ALL options to default.", 72);
+        mainText = new FlxText(0, 0, 1280, "troll", 72);
 		mainText.scrollFactor.set(0, 0);
 		mainText.setFormat("VCR OSD Mono", 42, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		mainText.borderSize = 2;
@@ -48,15 +49,30 @@ class ResetOptionsState extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
+        switch (ResetType)
+        {
+            case 'options':
+                mainText.text = 'Are you sure? This will reset ALL options to default.';
+            case 'scores':
+                mainText.text = 'Are you sure? This will reset ALL song scores.';
+            default:
+                FlxTween.tween(mainText, {alpha: 0}, 1, {ease: FlxEase.expoInOut});
+                FlxTween.tween(blackBox, {alpha: 0}, 1.1, {ease: FlxEase.expoInOut, onComplete: function(flx:FlxTween){close();}});
+        }
         var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
         if(FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.Z || FlxG.keys.justPressed.SPACE || (gamepad != null && (gamepad.justPressed.START || gamepad.justPressed.A)))
         {
             FlxG.sound.play(Paths.sound('confirmMenu'));
 
-            OptionSaveData.ResetOptions();
-
-            ResetOptions = true;
+            switch (ResetType)
+            {
+                case 'options':
+                    OptionSaveData.ResetOptions();
+                    ResetOptions = true;
+                case 'scores':
+                    FlxG.save.data.songScores = null;
+            }
 
             FlxTween.tween(mainText, {alpha: 0}, 1, {ease: FlxEase.expoInOut});
             FlxTween.tween(blackBox, {alpha: 0}, 1.1, {ease: FlxEase.expoInOut, onComplete: function(flx:FlxTween){close();}});
