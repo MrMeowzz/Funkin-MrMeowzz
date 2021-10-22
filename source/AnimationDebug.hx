@@ -129,9 +129,9 @@ class AnimationDebug extends FlxState
 		if (FlxG.keys.justPressed.O)
 		{
 			if (isDad)
-				dad.remove();
+				remove(dad);
 			else
-				bf.remove();
+				remove(bf);
 
 			isDad = !isDad;
 
