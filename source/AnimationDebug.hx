@@ -157,8 +157,10 @@ class AnimationDebug extends FlxState
 				char = bf;
 				bf.flipX = false;
 			}
-
-			genBoyOffsets(false);
+			//remove old shit and put new shit
+			dumbTexts.clear();
+			animList = [];
+			genBoyOffsets();
 		}
 
 		if (FlxG.keys.justPressed.P)
