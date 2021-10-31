@@ -91,7 +91,11 @@ class Main extends Sprite
 		#end
 
 		#if !mobile
-		framerateCounter = new FPS(10, 3, 0xFFFFFF);
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			framerateCounter = new FPS(10, 3, 0xFFFFA500);
+		else
+			framerateCounter = new FPS(10, 3, 0xFFFFFF);
+
 		addChild(framerateCounter);
 		#end
 	}

@@ -14,7 +14,6 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Lib;
 
@@ -33,6 +32,7 @@ class MainMenuState extends MusicBeatState
 	#end
 
 	var magenta:FlxSprite;
+	var white:FlxSprite;
 	var camFollow:FlxObject;
 
 	var fnfversion:String = '0.2.7.1';
@@ -53,12 +53,23 @@ class MainMenuState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing)
 		{
-			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			FlxG.sound.music.time = 10448;
 		}
 
 		persistentUpdate = persistentDraw = true;
 
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+		{
+			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+			bg.color = FlxColor.ORANGE;
+		}
+		else
+			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.x = 0;
 		bg.scrollFactor.y = 0.17;
 		bg.setGraphicSize(Std.int(bg.width * 1.2));
@@ -80,6 +91,16 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = true;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
+		white = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		white.scrollFactor.x = 0;
+		white.scrollFactor.y = 0.17;
+		white.setGraphicSize(Std.int(bg.width));
+		white.updateHitbox();
+		white.screenCenter();
+		white.visible = false;
+		white.antialiasing = true;
+		white.color = FlxColor.WHITE;
+		add(white);
 		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
@@ -90,6 +111,8 @@ class MainMenuState extends MusicBeatState
 		for (i in 0...optionShit.length)
 		{
 			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
+			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+				menuItem.color = FlxColor.ORANGE;
 			menuItem.frames = tex;
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " idle", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " selected", 24);
@@ -106,7 +129,15 @@ class MainMenuState extends MusicBeatState
 		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Mr Meowzz's FNF v" + Application.current.meta.get('version') + " Using FNF v" + fnfversion, 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			versionShit.color = FlxColor.ORANGE;
 		add(versionShit);
+		var halloween:FlxText = new FlxText(0, 18, "Happy Halloween " + Date.now().getFullYear() + "!", 16);
+		halloween.scrollFactor.set();
+		halloween.setFormat("VCR OSD Mono", 16, FlxColor.ORANGE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		halloween.screenCenter(X);
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			add(halloween);
 
 		// NG.core.calls.event.logEvent('swag').send();
 
@@ -121,6 +152,9 @@ class MainMenuState extends MusicBeatState
 				FlxTween.tween(FlxG.camera, { zoom: 1, angle: 0}, 0.5, {ease: FlxEase.quadIn });
 			case 'zoom':
 				FlxG.camera.zoom = 0.1;
+				FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
+			case 'zoomout':
+				FlxG.camera.zoom = 1.25;
 				FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
 		}
 		transition = '';
@@ -185,7 +219,10 @@ class MainMenuState extends MusicBeatState
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 
-					FlxFlicker.flicker(magenta, 1.1, 0.15, false);
+					if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+						FlxFlicker.flicker(white, 1.1, 0.15, false);
+					else
+						FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{

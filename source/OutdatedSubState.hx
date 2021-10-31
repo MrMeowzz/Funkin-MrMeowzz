@@ -15,6 +15,8 @@ class OutdatedSubState extends MusicBeatState
 
     public static var prerelease:Bool = false;
 
+	public static var data:String;
+
 	override function create()
 	{
 		super.create();
@@ -26,14 +28,25 @@ class OutdatedSubState extends MusicBeatState
 			+ ver
 			+ " while the most recent version is v"
 			+ latestver
-			+ "! Press ACCEPT to go to GitHub, or BACK to ignore this!!",
+			+ "! Press ACCEPT to go to GitHub, or BACK to ignore this!!\nHold SHIFT with ACCEPT to automatically open/download the file from GitHub.",
 			32);
+		var patchnotes:FlxText = new FlxText(0, 0, FlxG.width, "", 20);
+		patchnotes.setFormat("VCR OSD Mono", 20, FlxColor.WHITE, CENTER);
+		patchnotes.screenCenter(X);
+		add(patchnotes);
+		if (data != null)
+			patchnotes.text = haxe.Json.parse(data).body;
+		
         if (prerelease)
+		{
+			patchnotes.visible = false;
             txt.text =
             "Pre-release build detected! Current version: "
             + ver
             + "\nRemember that there is probably bugs and unfinished features in this build!\nPress ACCEPT to close this!!";
+		}
 		#if html5
+		patchnotes.visible = false;
 		if (!prerelease)
 			txt.text =
 			"HEY! You're running an outdated version of Mr Meowzz's FNF!\nCurrent version is "
@@ -44,6 +57,9 @@ class OutdatedSubState extends MusicBeatState
 		#end
 		txt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		txt.screenCenter();
+		if (patchnotes.visible)
+			txt.y = 25;
+		patchnotes.y = txt.height += 125;
 		add(txt);
 	}
 
@@ -60,9 +76,15 @@ class OutdatedSubState extends MusicBeatState
             {
 				#if !html5
                 #if linux
-			    Sys.command('/usr/bin/xdg-open', ["https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest", "&"]);
+				if (FlxG.keys.pressed.SHIFT)
+					Sys.command('/usr/bin/xdg-open', ["https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest/download/MrMeowzzFunkin.zip", "&"]);
+				else
+			    	Sys.command('/usr/bin/xdg-open', ["https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest", "&"]);
 			    #else
-			    FlxG.openURL('https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest');
+				if (FlxG.keys.pressed.SHIFT)
+					FlxG.openURL('https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest/download/MrMeowzzFunkin.zip');
+				else
+			    	FlxG.openURL('https://github.com/MrMeowzz/Funkin-MrMeowzz/releases/latest');
 			    #end
 				#end
             }

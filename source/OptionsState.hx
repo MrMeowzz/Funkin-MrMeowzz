@@ -45,7 +45,8 @@ class OptionsState extends MusicBeatState
 	'Freeplay Dialog',
 	'Menu Transitions',
 	'Enemy Extra Effects',
-	'Enemy Strums'];
+	'Enemy Strums',
+	'Safe Frames'];
 
 	var descriptions:Array<String> = ['Resets ALL options to default.'];
 
@@ -78,7 +79,8 @@ class OptionsState extends MusicBeatState
 	'Freeplay Dialog ON',
 	'Menu Transitions ON',
 	'Extra Enemy Effects',
-	'Showing Enemy Strums'];
+	'Showing Enemy Strums',
+	'Safe Frames'];
 
 	var OptionsOFF:Array<String> = ['Reset Options to Default',
 	'Remove Song Scores',
@@ -109,7 +111,8 @@ class OptionsState extends MusicBeatState
 	'Freeplay Dialog OFF',
 	'Menu Transitions OFF',
 	'No Extra Enemy Effects',
-	'No Enemy Strums'];
+	'No Enemy Strums',
+	'Safe Frames'];
 
 	#if html5
 	var DisabledOptions:Array<Bool> = [false,false,true,true,false,true];
@@ -132,6 +135,7 @@ class OptionsState extends MusicBeatState
 	var timer:FlxTimer = new FlxTimer();
 
 	var songspeed:Float = 0.1;
+	var safeframes:Int = 10;
 
 	var noteStyles:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteStyles'));
 
@@ -141,7 +145,11 @@ class OptionsState extends MusicBeatState
 	{
 		if (!FlxG.sound.music.playing)
 		{
-			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			FlxG.sound.music.time = 10448;
 		}
 
 		noteStyles.insert(0, 'default');
@@ -150,6 +158,8 @@ class OptionsState extends MusicBeatState
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		menuBG.color = 0xFFea71fd;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			menuBG.color = FlxColor.ORANGE;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
@@ -158,6 +168,8 @@ class OptionsState extends MusicBeatState
 
 		descriptiontxt = new FlxText(75, 0, 0, "", 15);
 		descriptiontxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			descriptiontxt.color = FlxColor.ORANGE;
 		add(descriptiontxt);
 
 		numtxt = new FlxText(0, 0, 0, "sus", 30);
@@ -165,6 +177,8 @@ class OptionsState extends MusicBeatState
 		numtxt.visible = false;
 		numtxt.screenCenter();
 		numtxt.y += 250;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			numtxt.color = FlxColor.ORANGE;
 		add(numtxt);
 
 		notestyletxt = new FlxText(0, 0, 0, "woah", 30);
@@ -172,6 +186,8 @@ class OptionsState extends MusicBeatState
 		notestyletxt.visible = false;
 		notestyletxt.screenCenter();
 		notestyletxt.y += 250;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			notestyletxt.color = FlxColor.ORANGE;
 		add(notestyletxt);
 
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
@@ -190,6 +206,8 @@ class OptionsState extends MusicBeatState
 
 		if (FlxG.save.data.scrollspeed != null)
 			songspeed = FlxG.save.data.scrollspeed;
+		if (FlxG.save.data.safeframes != null)
+			safeframes = FlxG.save.data.safeframes;
 
 		changeSelection();
 
@@ -209,37 +227,6 @@ class OptionsState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-		descriptions = ['Resets ALL options to default.',
-	'Removes ALL song scores (including weeks).', 
-	'Changes some assets to make it more appropriate.', 
-	'Preloads the freeplay song previews so it does not lag while switching songs. May cause higher memory usage in low-end devices.', 
-	'Disables the freeplay song previews.', 
-	'Adds color to the ratings.', 
-	'Makes the game fullscreen or windowed.', 
-	'Toggles the visibility of the FPS Counter in the top left.', 
-	'Whether to use downscroll or upscroll.', 
-	'Puts the main players strums in the middle.',
-	'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold ${KeyBinds.gamepad ? 'LEFT Shoulder to change faster' : 'shift to increase or decrease faster'}.', 
-	'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 
-	'Whether to play miss sounds or not.', 
-	'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 
-	'Plays a sound when a note is hit. Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.',
-	'Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current enemy hit sound. Replace enemyhitsound.ogg in assets/sounds for a different sound.', 
-	'Skips the short animation before restarting when enabled.', 
-	'Enables note splashes that occur when you get sick rating.', 
-	'Changes the hit timings of ratings and notes to be more accurate.', 
-	'Whether for the ratings to be by gf or for them to follow the camera.', 
-	'Which notestyle should be used. Default uses the songs notestyle. Notestyle will not be changed if the song has notestyle override on.', 
-	'Makes Tabi notes shake.', 
-	'Shows the note timing in milliseconds for each note pressed.', 
-	'Change keybinds for gameplay.',
-	'Skips the countdown before the song starts.',
-	'Toggles the cutscenes and dialog in story mode.',
-	'Toggles the cutscenes and dialog in freeplay.',
-	'Toggles the menu transitions between states.',
-	'Shows ratings and the combo of the enemy like it is actually pressing the notes.',
-	'Shows the strums and notes of the enemy.'];
 
 		if (controls.UP_P)
 		{
@@ -282,42 +269,57 @@ class OptionsState extends MusicBeatState
 		if (FlxG.keys.justPressed.ANY)
         {
             KeyBinds.gamepad = false;
-			descriptiontxt.text = descriptions[curSelected];
+			updateDescription();
         }
 		else if (gamepad != null && gamepad.justPressed.ANY)
 		{
 			KeyBinds.gamepad = true;
-			descriptiontxt.text = descriptions[curSelected];
+			updateDescription();
 		}
 
 		if (controls.LEFT_P)
+		{
 			if (FlxG.save.data.overridespeed && Options[curSelected] == "Override Song Scroll Speed" && songspeed > 0.1)
 			{
 				songspeed -= 0.1;
-				if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)) && songspeed - 0.4 > 0.1)
-					songspeed -= 0.4;
-				else if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)) && songspeed - 0.4 < 0.1)
-					songspeed = 0.1;
+				if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)))
+					if (songspeed - 0.4 > 0.1)
+						songspeed -= 0.4;
 			}
 			else if (Options[curSelected] == 'Notestyle' && (noteStyles.indexOf(FlxG.save.data.notestyle) - 1) >= 0)
 			{
 				FlxG.save.data.notestyle = noteStyles[noteStyles.indexOf(FlxG.save.data.notestyle) - 1];
 			}
+			else if (Options[curSelected] == "Safe Frames" && safeframes > 1)
+			{
+				safeframes -= 1;
+				if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)))
+					safeframes -= 1;
+			}
+			updateDescription();
+		}
 					
 
 		if (controls.RIGHT_P)
+		{
 			if (FlxG.save.data.overridespeed && Options[curSelected] == "Override Song Scroll Speed" && songspeed < 10)
 			{
 				songspeed += 0.1;
-				if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER))  && songspeed + 0.4 < 10)
+				if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)))
 					songspeed += 0.4;
-				else if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER))  && songspeed + 0.4 > 10)
-					songspeed = 10;
 			}
 			else if (Options[curSelected] == 'Notestyle' && (noteStyles.indexOf(FlxG.save.data.notestyle) + 1) < noteStyles.length)
 			{
 				FlxG.save.data.notestyle = noteStyles[noteStyles.indexOf(FlxG.save.data.notestyle) + 1];
 			}
+			else if (Options[curSelected] == "Safe Frames" && safeframes < 20)
+			{
+				safeframes += 1;
+				if ((FlxG.keys.pressed.SHIFT || (gamepad != null && gamepad.pressed.LEFT_SHOULDER)))
+					safeframes += 1;
+			}
+			updateDescription();
+		}
 		
 		if (FlxG.keys.justPressed.P || (gamepad != null && gamepad.justPressed.Y))
 		{
@@ -331,9 +333,21 @@ class OptionsState extends MusicBeatState
 			songspeed = 0.1;
 		if (songspeed > 10)
 			songspeed = 10;
+		if (safeframes < 1)
+			safeframes = 1;
+		if (safeframes > 20)
+			safeframes = 20;
 
-		numtxt.text = Std.string(songspeed);
+		switch (Options[curSelected])
+		{
+			case "Override Song Scroll Speed":
+				numtxt.text = Std.string(songspeed);
+			case "Safe Frames":
+				numtxt.text = Std.string(safeframes);
+		}
 		notestyletxt.text = FlxG.save.data.notestyle;
+		if (FlxG.save.data.notestyle == 'camellia')
+			notestyletxt.text += '/stepmania';
 
 		if (controls.BACK)
 		{
@@ -343,6 +357,8 @@ class OptionsState extends MusicBeatState
 				FlxG.save.data.scrollspeed = songspeed;
 				FlxG.save.flush();
 			}
+			if (FlxG.save.data.safeframes != safeframes)
+				FlxG.save.data.safeframes = safeframes;
 			if (FlxG.save.data.menutransitions)
 			{
 				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });
@@ -546,6 +562,42 @@ class OptionsState extends MusicBeatState
 			regenStuff();
         }
 		#end
+	}
+
+	public function updateDescription()
+	{
+		descriptions = ['Resets ALL options to default.',
+		'Removes ALL song scores (including weeks).', 
+		'Changes some assets to make it more appropriate.', 
+		'Preloads the freeplay song previews so it does not lag while switching songs. May cause higher memory usage in low-end devices.', 
+		'Disables the freeplay song previews.', 
+		'Adds color to the ratings.', 
+		'Makes the game fullscreen or windowed.', 
+		'Toggles the visibility of the FPS Counter in the top left.', 
+		'Whether to use downscroll or upscroll.', 
+		'Puts the main players strums in the middle.',
+		'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold ${KeyBinds.gamepad ? 'LEFT Shoulder to change faster' : 'shift to increase or decrease faster'}.', 
+		'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 
+		'Whether to play miss sounds or not.', 
+		'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 
+		'Plays a sound when a note is hit. Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.',
+		'Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current enemy hit sound. Replace enemyhitsound.ogg in assets/sounds for a different sound.', 
+		'Skips the short animation before restarting when enabled.', 
+		'Enables note splashes that occur when you get sick rating.', 
+		'Changes the hit timings of ratings and notes to be more accurate.', 
+		'Whether for the ratings to be by gf or for them to follow the camera.', 
+		'Which notestyle should be used. Default uses the songs notestyle. Notestyle will not be changed if the song has notestyle override on.', 
+		'Makes Tabi notes shake.', 
+		'Shows the note timing in milliseconds for each note pressed.', 
+		'Change keybinds for gameplay.',
+		'Skips the countdown before the song starts.',
+		'Toggles the cutscenes and dialog in story mode.',
+		'Toggles the cutscenes and dialog in freeplay.',
+		'Toggles the menu transitions between states.',
+		'Shows ratings and the combo of the enemy like it is actually pressing the notes.',
+		'Shows the strums and notes of the enemy.',
+		'Affects the hitbox of a note. Changing this will affect your score. Sick: 0ms ${FlxG.save.data.newhittimings ? 'Good: ' + Math.floor((safeframes / 60) * 1000) * 0.325 + 'ms Bad: ' + Math.floor((safeframes / 60) * 1000) * 0.575 + 'ms ' + '${FlxG.save.data.cleanmode ? 'Terrible: ' : 'Shit: '}: ' + Math.floor((safeframes / 60) * 1000) * 0.8 + 'ms' : 'Good: ' + Math.floor((safeframes / 60) * 1000) * 0.2 + 'ms Bad: ' + Math.floor((safeframes / 60) * 1000) * 0.75 + 'ms ' + '${FlxG.save.data.cleanmode ? 'Terrible: ' : 'Shit: '}: ' + Math.floor((safeframes / 60) * 1000) * 0.9 + 'ms'}'];
+		descriptiontxt.text = descriptions[curSelected];
 	}
 
 	public function regenStuff()
@@ -762,6 +814,10 @@ class OptionsState extends MusicBeatState
 			VisibleOptions.push(OptionsON[i]);
 		else
 			VisibleOptions.push(OptionsOFF[i]);
+
+		i++;
+
+		VisibleOptions.push(OptionsON[i]);
 	}
 
 	public function regenOptions()
@@ -791,7 +847,7 @@ class OptionsState extends MusicBeatState
 			curSelected = 0;
 
 		timer.cancel();
-		descriptiontxt.text = descriptions[curSelected];
+		updateDescription();
 
 		var bullShit:Int = 0;
 
@@ -806,7 +862,7 @@ class OptionsState extends MusicBeatState
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
-				if (Options[bullShit] == 'Override Song Scroll Speed')
+				if (Options[bullShit] == 'Override Song Scroll Speed' || Options[bullShit] == 'Safe Frames')
 					numtxt.visible = true;
 				else
 					numtxt.visible = false;

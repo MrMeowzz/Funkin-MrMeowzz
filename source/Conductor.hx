@@ -1,6 +1,7 @@
 package;
 
 import Song.SwagSong;
+import flixel.FlxG;
 
 /**
  * ...
@@ -66,5 +67,7 @@ class Conductor
 
 		crochet = ((60 / newBpm) * 1000) / PlayState.songMultiplier;
 		stepCrochet = (crochet / 4) * PlayState.songMultiplier;
+		safeFrames = FlxG.save.data.safeframes;
+		safeZoneOffset = Math.floor((safeFrames / 60) * 1000);
 	}
 }

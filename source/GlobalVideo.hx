@@ -47,8 +47,8 @@ class GlobalVideo
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		var width:Float = GameDimensions.width;
-		var height:Float = GameDimensions.height;
+		var width:Float = 1280;
+		var height:Float = 720;
 		
 		//trace("AH: " + stageWidth);
 		//trace(width);

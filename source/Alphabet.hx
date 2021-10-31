@@ -6,6 +6,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
 import openfl.Lib;
 
 using StringTools;
@@ -249,6 +250,8 @@ class AlphaCharacter extends FlxSprite
 		super(x, y);
 		var tex = Paths.getSparrowAtlas('alphabet');
 		frames = tex;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			color = FlxColor.ORANGE;
 
 		antialiasing = true;
 	}

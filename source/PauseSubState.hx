@@ -53,6 +53,10 @@ class PauseSubState extends MusicBeatSubstate
 
 	var loadedShit:Bool = false;
 
+	var player:Int = 1;
+	var player1Characters = [];
+	var player2Characters = [];
+
 	public function new(x:Float, y:Float)
 	{
 		loadedShit = false;
@@ -65,9 +69,6 @@ class PauseSubState extends MusicBeatSubstate
 			menuItems.remove("Toggle Practice Mode");
 			menuItems.remove("Toggle Botplay");
 		}
-
-		if (PlayState.swappedsides)
-			menuItems.remove("Change Character");
 
 		originalmenuItems = menuItems;
 
@@ -287,6 +288,21 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			loadedShit = true;
 		});
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+		{
+			levelInfo.color = FlxColor.ORANGE;
+			bpmlevelInfo.color = FlxColor.ORANGE;
+			speedlevelInfo.color = FlxColor.ORANGE;
+			ratelevelInfo.color = FlxColor.ORANGE;
+			levelDifficulty.color = FlxColor.ORANGE;
+			deathMenuCounter.color = FlxColor.ORANGE;
+			playingAs.color = FlxColor.ORANGE;
+			modeText.color = FlxColor.ORANGE;
+			sicks.color = FlxColor.ORANGE;
+			goods.color = FlxColor.ORANGE;
+			bads.color = FlxColor.ORANGE;
+			shits.color = FlxColor.ORANGE;
+		}
 	}
 
 	public function regenMenu()
@@ -401,9 +417,12 @@ class PauseSubState extends MusicBeatSubstate
 			}
 			PlayState.songMultiplier = rate;
 			if ((controls.LEFT_P || controls.RIGHT_P))
-				toggleResume(false);
-			else if ((controls.LEFT_P || controls.RIGHT_P) && rate == originalrate)
-				toggleResume(true);
+			{
+				if (rate == originalrate)
+					toggleResume(true);
+				else
+					toggleResume(false);
+			}
 
 			var scrollspeed = PlayState.SONG.speed;
 			if (FlxG.save.data.overridespeed)
@@ -422,6 +441,7 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			var daSelected:String = menuItems[curSelected];
 			var lastCharacter:String = PlayState.SONG.player1;
+			var lastEnemy:String = PlayState.SONG.player2;
 			var difficulty:String = "";
 			var gfVersion:String = 'gf'; 
 			if (PlayState.SONG.gf != null)
@@ -477,7 +497,13 @@ class PauseSubState extends MusicBeatSubstate
 					if (PlayState.storyPlaylist.length <= 0) 
 					{
 						if (OG.StoryMenuType != 'bside')
-							FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+						{
+							if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+								FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+							else
+								FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+							FlxG.sound.music.time = 10448;
+						}
 						if (PlayState.SONG.validScore)
 							Highscore.saveWeekScore(PlayState.storyWeek, PlayState.campaignScore, PlayState.storyDifficulty);
 
@@ -488,6 +514,8 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, bsidecrap + PlayState.storyPlaylist[0].toLowerCase());
 						if (!lastCharacter.startsWith("bf"))
 							PlayState.SONG.player1 = lastCharacter;
+						if (lastEnemy != PlayState.SONG.player2)
+							PlayState.SONG.player2 = lastEnemy;
 
 						if (FlxG.save.data.menutransitions)
 							FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
@@ -562,69 +590,183 @@ class PauseSubState extends MusicBeatSubstate
 					regenMenu();
 					curSelected = 0;
 					changeSelection();
-				case "Change Character":
-					lastSelected = curSelected;
+				case "Player One" | "Player Two":
 					SelectionScreen = true;
+					if (daSelected == "Player One")
+						player = 1;
+					else
+						player = 2;
 					menuItems = ['bf', 'amog us', 'monster', 'tankman', 'pico', 'mom', 'gf', 'BACK'];
 					var pixelmenuItems:Array<String> = ['bf', 'tankman', 'pico', 'senpai', 'spirit', 'BACK'];
 					if (!PlayState.curStage.startsWith('school'))
 					{
-						if (menuItems.contains(PlayState.SONG.player1))
-							menuItems.remove(PlayState.SONG.player1);
+						player1Characters = ['bf', 'bf-amogus', 'monster', 'tankman', 'pico', 'mom', 'gf'];
+						player2Characters = player1Characters;
+						if (player == 1)
+						{
+							if (menuItems.contains(PlayState.SONG.player1))
+							{
+								menuItems.remove(PlayState.SONG.player1);
+								player1Characters.remove(PlayState.SONG.player1);
+							}
 
-						if (gfVersion != "gf-christmas" && gfVersion != "gf" && PlayState.SONG.player2 != "gf")
-							menuItems.remove('gf');
+							if (PlayState.SONG.player1 == 'bf-amogus')
+							{
+								menuItems.remove('amog us');
+								player1Characters.remove('bf-amogus');
+							}
+
+							if (PlayState.SONG.player1.startsWith('monster'))
+							{
+								menuItems.remove('monster');
+								player1Characters.remove('monster');
+							}
+
+							if (PlayState.SONG.player1.startsWith('mom'))
+							{
+								menuItems.remove('mom');
+								player1Characters.remove('mom');
+							}
+
+							if (PlayState.SONG.player1 == gfVersion)
+							{
+								menuItems.remove('gf');
+								player1Characters.remove('gf');
+							}
+
+							if (gfVersion != "gf-christmas" && gfVersion != "gf" && PlayState.SONG.player1 != "gf")
+							{
+								menuItems.remove('gf');
+								player1Characters.remove('gf');
+							}
+
+							if (PlayState.SONG.player1.startsWith('bf') && PlayState.SONG.player1 != 'bf-amogus' && (PlayState.SONG.song.toLowerCase() == 'test' && PlayState.SONG.player1 != 'bf-pixel'))
+							{
+								menuItems.remove('bf');
+								player1Characters.remove('bf');
+							}
+						}
+						else
+						{
+							if (menuItems.contains(PlayState.SONG.player2))
+							{
+								menuItems.remove(PlayState.SONG.player2);
+								player2Characters.remove(PlayState.SONG.player2);
+							}
+								
+							if (PlayState.SONG.player2 == 'bf-amogus')
+							{
+								menuItems.remove('amog us');
+								player2Characters.remove('bf-amogus');
+							}
+
+							if (PlayState.SONG.player2.startsWith('monster'))
+							{
+								menuItems.remove('monster');
+								player2Characters.remove('mmonster');
+							}
+
+							if (PlayState.SONG.player2.startsWith('mom'))
+							{
+								menuItems.remove('mom');
+								player2Characters.remove('mom');
+							}
+
+							if (PlayState.SONG.player2 == gfVersion)
+							{
+								menuItems.remove('gf');
+								player2Characters.remove('gf');
+							}
+
+							if (gfVersion != "gf-christmas" && gfVersion != "gf" && PlayState.SONG.player2 != "gf")
+							{
+								menuItems.remove('gf');
+								player2Characters.remove('gf');
+							}
+
+							if (PlayState.SONG.player2.startsWith('bf') && PlayState.SONG.player2 != 'bf-amogus' && (PlayState.SONG.song.toLowerCase() == 'test' && PlayState.SONG.player2 != 'bf-pixel'))							
+							{
+								menuItems.remove('bf');
+								player2Characters.remove('bf');
+							}
+						}
 
 						if (PlayState.SONG.song.toLowerCase() == "among us drip")
+						{
 							menuItems.remove('bf');
-
-						if (PlayState.SONG.player1 == 'bf-amogus')
-							menuItems.remove('amog us');
-
-						if (PlayState.SONG.player1.startsWith('monster'))
-							menuItems.remove('monster');
-
-						if (PlayState.SONG.player1.startsWith('mom'))
-							menuItems.remove('mom');
-
-						if (PlayState.SONG.player1 == gfVersion)
-							menuItems.remove('gf');
-
-						if (PlayState.SONG.player1.startsWith('bf') && PlayState.SONG.player1 != 'bf-amogus' && (PlayState.SONG.song.toLowerCase() == 'test' && PlayState.SONG.player1 != 'bf-pixel'))
-							menuItems.remove('bf');
+							player1Characters.remove('bf');
+							player2Characters.remove('bf');
+						}
 
 						if (PlayState.SONG.song.toLowerCase() == 'high effort ugh' || PlayState.SONG.song.toLowerCase() == 'h.e. no among us')
+						{
 							menuItems.remove('tankman');
+							player1Characters.remove('tankman');
+							player2Characters.remove('tankman');
+						}
 							
 						if (PlayState.SONG.song == 'Old Bopeebo')
+						{
 							menuItems.remove('gf');
+							player1Characters.remove('gf');
+							player2Characters.remove('gf');
+						}
 						if (OG.BSIDE)
 						{
 							menuItems.remove('tankman');
 							menuItems.remove('amog us');
+							player1Characters.remove('tankman');
+							player2Characters.remove('tankman');
+							player1Characters.remove('bf-amogus');
+							player2Characters.remove('bf-amogus');
 						}
 					}
 					else
 					{
+						player1Characters = ['bf-pixel', 'tankman-pixel', 'pico-pixel', 'senpai', 'spirit'];
+						player2Characters = player1Characters;
 						menuItems = pixelmenuItems;
 						var nonpixel:String = Std.string(PlayState.SONG.player1);
+						if (player == 2)
+							nonpixel = Std.string(PlayState.SONG.player2);
 						nonpixel = nonpixel.replace("-pixel","");
 						if (menuItems.contains(nonpixel))
 							menuItems.remove(nonpixel);
 
-						if (PlayState.SONG.player1 == 'senpai-angry')
-							menuItems.remove('senpai');			
+						if (player == 1)
+						{
+							if (PlayState.SONG.player1 == 'senpai-angry')
+							{
+								menuItems.remove('senpai');
+								player1Characters.remove('senpai');
+							}
+						}
+						else
+						{
+							if (PlayState.SONG.player2 == 'senpai-angry')
+							{
+								menuItems.remove('senpai');
+								player2Characters.remove('senpai');
+							}
+						}			
 
 						if (OG.BSIDE)
 						{
-							if (menuItems.contains(PlayState.SONG.player2))
-								menuItems.remove(PlayState.SONG.player2);
-							if (PlayState.SONG.player2 == 'senpai-angry')
-								menuItems.remove('senpai');
 							menuItems.remove('tankman');
 							menuItems.remove('pico');
+							player1Characters.remove('tankman-pixel');
+							player2Characters.remove('tankman-pixel');
+							player1Characters.remove('pico-pixel');
+							player2Characters.remove('pico-pixel');
 						}
 					}
+					regenMenu();
+					curSelected = 0;
+					changeSelection();
+				case "Change Character":
+					lastSelected = curSelected;
+					SelectionScreen = true;
+					menuItems = ['Player One', 'Player Two', 'BACK'];
 					regenMenu();
 					curSelected = 0;
 					changeSelection();
@@ -649,81 +791,228 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, folder);
 					if (!lastCharacter.startsWith("bf"))
 						PlayState.SONG.player1 = lastCharacter;
+					if (lastEnemy != PlayState.SONG.player2)
+						PlayState.SONG.player2 = lastEnemy;
 
 					PlayState.storyDifficulty = curSelected;
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
-				case "tankman":
-					if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+				case "tankman" | "bf" | "pico" | "gf" | "amog us" | "monster" | "mom" | "senpai" | "spirit":
+					if (player == 1)
+						PlayState.SONG.player1 = player1Characters[curSelected];
+					else
+						PlayState.SONG.player2 = player2Characters[curSelected];
+					//extra char stuf
+					switch (daSelected)
 					{
-						PlayState.SONG.player1 = "tankman-pixel";
+						case "tankman":
+							if (player == 1)
+							{
+								if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+									PlayState.SONG.player1 += "-pixel";
+								else if (PlayState.SONG.song.toLowerCase() == 'no among us')
+									PlayState.SONG.player1 += "noamongus";
+							}
+							else
+							{
+								if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+									PlayState.SONG.player2 += "-pixel";
+								else if (PlayState.SONG.song.toLowerCase() == 'no among us')
+									PlayState.SONG.player2 += "noamongus";
+							}
+						case "bf":
+							var placeholderSong:SwagSong = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
+							if (placeholderSong.player1.startsWith('bf')) {
+							if (player == 1)
+								PlayState.SONG.player1 = placeholderSong.player1;
+							else
+								PlayState.SONG.player2 = placeholderSong.player1;
+							}
+						case "pico":
+							if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+							{
+								if (player == 1)
+									PlayState.SONG.player1 += "-pixel";
+								else
+									PlayState.SONG.player2 += "-pixel";
+							}
+						case "gf":
+							if (player == 1)
+								PlayState.SONG.player1 = gfVersion;
+							else
+								PlayState.SONG.player2 = gfVersion;
+						case "monster":
+							if (PlayState.curStage.startsWith('mall'))
+							{
+								if (player == 1)
+									PlayState.SONG.player1 += "-christmas";
+								else
+									PlayState.SONG.player2 += "-christmas";
+							}
+						case "mom":
+							if (PlayState.curStage == 'limo')
+							{
+								if (player == 1)
+									PlayState.SONG.player1 += "-car";
+								else
+									PlayState.SONG.player2 += "-car";
+							}
+						case "senpai":
+							if (PlayState.SONG.song.toLowerCase() == 'roses')
+							{
+								if (player == 1)
+									PlayState.SONG.player1 += "-angry";
+								else
+									PlayState.SONG.player2 += "-angry";
+							}
 					}
-					else if (PlayState.SONG.song.toLowerCase() == 'no among us')
+					if (FlxG.save.data.menutransitions)
+						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
+					LoadingState.loadAndSwitchState(new PlayState());
+				/*				
+				case "tankman":
+					if (player == 1)
 					{
-						PlayState.SONG.player1 = "tankmannoamongus";
+						if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+						{
+							PlayState.SONG.player1 = "tankman-pixel";
+						}
+						else if (PlayState.SONG.song.toLowerCase() == 'no among us')
+						{
+							PlayState.SONG.player1 = "tankmannoamongus";
+						}
+						else
+						{
+							PlayState.SONG.player1 = "tankman";
+						}
 					}
 					else
 					{
-						PlayState.SONG.player1 = "tankman";
+						if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+						{
+							PlayState.SONG.player2 = "tankman-pixel";
+						}
+						else if (PlayState.SONG.song.toLowerCase() == 'no among us')
+						{
+							PlayState.SONG.player2 = "tankmannoamongus";
+						}
+						else
+						{
+							PlayState.SONG.player2 = "tankman";
+						}
 					}
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "bf":
 					var placeholderSong:SwagSong = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + difficulty, bsidecrap + PlayState.SONG.song.toLowerCase());
-					PlayState.SONG.player1 = placeholderSong.player1;
+					if (player == 1)
+						PlayState.SONG.player1 = placeholderSong.player1;
+					else
+						PlayState.SONG.player2 = placeholderSong.player1;
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "pico":
-					if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+					if (player == 1)
 					{
-						PlayState.SONG.player1 = "pico-pixel";
+						if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+						{
+							PlayState.SONG.player1 = "pico-pixel";
+						}
+						else
+						{
+							PlayState.SONG.player1 = "pico";
+						}
 					}
 					else
 					{
-						PlayState.SONG.player1 = "pico";
+						if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+						{
+							PlayState.SONG.player2 = "pico-pixel";
+						}
+						else
+						{
+							PlayState.SONG.player2 = "pico";
+						}
 					}
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "gf":
-					PlayState.SONG.player1 = gfVersion;
+					if (player == 1)
+						PlayState.SONG.player1 = gfVersion;
+					else
+						PlayState.SONG.player2 = gfVersion;
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "amog us":
-					PlayState.SONG.player1 = "bf-amogus";
+					if (player == 1)
+						PlayState.SONG.player1 = "bf-amogus";
+					else
+						PlayState.SONG.player2 = "bf-amogus";
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "monster":
-					PlayState.SONG.player1 = "monster";
-					if (PlayState.curStage.startsWith('mall'))
-						PlayState.SONG.player1 += "-christmas";
+					if (player == 1) 
+					{
+						PlayState.SONG.player1 = "monster";
+						if (PlayState.curStage.startsWith('mall'))
+							PlayState.SONG.player1 += "-christmas";
+					}
+					else
+					{
+						PlayState.SONG.player2 = "monster";
+						if (PlayState.curStage.startsWith('mall'))
+							PlayState.SONG.player2 += "-christmas";
+					}
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "mom":
-					PlayState.SONG.player1 = "mom";
-					if (PlayState.curStage == 'limo')
-						PlayState.SONG.player1 += "-car";
+					if (player == 1)
+					{
+						PlayState.SONG.player1 = "mom";
+						if (PlayState.curStage == 'limo')
+							PlayState.SONG.player1 += "-car";
+					}
+					else
+					{
+						PlayState.SONG.player2 = "mom";
+						if (PlayState.curStage == 'limo')
+							PlayState.SONG.player2 += "-car";
+					}
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "senpai":
-					PlayState.SONG.player1 = "senpai";
-					if (PlayState.SONG.song.toLowerCase() == 'roses')
-						PlayState.SONG.player1 += "-angry";
+					if (player == 1)
+					{
+						PlayState.SONG.player1 = "senpai";
+						if (PlayState.SONG.song.toLowerCase() == 'roses')
+							PlayState.SONG.player1 += "-angry";
+					}
+					else
+					{
+						PlayState.SONG.player2 = "senpai";
+						if (PlayState.SONG.song.toLowerCase() == 'roses')
+							PlayState.SONG.player2 += "-angry";
+					}
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
 				case "spirit":
-					PlayState.SONG.player1 = "spirit";
+					if (player == 1)
+						PlayState.SONG.player1 = "spirit";
+					else
+						PlayState.SONG.player2 = "spirit";
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
+				*/
 				case "Swap Sides":
 					PlayState.swappedsides = !PlayState.swappedsides;
 					if (FlxG.save.data.menutransitions)

@@ -84,6 +84,9 @@ class OptionSaveData
 
 		if (FlxG.save.data.enemystrums == null)
 			FlxG.save.data.enemystrums = true;
+
+		if (FlxG.save.data.safeframes == null)
+			FlxG.save.data.safeframes = 10;
 		PlayerSettings.player1.controls.loadKeyBinds();
 		KeyBinds.keyCheck();
     }
@@ -141,5 +144,7 @@ class OptionSaveData
 		FlxG.save.data.enemyextraeffects = false;
 
 		FlxG.save.data.enemystrums = true;
+
+		FlxG.save.data.safeframes = 10;
     }
 }

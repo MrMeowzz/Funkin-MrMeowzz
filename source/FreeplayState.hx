@@ -55,13 +55,25 @@ class FreeplayState extends MusicBeatState
 	{
 		#if html5
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			{
+				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				FlxG.sound.music.time = 10448;
+			}
 		#end
 		#if desktop
 		if (!FlxG.save.data.freeplaypreviews)
 		{
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			{
+				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				FlxG.sound.music.time = 10448;
+			}
 		}
 		#end
 
@@ -92,7 +104,10 @@ class FreeplayState extends MusicBeatState
 		isDebug = true;
 		#end
 
-		addSection(['Normal', 'BSide'], ['bf', 'bf-bside']);
+		if (Date.now().getMonth() == 9)
+			addSection(['Normal', 'BSide'], ['spooky', 'spooky-bside']);
+		else
+			addSection(['Normal', 'BSide'], ['bf', 'bf-bside']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
 			addWeek(['Test', 'Ridge'], 1, ['bf-pixel', 'dad']);
@@ -180,6 +195,8 @@ class FreeplayState extends MusicBeatState
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
 		// scoreText.autoSize = false;
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			scoreText.color = FlxColor.ORANGE;
 		// scoreText.alignment = RIGHT;
 
 		#if desktop
@@ -194,11 +211,15 @@ class FreeplayState extends MusicBeatState
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			diffText.color = FlxColor.ORANGE;
 
 		rate = PlayState.songMultiplier;
 
 		previewtext = new FlxText(scoreText.x, scoreText.y + 66, 0, "Rate: " + rate + "x", 24);
 		previewtext.font = scoreText.font;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			previewtext.color = FlxColor.ORANGE;
 		
 		controlstext = new FlxText(scoreText.x, scoreText.y + 96, 0, "", 16);
 		#if desktop
@@ -208,6 +229,8 @@ class FreeplayState extends MusicBeatState
 		controlstext.y -= 30;
 		#end
 		controlstext.x = FlxG.width - controlstext.width;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			controlstext.color = FlxColor.ORANGE;
 
 		add(diffText);
 
@@ -475,7 +498,13 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 			#if desktop
 			if (FlxG.save.data.freeplaypreviews)
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			{
+				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else
+					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				FlxG.sound.music.time = 10448;
+			}
 			#end
 			if (FlxG.save.data.menutransitions) 
 			{
@@ -495,7 +524,13 @@ class FreeplayState extends MusicBeatState
 				FlxG.switchState(new MainMenuState());
 				#if desktop
 				if (FlxG.save.data.freeplaypreviews)
+				{
+					if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else
 					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+					FlxG.sound.music.time = 10448;
+				}
 				#end
 				if (FlxG.save.data.menutransitions)
 				{
@@ -694,6 +729,13 @@ class FreeplayState extends MusicBeatState
 				return 0xFFFBE30C;
 			case 'bf-bside':
 				return 0xFFE86ACB;
+			case 'spooky-bside':
+				var random:Int;
+				random = FlxG.random.int(0, 1);
+				if (random == 1)
+					return 0xFFFD9013;
+				else
+					return 0xFFC3C3C3;
 			default:
 				return FlxColor.WHITE;
 		}
@@ -735,11 +777,6 @@ class FreeplayState extends MusicBeatState
 
 	function changeSelection(change:Int = 0)
 	{
-		#if !switch
-		NGio.logEvent('Fresh');
-		#end
-
-		// NGio.logEvent('Fresh');
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected += change;
@@ -785,11 +822,27 @@ class FreeplayState extends MusicBeatState
 				switch (curSelected)
 				{
 					case 0:
-						if (loadedSongs.contains(songs[3].songName.toLowerCase()) || !FlxG.save.data.preloadfreeplaypreviews)
-							FlxG.sound.playMusic(Paths.inst(songs[3].songName), 0);
+						if (Date.now().getMonth() == 9)
+						{
+							if (loadedSongs.contains(songs[7].songName.toLowerCase()) || !FlxG.save.data.preloadfreeplaypreviews)
+								FlxG.sound.playMusic(Paths.inst(songs[7].songName), 0);
+						}
+						else
+						{
+							if (loadedSongs.contains(songs[3].songName.toLowerCase()) || !FlxG.save.data.preloadfreeplaypreviews)
+								FlxG.sound.playMusic(Paths.inst(songs[3].songName), 0);
+						}
 					case 1:
-						if (loadedSongs.contains(bsidesongs[1].songName.toLowerCase() + '-bside') || !FlxG.save.data.preloadfreeplaypreviews)
-							FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[1].songName), 0);
+						if (Date.now().getMonth() == 9)
+						{
+							if (loadedSongs.contains(bsidesongs[4].songName.toLowerCase() + '-bside') || !FlxG.save.data.preloadfreeplaypreviews)
+								FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[4].songName), 0);
+						}
+						else
+						{
+							if (loadedSongs.contains(bsidesongs[1].songName.toLowerCase() + '-bside') || !FlxG.save.data.preloadfreeplaypreviews)
+								FlxG.sound.playMusic(Paths.bsideinst(bsidesongs[1].songName), 0);
+						}
 				}
 			}
 			else if (OG.FreeplayMenuType == 'bside' && (loadedSongs.contains(bsidesongs[curSelected].songName.toLowerCase() + '-bside') || !FlxG.save.data.preloadfreeplaypreviews))
@@ -832,7 +885,9 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		if (OG.FreeplayMenuType == 'section')
+		{
 			FlxTween.color(bg, 0.5, bg.color, iconColors(Std.string(sections[curSelected].Character)));
+		}
 		else if (OG.FreeplayMenuType == 'bside')
 			FlxTween.color(bg, 0.5, bg.color, bsideiconColors(Std.string(bsidesongs[curSelected].songCharacter)));
 		else
@@ -879,6 +934,8 @@ class FreeplayState extends MusicBeatState
 		{
 			var songText:Alphabet;
 			songText = new Alphabet(0, (70 * i) + 30, bsidesongs[i].songName, true, false);
+			if (bsidesongs[i].songCharacter == 'spooky' && Date.now().getMonth() == 9)
+				songText.color = FlxColor.ORANGE;
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpVisible.add(songText);
@@ -904,6 +961,8 @@ class FreeplayState extends MusicBeatState
 				songText = new Alphabet(0, (70 * i) + 30, 'High Effort No Among Us', true, false);
 			else
 				songText = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
+			if (songs[i].songCharacter == 'spooky' && Date.now().getMonth() == 9)
+				songText.color = FlxColor.ORANGE;
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpVisible.add(songText);

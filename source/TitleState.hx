@@ -24,7 +24,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
 import openfl.Lib;
@@ -49,8 +48,6 @@ class TitleState extends MusicBeatState
 
 	var wackyImage:FlxSprite;
 
-	var music = [];
-
 	override public function create():Void
 	{
 		#if polymod
@@ -60,17 +57,12 @@ class TitleState extends MusicBeatState
 		PlayerSettings.init();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			curWacky = ["ITS", "SPOOKY DAY"];
 
 		// DEBUG BULLSHIT
 
 		super.create();
-
-		NGio.noLogin(APIStuff.API);
-
-		#if ng
-		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
-		trace('NEWGROUNDS LOL');
-		#end
 
 		FlxG.save.bind('funkin', 'Mr Meowzz');
 
@@ -100,16 +92,20 @@ class TitleState extends MusicBeatState
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
 			#if desktop
-			if (FlxG.save.data.preloadfreeplaypreviews) {
+			if (FlxG.save.data.preloadfreeplaypreviews && !OG.preloadedSongs) {
+			OG.preloadedSongs = true;
 			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/songs")))
-				music.push(i);
+				if (!i.contains('.txt')) //dont include the ducking txt file
+					OG.music.push(i);
+			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/songs/b-side")))
+				OG.bsidemusic.push(i);
 			sys.thread.Thread.create(() -> {
-			for (i in music)
+			for (i in OG.music)
 			{
 				FlxG.sound.cache(Paths.inst(i));
 				FreeplayState.loadedSongs.push(Std.string(i));
 			}
-			for (i in music)
+			for (i in OG.bsidemusic)
 			{
 				FlxG.sound.cache(Paths.bsideinst(i));
 				FreeplayState.loadedSongs.push(Std.string(i + "-bside"));
@@ -161,11 +157,13 @@ class TitleState extends MusicBeatState
 			// https://github.com/HaxeFlixel/flixel-addons/pull/348
 
 			// var music:FlxSound = new FlxSound();
-			// music.loadStream(Paths.music('frogIntroRemix'));
+			// music.loadStream(Paths.music('freakyMenu'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-			FlxG.sound.playMusic(Paths.music('frogIntroRemix'), 0);
-
+			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
@@ -180,18 +178,30 @@ class TitleState extends MusicBeatState
 
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpinSPOOKY');
 		logoBl.antialiasing = true;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
-
-		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
-		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
-		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gfDance.antialiasing = true;
+		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+		{
+			gfDance = new FlxSprite(FlxG.width * 0.5, FlxG.height * 0.07);
+			gfDance.frames = Paths.getSparrowAtlas('spookyDance');
+			gfDance.animation.addByIndices('danceLeft', 'spooky dance', [16, 0, 1, 2, 3, 4, 5, 6, 7], "", 24, false);
+			gfDance.animation.addByIndices('danceRight', 'spooky dance', [8, 9, 10, 11, 12, 13, 14, 15], "", 24, false);
+			gfDance.antialiasing = true;
+		}
+		else
+		{
+			gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
+			gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+			gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+			gfDance.antialiasing = true;
+		}
 		add(gfDance);
 		add(logoBl);
 
@@ -270,6 +280,8 @@ class TitleState extends MusicBeatState
 		{
 			swagGoodArray.push(i.split('--'));
 		}
+		if (Date.now().getMonth() == 9)
+			swagGoodArray.push(["ITS", "SPOOKY MONTH"]);
 
 		return swagGoodArray;
 	}
@@ -320,14 +332,6 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
-			#if !switch
-			NGio.unlockMedal(60960);
-
-			// If it's Friday according to da clock
-			if (Date.now().getDay() == 5)
-				NGio.unlockMedal(61034);
-			#end
-
 			titleText.animation.play('press');
 			titleTextController.animation.play('press');
 
@@ -339,31 +343,29 @@ class TitleState extends MusicBeatState
 
 			// FlxG.switchState(new MainMenuState());
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
-	
-			var http = new haxe.Http("https://raw.githubusercontent.com/MrMeowzz/Funkin-MrMeowzz/main/latestver.downloadMe");
-
+			var http = new haxe.Http("https://api.github.com/repos/MrMeowzz/Funkin-MrMeowzz/releases/latest");
+			http.addHeader('User-Agent', 'request'); //needed because github stuf
 			if (Application.current.meta.get('version').contains('PRE')) {
-
 				OutdatedSubState.prerelease = true;
 				FlxG.switchState(new OutdatedSubState());
 			}
 			else {
-			http.onData = function (data:String)
+			http.onData = function (tempdata:String)
 			{
-				if (Std.parseFloat(Application.current.meta.get('version')) < Std.parseFloat(data) && !OutdatedSubState.leftState && !Application.current.meta.get('version').contains('DEV'))
+				var data = haxe.Json.parse(tempdata).tag_name.substring(1);
+				trace('LATEST VER: ' + data);
+				if (Application.current.meta.get('version') != data)
 				{
 					OutdatedSubState.latestver = data;
+					OutdatedSubState.data = tempdata;
 					FlxG.switchState(new OutdatedSubState());
 				}
 				else
 				{
 					if (FlxG.save.data.menutransitions) {
-					FlxTween.tween(FlxG.camera, { zoom: 1.25, angle: 45 }, 1, {ease: FlxEase.quadIn, onComplete: function(tmr:FlxTween)
-					{			
-						FlxTween.tween(FlxG.camera, { zoom: 1}, 0.5, {ease: FlxEase.quadIn });
-						MainMenuState.transition = 'zoomtilt';
-						FlxG.switchState(new MainMenuState());
-					} });
+					FlxTween.tween(FlxG.camera, { zoom: 1.25}, 0.5, {ease: FlxEase.quadIn });
+					MainMenuState.transition = 'zoomout';
+					FlxG.switchState(new MainMenuState());
 					}
 					else
 						FlxG.switchState(new MainMenuState());
@@ -373,10 +375,39 @@ class TitleState extends MusicBeatState
 				
 			http.onError = function (error) {
 				trace('error: $error');
+				if (FlxG.save.data.menutransitions) {
+				FlxTween.tween(FlxG.camera, { zoom: 1.25}, 0.5, {ease: FlxEase.quadIn });
+				MainMenuState.transition = 'zoomout';
 				FlxG.switchState(new MainMenuState());
+				}
+				else
+					FlxG.switchState(new MainMenuState());
 			}
-				
-			http.request();
+			
+			//limit requests since github has rate limit
+			if (!Application.current.meta.get('version').contains('PRE') && !OG.httpRequested)
+			{
+				//request on dif thread so it doesnt cause big ass nuke sized lag spike (totally not exaggerating)
+				#if desktop
+				sys.thread.Thread.create(() -> {
+				http.request();
+				});
+				#else
+				http.request();
+				#end
+				trace('SENT HTTP REQUEST');
+				OG.httpRequested = true;
+			}
+			else
+			{
+				if (FlxG.save.data.menutransitions) {
+				FlxTween.tween(FlxG.camera, { zoom: 1.25}, 0.5, {ease: FlxEase.quadIn });
+				MainMenuState.transition = 'zoomout';
+				FlxG.switchState(new MainMenuState());
+				}
+				else
+					FlxG.switchState(new MainMenuState());
+			}
 		}
 
 		if (pressedEnter && !skippedIntro)
@@ -396,6 +427,8 @@ class TitleState extends MusicBeatState
 			money.y += (i * 60) + 200;
 			if (textArray[i] == 'Mr Meowzz')
 				money.color = FlxColor.YELLOW;
+			if (textArray[i].toLowerCase().contains('spooky'))
+				money.color = FlxColor.ORANGE;
 			credGroup.add(money);
 			textGroup.add(money);
 		}

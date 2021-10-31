@@ -873,7 +873,11 @@ class ChartingState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 			FlxG.sound.music.stop();
 			vocals.stop();
-			FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
+				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+			FlxG.sound.music.time = 10448;
 			if (FlxG.save.data.menutransitions)
 			{
 				FlxTween.tween(FlxG.camera, { zoom: 0.1 }, 1, { ease: FlxEase.quadIn });

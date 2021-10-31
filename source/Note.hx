@@ -304,8 +304,8 @@ class Note extends FlxSprite
 			if (noteType == 'halo')
 			{
 				// these though, REALLY hard to hit.
-				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.3 / PlayState.songMultiplier)
-					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.2 * PlayState.songMultiplier)) // also they're almost impossible to hit late!
+				if (strumTime > Conductor.songPosition - (166 * 0.3 / PlayState.songMultiplier)
+					&& strumTime < Conductor.songPosition + (166 * 0.2 * PlayState.songMultiplier)) // also they're almost impossible to hit late!
 					canBeHit = true;
 				else
 					canBeHit = false;
@@ -313,8 +313,8 @@ class Note extends FlxSprite
 			else if (noteType == 'fire')
 			{
 				// make burning notes a lot harder to accidently hit because they're weirdchamp!
-				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.6 / PlayState.songMultiplier)
-					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.4 * PlayState.songMultiplier)) // also they're almost impossible to hit late!
+				if (strumTime > Conductor.songPosition - (166 * 0.6 / PlayState.songMultiplier)
+					&& strumTime < Conductor.songPosition + (166 * 0.4 * PlayState.songMultiplier)) // also they're almost impossible to hit late!
 					canBeHit = true;
 				else
 					canBeHit = false;
@@ -328,21 +328,20 @@ class Note extends FlxSprite
 			else
 			{
 				if (FlxG.save.data.newhittimings) {
-				if (strumTime - Conductor.songPosition  <= (((Conductor.safeZoneOffset * Conductor.timeScale)))
-					&& strumTime - Conductor.songPosition >= (((-(Conductor.safeZoneOffset) * Conductor.timeScale))))
+				if (strumTime - Conductor.songPosition  <= (((166 * Conductor.timeScale)))
+					&& strumTime - Conductor.songPosition >= (((-166 * Conductor.timeScale))))
 					canBeHit = true;
 				else
 					canBeHit = false;
 				}
 				else {
-				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset / PlayState.songMultiplier)
-					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5 * PlayState.songMultiplier)) // The * 0.5 is so that it's easier to hit them too late, instead of too early
+				if (strumTime > Conductor.songPosition - (166 / PlayState.songMultiplier)
+					&& strumTime < Conductor.songPosition + (166 * 0.5 * PlayState.songMultiplier)) // The * 0.5 is so that it's easier to hit them too late, instead of too early
 					canBeHit = true;
 				else
 					canBeHit = false;
 				}
-
-				if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset * Conductor.timeScale && !wasGoodHit)
+				if (strumTime < Conductor.songPosition - 166 * Conductor.timeScale && !wasGoodHit && !FlxG.save.data.newhittimings)
 					tooLate = true;
 			}
 		}
