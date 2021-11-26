@@ -252,6 +252,9 @@ class AlphaCharacter extends FlxSprite
 		frames = tex;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			color = FlxColor.CYAN;
+
 
 		antialiasing = true;
 	}

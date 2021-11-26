@@ -33,6 +33,7 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var white:FlxSprite;
+	var red:FlxSprite;
 	var camFollow:FlxObject;
 
 	var fnfversion:String = '0.2.7.1';
@@ -55,6 +56,8 @@ class MainMenuState extends MusicBeatState
 		{
 			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+				FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 			else
 				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			FlxG.sound.music.time = 10448;
@@ -67,6 +70,11 @@ class MainMenuState extends MusicBeatState
 		{
 			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 			bg.color = FlxColor.ORANGE;
+		}
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+		{
+			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+			bg.color = FlxColor.CYAN;
 		}
 		else
 			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
@@ -101,6 +109,16 @@ class MainMenuState extends MusicBeatState
 		white.antialiasing = true;
 		white.color = FlxColor.WHITE;
 		add(white);
+		red = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		red.scrollFactor.x = 0;
+		red.scrollFactor.y = 0.17;
+		red.setGraphicSize(Std.int(bg.width));
+		red.updateHitbox();
+		red.screenCenter();
+		red.visible = false;
+		red.antialiasing = true;
+		red.color = FlxColor.RED;
+		add(red);
 		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
@@ -113,6 +131,8 @@ class MainMenuState extends MusicBeatState
 			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
 			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 				menuItem.color = FlxColor.ORANGE;
+			else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+				menuItem.color = FlxColor.CYAN;
 			menuItem.frames = tex;
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " idle", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " selected", 24);
@@ -131,13 +151,21 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			versionShit.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			versionShit.color = FlxColor.CYAN;
 		add(versionShit);
 		var halloween:FlxText = new FlxText(0, 18, "Happy Halloween " + Date.now().getFullYear() + "!", 16);
 		halloween.scrollFactor.set();
 		halloween.setFormat("VCR OSD Mono", 16, FlxColor.ORANGE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		halloween.screenCenter(X);
+		var christmas:FlxText = new FlxText(0, 18, "Merry Christmas " + Date.now().getFullYear() + "!", 16);
+		christmas.scrollFactor.set();
+		christmas.setFormat("VCR OSD Mono", 16, FlxColor.CYAN, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		christmas.screenCenter(X);
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			add(halloween);
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			add(christmas);
 
 		// NG.core.calls.event.logEvent('swag').send();
 
@@ -221,6 +249,8 @@ class MainMenuState extends MusicBeatState
 
 					if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 						FlxFlicker.flicker(white, 1.1, 0.15, false);
+					else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+						FlxFlicker.flicker(red, 1.1, 0.15, false);
 					else
 						FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 

@@ -58,6 +58,8 @@ class FreeplayState extends MusicBeatState
 			{
 				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+					FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 				else
 					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 				FlxG.sound.music.time = 10448;
@@ -70,6 +72,8 @@ class FreeplayState extends MusicBeatState
 			{
 				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+					FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 				else
 					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 				FlxG.sound.music.time = 10448;
@@ -197,6 +201,8 @@ class FreeplayState extends MusicBeatState
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			scoreText.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			scoreText.color = FlxColor.CYAN;
 		// scoreText.alignment = RIGHT;
 
 		#if desktop
@@ -213,6 +219,8 @@ class FreeplayState extends MusicBeatState
 		diffText.font = scoreText.font;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			diffText.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			diffText.color = FlxColor.CYAN;
 
 		rate = PlayState.songMultiplier;
 
@@ -220,6 +228,8 @@ class FreeplayState extends MusicBeatState
 		previewtext.font = scoreText.font;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			previewtext.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			previewtext.color = FlxColor.CYAN;
 		
 		controlstext = new FlxText(scoreText.x, scoreText.y + 96, 0, "", 16);
 		#if desktop
@@ -231,6 +241,8 @@ class FreeplayState extends MusicBeatState
 		controlstext.x = FlxG.width - controlstext.width;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			controlstext.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			controlstext.color = FlxColor.CYAN;
 
 		add(diffText);
 
@@ -501,6 +513,8 @@ class FreeplayState extends MusicBeatState
 			{
 				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+					FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 				else
 					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 				FlxG.sound.music.time = 10448;
@@ -526,10 +540,12 @@ class FreeplayState extends MusicBeatState
 				if (FlxG.save.data.freeplaypreviews)
 				{
 					if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
-					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
-				else
-					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
-					FlxG.sound.music.time = 10448;
+						FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+					else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+						FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
+					else
+						FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+						FlxG.sound.music.time = 10448;
 				}
 				#end
 				if (FlxG.save.data.menutransitions)
@@ -710,7 +726,7 @@ class FreeplayState extends MusicBeatState
 				return 0xFFFA86C4;
 			case 'spirit':
 				return 0xFF320691;
-			case 'spooky':
+			case 'spooky' | 'spooky-bside':
 				var random:Int;
 				random = FlxG.random.int(0, 1);
 				if (random == 1)
@@ -729,13 +745,6 @@ class FreeplayState extends MusicBeatState
 				return 0xFFFBE30C;
 			case 'bf-bside':
 				return 0xFFE86ACB;
-			case 'spooky-bside':
-				var random:Int;
-				random = FlxG.random.int(0, 1);
-				if (random == 1)
-					return 0xFFFD9013;
-				else
-					return 0xFFC3C3C3;
 			default:
 				return FlxColor.WHITE;
 		}
@@ -936,6 +945,8 @@ class FreeplayState extends MusicBeatState
 			songText = new Alphabet(0, (70 * i) + 30, bsidesongs[i].songName, true, false);
 			if (bsidesongs[i].songCharacter == 'spooky' && Date.now().getMonth() == 9)
 				songText.color = FlxColor.ORANGE;
+			else if (bsidesongs[i].songCharacter.contains('christmas') && Date.now().getMonth() == 11)
+				songText.color = FlxColor.CYAN;
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpVisible.add(songText);
@@ -963,6 +974,8 @@ class FreeplayState extends MusicBeatState
 				songText = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			if (songs[i].songCharacter == 'spooky' && Date.now().getMonth() == 9)
 				songText.color = FlxColor.ORANGE;
+			else if (songs[i].songCharacter.contains('christmas') && Date.now().getMonth() == 11)
+				songText.color = FlxColor.CYAN;
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpVisible.add(songText);

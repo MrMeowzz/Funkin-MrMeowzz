@@ -113,7 +113,7 @@
 	<SubTexture name="Dad Sing Note UP0057" x="408" y="818" width="408" height="809" frameX="0" frameY="-8" frameWidth="409" frameHeight="818"/>
 	<SubTexture name="Dad Sing Note UP0058" x="0" y="818" width="408" height="809" frameX="0" frameY="-8" frameWidth="409" frameHeight="818"/>
 	<SubTexture name="Dad Sing Note UP0059" x="0" y="818" width="408" height="809" frameX="0" frameY="-8" frameWidth="409" frameHeight="818"/>
-	<SubTexture name="Dad SingNote DOWN MISS0000" x="0" y="0" width="470" height="730" pivotX="3.7" pivotY="69.7" frameX="0" frameY="-5" frameWidth="470" frameHeight="735"/>
+	<SubTexture name="Dad SingNote DOWN MISS0000" x="816" y="818" width="470" height="730"/>
 	<SubTexture name="Dad SingNote DOWN MISS0001" x="816" y="818" width="470" height="730"/>
 	<SubTexture name="Dad SingNote DOWN MISS0002" x="816" y="818" width="470" height="730"/>
 	<SubTexture name="Dad SingNote DOWN MISS0003" x="1286" y="818" width="470" height="730"/>
@@ -138,7 +138,7 @@
 	<SubTexture name="Dad SingNote DOWN MISS0022" x="1286" y="818" width="470" height="730"/>
 	<SubTexture name="Dad SingNote DOWN MISS0023" x="1286" y="818" width="470" height="730"/>
 	<SubTexture name="Dad SingNote DOWN MISS0024" x="1286" y="818" width="470" height="730"/>
-	<SubTexture name="Dad SingNote LEFT MISS0000" x="933" y="0" width="371" height="777" pivotX="-46.5" pivotY="76.45" frameX="0" frameY="0" frameWidth="383" frameHeight="777"/>
+	<SubTexture name="Dad SingNote LEFT MISS0000" x="1756" y="818" width="383" height="777"/>
 	<SubTexture name="Dad SingNote LEFT MISS0001" x="1756" y="818" width="383" height="777"/>
 	<SubTexture name="Dad SingNote LEFT MISS0002" x="1756" y="818" width="383" height="777"/>
 	<SubTexture name="Dad SingNote LEFT MISS0003" x="2139" y="818" width="383" height="777"/>
@@ -163,7 +163,7 @@
 	<SubTexture name="Dad SingNote LEFT MISS0022" x="2139" y="818" width="383" height="777"/>
 	<SubTexture name="Dad SingNote LEFT MISS0023" x="2139" y="818" width="383" height="777"/>
 	<SubTexture name="Dad SingNote LEFT MISS0024" x="2139" y="818" width="383" height="777"/>
-	<SubTexture name="Dad SingNote RIGHT MISS0000" x="2070" y="0" width="465" height="792" pivotX="0.45" pivotY="111.35" frameX="0" frameY="-1" frameWidth="465" frameHeight="793"/>
+	<SubTexture name="Dad SingNote RIGHT MISS0000" x="2522" y="818" width="452" height="793"/>
 	<SubTexture name="Dad SingNote RIGHT MISS0001" x="2522" y="818" width="452" height="793"/>
 	<SubTexture name="Dad SingNote RIGHT MISS0002" x="2522" y="818" width="452" height="793"/>
 	<SubTexture name="Dad SingNote RIGHT MISS0003" x="2974" y="818" width="452" height="793"/>
@@ -188,7 +188,7 @@
 	<SubTexture name="Dad SingNote RIGHT MISS0022" x="2974" y="818" width="452" height="793"/>
 	<SubTexture name="Dad SingNote RIGHT MISS0023" x="2974" y="818" width="452" height="793"/>
 	<SubTexture name="Dad SingNote RIGHT MISS0024" x="2974" y="818" width="452" height="793"/>
-	<SubTexture name="Dad SingNote UP MISS0000" x="3439" y="0" width="408" height="818" pivotX="373.3" pivotY="597.65" frameX="-1" frameY="0" frameWidth="409" frameHeight="818"/>
+	<SubTexture name="Dad SingNote UP MISS0000" x="3426" y="818" width="408" height="809"/>
 	<SubTexture name="Dad SingNote UP MISS0001" x="3426" y="818" width="408" height="809"/>
 	<SubTexture name="Dad SingNote UP MISS0002" x="3426" y="818" width="408" height="809"/>
 	<SubTexture name="Dad SingNote UP MISS0003" x="0" y="1627" width="408" height="809"/>

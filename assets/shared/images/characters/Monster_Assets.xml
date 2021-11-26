@@ -27,7 +27,7 @@
 	<SubTexture name="monsterdown MISS0022" x="428" y="0" width="428" height="571"/>
 	<SubTexture name="monsterdown MISS0023" x="428" y="0" width="428" height="571"/>
 	<SubTexture name="monsterdown MISS0024" x="428" y="0" width="428" height="571"/>
-	<SubTexture name="Monster Rightnote MISS0000" x="3346" y="0" width="375" height="691" pivotX="0" pivotY="168.55" frameX="-4" frameY="0" frameWidth="381" frameHeight="691"/>
+	<SubTexture name="Monster Rightnote MISS0000" x="856" y="0" width="375" height="708"/>
 	<SubTexture name="Monster Rightnote MISS0001" x="856" y="0" width="375" height="708"/>
 	<SubTexture name="Monster Rightnote MISS0002" x="856" y="0" width="375" height="708"/>
 	<SubTexture name="Monster Rightnote MISS0003" x="1231" y="0" width="375" height="708"/>
@@ -52,7 +52,7 @@
 	<SubTexture name="Monster Rightnote MISS0022" x="1231" y="0" width="375" height="708"/>
 	<SubTexture name="Monster Rightnote MISS0023" x="1231" y="0" width="375" height="708"/>
 	<SubTexture name="Monster Rightnote MISS0024" x="1231" y="0" width="375" height="708"/>
-	<SubTexture name="Monster leftnote MISS0000" x="381" y="753" width="460" height="675" pivotX="513.95" pivotY="345.75" frameX="-15" frameY="0" frameWidth="475" frameHeight="677"/>
+	<SubTexture name="Monster leftnote MISS0000" x="1606" y="0" width="460" height="682"/>
 	<SubTexture name="Monster leftnote MISS0001" x="1606" y="0" width="460" height="682"/>
 	<SubTexture name="Monster leftnote MISS0002" x="1606" y="0" width="460" height="682"/>
 	<SubTexture name="Monster leftnote MISS0003" x="2066" y="0" width="460" height="682"/>
@@ -77,7 +77,7 @@
 	<SubTexture name="Monster leftnote MISS0022" x="2066" y="0" width="460" height="682"/>
 	<SubTexture name="Monster leftnote MISS0023" x="2066" y="0" width="460" height="682"/>
 	<SubTexture name="Monster leftnote MISS0024" x="2066" y="0" width="460" height="682"/>
-	<SubTexture name="monster upnote MISS0000" x="3388" y="2092" width="410" height="753" pivotX="0" pivotY="162.1" frameX="-7" frameY="0" frameWidth="418" frameHeight="759"/>
+	<SubTexture name="monster upnote MISS0000" x="2526" y="0" width="410" height="753"/>
 	<SubTexture name="monster upnote MISS0001" x="2526" y="0" width="410" height="753"/>
 	<SubTexture name="monster upnote MISS0002" x="2526" y="0" width="410" height="753"/>
 	<SubTexture name="monster upnote MISS0003" x="2936" y="0" width="410" height="753"/>

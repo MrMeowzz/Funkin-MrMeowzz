@@ -7,6 +7,7 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import flixel.util.FlxColor;
 
 class Main extends Sprite
 {
@@ -92,9 +93,11 @@ class Main extends Sprite
 
 		#if !mobile
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
-			framerateCounter = new FPS(10, 3, 0xFFFFA500);
+			framerateCounter = new FPS(10, 3, FlxColor.ORANGE);
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			framerateCounter = new FPS(10, 3, FlxColor.CYAN);
 		else
-			framerateCounter = new FPS(10, 3, 0xFFFFFF);
+			framerateCounter = new FPS(10, 3, FlxColor.WHITE);
 
 		addChild(framerateCounter);
 		#end

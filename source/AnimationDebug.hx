@@ -22,13 +22,15 @@ class AnimationDebug extends FlxState
 	var animList:Array<String> = [];
 	var curAnim:Int = 0;
 	var isDad:Bool = true;
-	var daAnim:String = 'spooky';
+	var daAnim:String = 'dad';
+	var daAnim2:String = 'bf';
 	var camFollow:FlxObject;
 
-	public function new(daAnim:String = 'spooky')
+	public function new(daAnim:String = 'dad', daAnim2:String = 'bf')
 	{
 		super();
 		this.daAnim = daAnim;
+		this.daAnim2 = daAnim2;
 	}
 
 	override function create()
@@ -56,7 +58,7 @@ class AnimationDebug extends FlxState
 		}
 		else
 		{
-			bf = new Boyfriend(0, 0);
+			bf = new Boyfriend(0, 0, daAnim2);
 			bf.screenCenter();
 			bf.debugMode = true;
 			add(bf);
@@ -149,7 +151,7 @@ class AnimationDebug extends FlxState
 			}
 			else
 			{
-				bf = new Boyfriend(0, 0);
+				bf = new Boyfriend(0, 0, daAnim2);
 				bf.screenCenter();
 				bf.debugMode = true;
 				add(bf);
@@ -166,7 +168,9 @@ class AnimationDebug extends FlxState
 		if (FlxG.keys.justPressed.P)
 		{
 			char.isPlayer = !char.isPlayer;
-			genBoyOffsets(false);
+			dumbTexts.clear();
+			animList = [];
+			genBoyOffsets();
 		}
 
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)

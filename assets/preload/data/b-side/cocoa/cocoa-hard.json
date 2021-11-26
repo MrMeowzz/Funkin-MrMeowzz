@@ -1,4 +1,4 @@
-{"song":{"song":"Cocoa","notes":[
+{"song":{"song":"Cocoa","stage":"mall","notes":[
 {"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"bpm":111,"changeBPM":true,"altAnim":false,"sectionNotes":[]},
 {"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"bpm":111,"changeBPM":true,"altAnim":false,"sectionNotes":[
 [2162.162162162162,0,0],

@@ -244,16 +244,23 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'Dad SingNote LEFT MISS', 24, false);
 
 				addOffset('idle');
-				addOffset("singUP", -6, 50);
-				addOffset("singRIGHT", 0, 27);
-				addOffset("singLEFT", -10, 10);
-				addOffset("singDOWN", 0, -30);
 				if (isPlayer)
 				{
-					//not yet future update
+					addOffset("singUP", -14, 52);
+					addOffset("singRIGHT", -40, 12);
+					addOffset("singLEFT", 40, 30);
+					addOffset("singDOWN", 40, -30);
+					addOffset("singUPmiss", -10, 45);
+					addOffset("singLEFTmiss", -40, 10);
+					addOffset("singDOWNmiss", 41, -36);
+					addOffset("singRIGHTmiss", -35, 10);
 				}
 				else
 				{
+					addOffset("singUP", -6, 50);
+					addOffset("singRIGHT", 0, 27);
+					addOffset("singLEFT", -10, 10);
+					addOffset("singDOWN", 0, -30);
 					addOffset("singUPmiss", -10, 40);
 					addOffset("singLEFTmiss", 0, 10);
 					addOffset("singDOWNmiss", 11, -36);
@@ -271,10 +278,28 @@ class Character extends FlxSprite
 				animation.addByPrefix('singLEFT', 'Dad Sing Note LEFT', 24);
 
 				addOffset('idle');
-				addOffset("singUP", -6, 50);
-				addOffset("singRIGHT", 0, 27);
-				addOffset("singLEFT", -10, 10);
-				addOffset("singDOWN", 0, -30);
+				if (isPlayer)
+				{
+					addOffset("singUP", -14, 52);
+					addOffset("singRIGHT", -40, 12);
+					addOffset("singLEFT", 40, 30);
+					addOffset("singDOWN", 40, -30);
+					addOffset("singUPmiss", -10, 45);
+					addOffset("singLEFTmiss", -40, 10);
+					addOffset("singDOWNmiss", 41, -36);
+					addOffset("singRIGHTmiss", -35, 10);
+				}
+				else
+				{
+					addOffset("singUP", -6, 50);
+					addOffset("singRIGHT", 0, 27);
+					addOffset("singLEFT", -10, 10);
+					addOffset("singDOWN", 0, -30);
+					addOffset("singUPmiss", -10, 40);
+					addOffset("singLEFTmiss", 0, 10);
+					addOffset("singDOWNmiss", 11, -36);
+					addOffset("singRIGHTmiss", -10, 10);
+				}
 
 				playAnim('idle');
 			case 'spooky':
@@ -294,16 +319,23 @@ class Character extends FlxSprite
 				addOffset('danceLeft');
 				addOffset('danceRight');
 
-				addOffset("singUP", -20, 26);
-				addOffset("singRIGHT", -130, -14);
-				addOffset("singLEFT", 130, -10);
-				addOffset("singDOWN", -50, -130);
 				if (isPlayer)
 				{
-					//not yet future update
+					addOffset("singUP", -50, 26);
+					addOffset("singRIGHT", -100, -14);
+					addOffset("singLEFT", -40, -10);
+					addOffset("singDOWN", 30, -130);
+					addOffset("singUPmiss", 0, 30);
+					addOffset("singLEFTmiss", -20, -20);
+					addOffset("singDOWNmiss", 0, -150);
+					addOffset("singRIGHTmiss", 110, -10);
 				}
 				else
 				{
+					addOffset("singUP", -20, 26);
+					addOffset("singRIGHT", -130, -14);
+					addOffset("singLEFT", 130, -10);
+					addOffset("singDOWN", -50, -130);
 					addOffset("singUPmiss", 0, 30);
 					addOffset("singLEFTmiss", 70, -20);
 					addOffset("singDOWNmiss", 0, -150);
@@ -406,7 +438,10 @@ class Character extends FlxSprite
 				animation.addByPrefix('singLEFTmiss', 'Monster leftnote MISS', 24, false);
 				animation.addByPrefix('singRIGHTmiss', 'Monster Rightnote MISS', 24, false);
 
+				animation.addByPrefix('hey', 'monster hey', 24, false);
+
 				addOffset('idle');
+				addOffset('hey');
 				if (isPlayer)
 				{
 					addOffset("singUP", -40, 80);
@@ -1228,7 +1263,22 @@ class Character extends FlxSprite
 				//warning offset overload
 				if (isPlayer)
 				{
-					//not yet future update
+					addOffset("singUP", -37, 24);
+					addOffset("singRIGHT", -61, 17);
+					addOffset("singLEFT", 80, -24);
+					addOffset("singDOWN", -11, -19);
+					addOffset("singUP-alt", -37, 24);
+					addOffset("singRIGHT-alt", -61, 16);
+					addOffset("singLEFT-alt", 80, -25);
+					addOffset("singDOWN-alt", -12, -17);
+					addOffset("singUPmiss", -34, 26);
+					addOffset("singLEFTmiss", 70, -24);
+					addOffset("singDOWNmiss", 0, -40);
+					addOffset("singRIGHTmiss", -74, 18);
+					addOffset("singUPmiss-alt", -34, 26);
+					addOffset("singLEFTmiss-alt", 70, -24);
+					addOffset("singDOWNmiss-alt", 0, -40);
+					addOffset("singRIGHTmiss-alt", -74, 18);
 				}
 				else
 				{

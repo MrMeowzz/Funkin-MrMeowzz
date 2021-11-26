@@ -37,9 +37,6 @@ class OptionSaveData
 		if (FlxG.save.data.misssounds == null)		
 			FlxG.save.data.misssounds = true;
 		
-		if (FlxG.save.data.countdown == null)		
-			FlxG.save.data.countdown = false;
-		
 		if (FlxG.save.data.hitsounds == null)		
 			FlxG.save.data.hitsounds = false;
 		
@@ -112,8 +109,6 @@ class OptionSaveData
 		FlxG.save.data.disabledmissstun = true;
 			
 		FlxG.save.data.misssounds = true;
-			
-		FlxG.save.data.countdown = false;
 		
 		FlxG.save.data.hitsounds = false;
 			

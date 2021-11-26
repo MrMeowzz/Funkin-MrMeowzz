@@ -59,6 +59,8 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			curWacky = ["ITS", "SPOOKY DAY"];
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			curWacky = ["ITS", "THE HOLIDAYS"];
 
 		// DEBUG BULLSHIT
 
@@ -161,9 +163,11 @@ class TitleState extends MusicBeatState
 			// FlxG.sound.list.add(music);
 			// music.play();
 			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
-				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'), 0);
+			else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+				FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 			else
-				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
+				FlxG.sound.playMusic(Paths.music('frogMenuRemix'), 0);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
@@ -180,6 +184,8 @@ class TitleState extends MusicBeatState
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			logoBl.frames = Paths.getSparrowAtlas('logoBumpinSPOOKY');
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpinFESTIVE');
 		logoBl.antialiasing = true;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logoBl.animation.play('bump');
@@ -192,6 +198,14 @@ class TitleState extends MusicBeatState
 			gfDance.frames = Paths.getSparrowAtlas('spookyDance');
 			gfDance.animation.addByIndices('danceLeft', 'spooky dance', [16, 0, 1, 2, 3, 4, 5, 6, 7], "", 24, false);
 			gfDance.animation.addByIndices('danceRight', 'spooky dance', [8, 9, 10, 11, 12, 13, 14, 15], "", 24, false);
+			gfDance.antialiasing = true;
+		}
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+		{
+			gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
+			gfDance.frames = Paths.getSparrowAtlas('gfChristmasDanceTitle');
+			gfDance.animation.addByIndices('danceLeft', 'GF Dancing Beat', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			gfDance.animation.addByIndices('danceRight', 'GF Dancing Beat', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 			gfDance.antialiasing = true;
 		}
 		else

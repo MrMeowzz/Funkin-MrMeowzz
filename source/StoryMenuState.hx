@@ -151,6 +151,8 @@ class StoryMenuState extends MusicBeatState
 				{
 					if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 						FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+					else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+						FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 					else
 						FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 					FlxG.sound.music.time = 10448;
@@ -170,8 +172,6 @@ class StoryMenuState extends MusicBeatState
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 49324858", 36);
 		scoreText.setFormat("VCR OSD Mono", 32);
-		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
-			scoreText.color = FlxColor.ORANGE;
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
 		txtWeekTitle.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, RIGHT);
@@ -263,8 +263,6 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.play('easy');
 
 		controlstext = new FlxText(871, 582, 0, "Press the -> and <- keys to toggle difficulty.", 14);
-		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
-			controlstext.color = FlxColor.ORANGE;
 		add(controlstext);
 
 		difficultySelectors.add(sprDifficulty);
@@ -432,6 +430,8 @@ class StoryMenuState extends MusicBeatState
 					FlxG.sound.music.stop();
 					if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 						FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+					else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+						FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 					else
 						FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 					FlxG.sound.music.time = 10448;
@@ -465,6 +465,8 @@ class StoryMenuState extends MusicBeatState
 				FlxG.sound.music.stop();
 				if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 					FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+				else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+					FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 				else
 					FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 				FlxG.sound.music.time = 10448;

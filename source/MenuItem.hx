@@ -46,11 +46,18 @@ class MenuItem extends FlxSpriteGroup
 			flashingInt += 1;
 
 		if (flashingInt % fakeFramerate >= Math.floor(fakeFramerate / 2))
-			week.color = 0xFF33ffff;
+			if ((weekNum == 2 && Date.now().getMonth() == 9) || (Date.now().getMonth() == 9 && Date.now().getDate() == 31))
+				week.color = FlxColor.WHITE;
+			else if ((weekNum == 5 && Date.now().getMonth() == 11) || (Date.now().getMonth() == 11 && Date.now().getDate() == 25))
+				week.color = FlxColor.RED;
+			else
+				week.color = 0xFF33ffff;
 		else
 		{
 			if ((weekNum == 2 && Date.now().getMonth() == 9) || (Date.now().getMonth() == 9 && Date.now().getDate() == 31))
 				week.color = FlxColor.ORANGE;
+			else if ((weekNum == 5 && Date.now().getMonth() == 11) || (Date.now().getMonth() == 11 && Date.now().getDate() == 25))
+				week.color = FlxColor.CYAN;
 			else
 				week.color = FlxColor.WHITE;
 		}

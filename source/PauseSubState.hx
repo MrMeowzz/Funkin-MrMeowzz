@@ -190,42 +190,6 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		add(modeText);
 
-		var sicks:FlxText = new FlxText(20, 568, 0, "", 32);
-		sicks.text += "SICKS: " + PlayState.sicks;
-		sicks.scrollFactor.set();
-		sicks.setFormat(Paths.font("vcr.ttf"), 32);
-		sicks.updateHitbox();
-		add(sicks);
-
-		var goods:FlxText = new FlxText(20, 568 + 32, 0, "", 32);
-		goods.text += "GOODS: " + PlayState.goods;
-		goods.scrollFactor.set();
-		goods.setFormat(Paths.font("vcr.ttf"), 32);
-		goods.updateHitbox();
-		add(goods);
-
-		var bads:FlxText = new FlxText(20, 568 + 64, 0, "", 32);
-		if (PlayState.curStage.startsWith('amogus'))
-			bads.text += "SUS: " + PlayState.bads;
-		else
-			bads.text += "BADS: " + PlayState.bads;
-		bads.scrollFactor.set();
-		bads.setFormat(Paths.font("vcr.ttf"), 32);
-		bads.updateHitbox();
-		add(bads);
-
-		var shits:FlxText = new FlxText(20, 568 + 96, 0, "", 32);
-		if (PlayState.curStage.startsWith('amogus'))
-			shits.text += "SUS!: " + PlayState.shits;
-		else if (FlxG.save.data.cleanmode)
-			shits.text += "TERRIBLES: " + PlayState.shits;
-		else
-			shits.text += "SHITS: " + PlayState.shits;
-		shits.scrollFactor.set();
-		shits.setFormat(Paths.font("vcr.ttf"), 32);
-		shits.updateHitbox();
-		add(shits);
-
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
 		bpmlevelInfo.alpha = 0;
@@ -233,10 +197,6 @@ class PauseSubState extends MusicBeatSubstate
 		ratelevelInfo.alpha = 0;
 		deathMenuCounter.alpha = 0;
 		playingAs.alpha = 0;
-		sicks.alpha = 0;
-		goods.alpha = 0;
-		bads.alpha = 0;
-		shits.alpha = 0;
 		if (modeText.visible)
 			modeText.alpha = 0;
 
@@ -248,10 +208,6 @@ class PauseSubState extends MusicBeatSubstate
 		deathMenuCounter.x = FlxG.width - (deathMenuCounter.width + 20);
 		modeText.x = FlxG.width - (modeText.width + 20);
 		playingAs.x = FlxG.width - (playingAs.width + 20);
-		sicks.x = FlxG.width - (sicks.width + 20);
-		goods.x = FlxG.width - (goods.width + 20);
-		bads.x = FlxG.width - (bads.width + 20);
-		shits.x = FlxG.width - (shits.width + 20);
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
@@ -263,11 +219,6 @@ class PauseSubState extends MusicBeatSubstate
 		FlxTween.tween(playingAs, {alpha: 1, y: playingAs.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.5});
 		if (modeText.visible)
 			FlxTween.tween(modeText, {alpha: 1, y: modeText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.7});
-
-		FlxTween.tween(sicks, {alpha: 1, y: sicks.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
-		FlxTween.tween(goods, {alpha: 1, y: goods.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
-		FlxTween.tween(bads, {alpha: 1, y: bads.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
-		FlxTween.tween(shits, {alpha: 1, y: shits.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
@@ -298,10 +249,17 @@ class PauseSubState extends MusicBeatSubstate
 			deathMenuCounter.color = FlxColor.ORANGE;
 			playingAs.color = FlxColor.ORANGE;
 			modeText.color = FlxColor.ORANGE;
-			sicks.color = FlxColor.ORANGE;
-			goods.color = FlxColor.ORANGE;
-			bads.color = FlxColor.ORANGE;
-			shits.color = FlxColor.ORANGE;
+		}
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+		{
+			levelInfo.color = FlxColor.CYAN;
+			bpmlevelInfo.color = FlxColor.CYAN;
+			speedlevelInfo.color = FlxColor.CYAN;
+			ratelevelInfo.color = FlxColor.CYAN;
+			levelDifficulty.color = FlxColor.CYAN;
+			deathMenuCounter.color = FlxColor.CYAN;
+			playingAs.color = FlxColor.CYAN;
+			modeText.color = FlxColor.CYAN;
 		}
 	}
 
@@ -500,6 +458,8 @@ class PauseSubState extends MusicBeatSubstate
 						{
 							if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 								FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+							else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+								FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 							else
 								FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 							FlxG.sound.music.time = 10448;
@@ -538,7 +498,10 @@ class PauseSubState extends MusicBeatSubstate
 					OG.currentCutsceneEnded = false;
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
-					FlxG.switchState(new MainMenuState());
+					if (PlayState.isStoryMode)
+						FlxG.switchState(new StoryMenuState());
+					else
+						FlxG.switchState(new FreeplayState());
 				case "Toggle Practice Mode":
 					PlayState.praticemode = !PlayState.praticemode;
 					modeText.visible = PlayState.praticemode;
@@ -596,15 +559,15 @@ class PauseSubState extends MusicBeatSubstate
 						player = 1;
 					else
 						player = 2;
-					menuItems = ['bf', 'amog us', 'monster', 'tankman', 'pico', 'mom', 'gf', 'BACK'];
-					var pixelmenuItems:Array<String> = ['bf', 'tankman', 'pico', 'senpai', 'spirit', 'BACK'];
+					menuItems = ['amog us', 'amog us guy', 'bf', 'dad', 'gf', 'mom', 'monster', 'parents', 'pico', 'spooky kids', 'tankman', 'BACK'];
+					var pixelmenuItems:Array<String> = ['bf', 'pico', 'senpai', 'spirit', 'tankman', 'BACK'];
 					if (!PlayState.curStage.startsWith('school'))
 					{
-						player1Characters = ['bf', 'bf-amogus', 'monster', 'tankman', 'pico', 'mom', 'gf'];
+						player1Characters = ['bf-amogus', 'amogusguy', 'bf', 'dad', 'gf', 'mom', 'monster', 'parents-christmas', 'pico', 'spooky', 'tankman'];
 						player2Characters = player1Characters;
 						if (player == 1)
 						{
-							if (menuItems.contains(PlayState.SONG.player1))
+							if (menuItems.contains(PlayState.SONG.player1) || player1Characters.contains(PlayState.SONG.player1))
 							{
 								menuItems.remove(PlayState.SONG.player1);
 								player1Characters.remove(PlayState.SONG.player1);
@@ -726,12 +689,21 @@ class PauseSubState extends MusicBeatSubstate
 						player1Characters = ['bf-pixel', 'tankman-pixel', 'pico-pixel', 'senpai', 'spirit'];
 						player2Characters = player1Characters;
 						menuItems = pixelmenuItems;
-						var nonpixel:String = Std.string(PlayState.SONG.player1);
-						if (player == 2)
+						var nonpixel:String;
+						if (player == 1)
+							nonpixel = Std.string(PlayState.SONG.player1);
+						else
 							nonpixel = Std.string(PlayState.SONG.player2);
+
 						nonpixel = nonpixel.replace("-pixel","");
 						if (menuItems.contains(nonpixel))
+						{
 							menuItems.remove(nonpixel);
+							if (player == 1)
+								player1Characters.remove(PlayState.SONG.player1);
+							else
+								player2Characters.remove(PlayState.SONG.player2);
+						}
 
 						if (player == 1)
 						{
@@ -798,7 +770,7 @@ class PauseSubState extends MusicBeatSubstate
 					if (FlxG.save.data.menutransitions)
 						FlxTween.tween(FlxG.camera, { zoom: 0.5, x: FlxG.width * -1}, 1, {ease: FlxEase.quadIn });
 					LoadingState.loadAndSwitchState(new PlayState());
-				case "tankman" | "bf" | "pico" | "gf" | "amog us" | "monster" | "mom" | "senpai" | "spirit":
+				case "amog us" | "amog us guy" | "bf" | "dad" | "gf" | "mom" | "monster" | "parents" | "pico" | "spooky kids" | "tankman":
 					if (player == 1)
 						PlayState.SONG.player1 = player1Characters[curSelected];
 					else
@@ -809,14 +781,14 @@ class PauseSubState extends MusicBeatSubstate
 						case "tankman":
 							if (player == 1)
 							{
-								if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+								if (PlayState.curStage.startsWith('school'))
 									PlayState.SONG.player1 += "-pixel";
 								else if (PlayState.SONG.song.toLowerCase() == 'no among us')
 									PlayState.SONG.player1 += "noamongus";
 							}
 							else
 							{
-								if (PlayState.curStage == "school" || PlayState.curStage == "schoolEvil")
+								if (PlayState.curStage.startsWith('school'))
 									PlayState.SONG.player2 += "-pixel";
 								else if (PlayState.SONG.song.toLowerCase() == 'no among us')
 									PlayState.SONG.player2 += "noamongus";

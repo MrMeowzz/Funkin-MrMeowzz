@@ -138,6 +138,7 @@ class ChartingState extends MusicBeatState
 		{
 			_song = {
 				song: 'Test',
+				stage: 'stage',
 				notes: [],
 				bpm: 150,
 				needsVoices: true,
@@ -259,6 +260,16 @@ class ChartingState extends MusicBeatState
 			HitsoundsPlayer = Std.parseInt(player);
 		});
 		hitsoundsPlayerDropDown.selectedLabel = "both";
+
+		var stages:Array<String> = CoolUtil.coolTextFile(Paths.txt('stages'));
+
+		var stageDropDown = new FlxUIDropDownMenu(125, 350, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), function(stage:String)
+		{
+			_song.stage = stages[Std.parseInt(stage)];
+		});
+		stageDropDown.selectedLabel = _song.stage;
+
+		var stageTxt:FlxText = new FlxText(stageDropDown.x, stageDropDown.y - 25, 0, "Stage");
 
 		var saveButton:FlxButton = new FlxButton(110, 8, "Save", function()
 		{
@@ -405,6 +416,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(gfDropDown);
 		tab_group_song.add(gfTxt);
 		tab_group_song.add(hitsoundsPlayerDropDown);
+		tab_group_song.add(stageDropDown);
+		tab_group_song.add(stageTxt);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(check_player2hitsbadnotes);
@@ -875,6 +888,8 @@ class ChartingState extends MusicBeatState
 			vocals.stop();
 			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+				FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 			else
 				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			FlxG.sound.music.time = 10448;

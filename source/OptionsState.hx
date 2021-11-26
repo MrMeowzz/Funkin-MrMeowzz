@@ -29,7 +29,6 @@ class OptionsState extends MusicBeatState
 	'Override Song Scroll Speed', 
 	'Miss Stun', 
 	'Miss Sounds', 
-	'Timer Type', 
 	'Hit Sounds',
 	'Enemy Hit Sounds', 
 	'Instant Restart', 
@@ -63,7 +62,6 @@ class OptionsState extends MusicBeatState
 	'Override Song Speed ON', 
 	'Miss Stun OFF', 
 	'Miss Sounds ON', 
-	'Countdown', 
 	'Hit Sounds ON',
 	'Enemy Hit Sounds ON', 
 	'Instant Restart ON', 
@@ -95,7 +93,6 @@ class OptionsState extends MusicBeatState
 	'Override Song Speed OFF', 
 	'Miss Stun ON', 
 	'Miss Sounds OFF', 
-	'Bar', 
 	'Hit Sounds OFF',
 	'Enemy Hit Sounds OFF', 
 	'Instant Restart OFF', 
@@ -147,6 +144,8 @@ class OptionsState extends MusicBeatState
 		{
 			if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 				FlxG.sound.playMusic(Paths.music('frogMenuSPOOKY'));
+			else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+				FlxG.sound.playMusic(Paths.music('frogMenuFESTIVE'));
 			else
 				FlxG.sound.playMusic(Paths.music('frogMenuRemix'));
 			FlxG.sound.music.time = 10448;
@@ -160,6 +159,8 @@ class OptionsState extends MusicBeatState
 		menuBG.color = 0xFFea71fd;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			menuBG.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			menuBG.color = FlxColor.CYAN;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
@@ -170,6 +171,8 @@ class OptionsState extends MusicBeatState
 		descriptiontxt.setFormat(Paths.font("vcr.ttf"), 15, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			descriptiontxt.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			descriptiontxt.color = FlxColor.CYAN;
 		add(descriptiontxt);
 
 		numtxt = new FlxText(0, 0, 0, "sus", 30);
@@ -179,6 +182,8 @@ class OptionsState extends MusicBeatState
 		numtxt.y += 250;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			numtxt.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			numtxt.color = FlxColor.CYAN;
 		add(numtxt);
 
 		notestyletxt = new FlxText(0, 0, 0, "woah", 30);
@@ -188,6 +193,8 @@ class OptionsState extends MusicBeatState
 		notestyletxt.y += 250;
 		if (Date.now().getMonth() == 9 && Date.now().getDate() == 31)
 			notestyletxt.color = FlxColor.ORANGE;
+		else if (Date.now().getMonth() == 11 && Date.now().getDate() == 25)
+			notestyletxt.color = FlxColor.CYAN;
 		add(notestyletxt);
 
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
@@ -470,11 +477,6 @@ class OptionsState extends MusicBeatState
 					FlxG.save.flush();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					regenStuff();
-				case "Timer Type":
-					FlxG.save.data.countdown = !FlxG.save.data.countdown;
-					FlxG.save.flush();
-					FlxG.sound.play(Paths.sound('confirmMenu'));
-					regenStuff();
 				case "Hit Sounds":
 					FlxG.save.data.hitsounds = !FlxG.save.data.hitsounds;
 					FlxG.save.flush();
@@ -579,7 +581,6 @@ class OptionsState extends MusicBeatState
 		'Whether to override the song scroll speed or not. Press the <- and -> keys if enabled. Hold ${KeyBinds.gamepad ? 'LEFT Shoulder to change faster' : 'shift to increase or decrease faster'}.', 
 		'Whether to disable or enable miss stun. Disabling miss stun causes health to drain faster and enables anti-mash.', 
 		'Whether to play miss sounds or not.', 
-		'Whether to use a countdown or a bar to display the remaining amount of time a song has.', 
 		'Plays a sound when a note is hit. Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current hit sound. Replace hitsound.ogg in assets/sounds for a different sound.',
 		'Press ${KeyBinds.gamepad ? 'Y' : 'P'} to play the current enemy hit sound. Replace enemyhitsound.ogg in assets/sounds for a different sound.', 
 		'Skips the short animation before restarting when enabled.', 
@@ -698,13 +699,6 @@ class OptionsState extends MusicBeatState
 		i++;
 
 		if (FlxG.save.data.misssounds)
-			VisibleOptions.push(OptionsON[i]);
-		else
-			VisibleOptions.push(OptionsOFF[i]);
-
-		i++;
-
-		if (FlxG.save.data.countdown)
 			VisibleOptions.push(OptionsON[i]);
 		else
 			VisibleOptions.push(OptionsOFF[i]);
