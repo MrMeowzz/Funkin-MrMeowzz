@@ -2,7 +2,7 @@
 <TextureAtlas imagePath="picoPixel.png">
 	<!-- Created with Adobe Animate version 20.0.0.17400 -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="BF DOWN MISS instance 10000" x="182" y="0" width="88" height="77"/>
+	<SubTexture name="BF DOWN MISS instance 10000" x="0" y="0" width="88" height="77"/>
 	<SubTexture name="BF DOWN MISS instance 10001" x="0" y="0" width="88" height="77"/>
 	<SubTexture name="BF DOWN MISS instance 10002" x="0" y="0" width="88" height="77"/>
 	<SubTexture name="BF DOWN MISS instance 10003" x="91" y="0" width="88" height="77"/>
@@ -44,7 +44,7 @@
 	<SubTexture name="BF IDLE instance 10011" x="182" y="91" width="88" height="77"/>
 	<SubTexture name="BF IDLE instance 10012" x="182" y="91" width="88" height="77"/>
 	<SubTexture name="BF IDLE instance 10013" x="182" y="91" width="88" height="77"/>
-	<SubTexture name="BF LEFT MISS instance 10000" x="455" y="91" width="88" height="77"/>
+	<SubTexture name="BF LEFT MISS instance 10000" x="273" y="91" width="88" height="77"/>
 	<SubTexture name="BF LEFT MISS instance 10001" x="273" y="91" width="88" height="77"/>
 	<SubTexture name="BF LEFT MISS instance 10002" x="273" y="91" width="88" height="77"/>
 	<SubTexture name="BF LEFT MISS instance 10003" x="364" y="91" width="88" height="77"/>
@@ -72,7 +72,7 @@
 	<SubTexture name="BF LEFT NOTE instance 10011" x="0" y="182" width="88" height="77"/>
 	<SubTexture name="BF LEFT NOTE instance 10012" x="0" y="182" width="88" height="77"/>
 	<SubTexture name="BF LEFT NOTE instance 10013" x="0" y="182" width="88" height="77"/>
-	<SubTexture name="BF RIGHT MISS instance 10000" x="273" y="182" width="88" height="77"/>
+	<SubTexture name="BF RIGHT MISS instance 10000" x="91" y="182" width="88" height="77"/>
 	<SubTexture name="BF RIGHT MISS instance 10001" x="91" y="182" width="88" height="77"/>
 	<SubTexture name="BF RIGHT MISS instance 10002" x="91" y="182" width="88" height="77"/>
 	<SubTexture name="BF RIGHT MISS instance 10003" x="182" y="182" width="88" height="77"/>
@@ -100,7 +100,7 @@
 	<SubTexture name="BF RIGHT NOTE instance 10011" x="364" y="182" width="88" height="77"/>
 	<SubTexture name="BF RIGHT NOTE instance 10012" x="364" y="182" width="88" height="77"/>
 	<SubTexture name="BF RIGHT NOTE instance 10013" x="364" y="182" width="88" height="77"/>
-	<SubTexture name="BF UP MISS instance 10000" x="91" y="273" width="88" height="77"/>
+	<SubTexture name="BF UP MISS instance 10000" x="455" y="182" width="88" height="77"/>
 	<SubTexture name="BF UP MISS instance 10001" x="455" y="182" width="88" height="77"/>
 	<SubTexture name="BF UP MISS instance 10002" x="455" y="182" width="88" height="77"/>
 	<SubTexture name="BF UP MISS instance 10003" x="0" y="273" width="88" height="77"/>
