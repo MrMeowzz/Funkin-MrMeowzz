@@ -2388,8 +2388,10 @@ class PlayState extends MusicBeatState
 		var fps = Std.int(cast (Lib.current.getChildAt(0), Main).currentframerate());
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * ((30 * songMultiplier / (fps / 60)) / fps));
 
+		#if desktop
 		if (FlxG.sound.music != null && FlxG.sound.music.playing && !paused)
 			FlxG.sound.music.endTime = FlxG.sound.music.length / 2;
+		#end
 
 		if (FlxG.keys.justPressed.NINE)
 		{
