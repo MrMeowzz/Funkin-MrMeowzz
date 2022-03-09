@@ -4827,6 +4827,73 @@ class PlayState extends MusicBeatState
 				}
 			});
 
+			var dataNotes = [];
+			for (i in possibleNotes) {
+				switch (i.noteData)
+				{
+					// NOTES YOU ARE HOLDING
+					case 0:
+						if (left && !i.isSustainNote)
+							dataNotes.push(i);
+					case 1:
+						if (down && !i.isSustainNote)
+							dataNotes.push(i);
+					case 2:
+						if (up && !i.isSustainNote)
+							dataNotes.push(i);
+					case 3:
+						if (right && !i.isSustainNote)
+							dataNotes.push(i);
+				}
+			}
+
+			if (dataNotes.length != 0)
+			{
+				var coolNote = null;
+
+				for (i in dataNotes)
+				{
+					coolNote = i;
+					break;
+				}
+
+				if (dataNotes.length > 1) // stacked notes or really close ones
+				{
+					for (i in 0...dataNotes.length)
+					{
+						if (i == 0)
+							continue;
+
+						var note = dataNotes[i];
+
+						switch (note.noteData)
+						{
+							// NOTES YOU ARE HOLDING
+							case 0:
+								if (!left)
+									continue;
+							case 1:
+								if (!down)
+									continue;
+							case 2:
+								if (!up)
+									continue;
+							case 3:
+								if (!right)
+									continue;
+						}
+
+						if (!note.isSustainNote && ((note.strumTime - coolNote.strumTime) < 2))
+						{
+							trace('found a stacked/really close note ' + (note.strumTime - coolNote.strumTime));
+							note.kill();
+							notes.remove(note, true);
+							note.destroy();
+						}
+					}
+				}
+			}
+
 			for (i in 0...controlArray.length)
 			{
 				if (controlArray[i] && !directionList.contains(i))
